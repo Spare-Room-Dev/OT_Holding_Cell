@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import heartbeat, ingest, prisoners
+from app.api.routes import heartbeat, ingest, ops, prisoners
 from app.core.config import get_settings
 from app.core.rate_limit import reset_rate_limiters
 from app.middleware.body_size import BodySizeLimitMiddleware
@@ -30,6 +30,7 @@ def create_app() -> FastAPI:
     app.include_router(ingest.router, prefix="/api", tags=["ingest"])
     app.include_router(heartbeat.router, prefix="/api", tags=["heartbeat"])
     app.include_router(prisoners.router, prefix="/api", tags=["prisoners"])
+    app.include_router(ops.router, prefix="/api", tags=["ops"])
     return app
 
 
