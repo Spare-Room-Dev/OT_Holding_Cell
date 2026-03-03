@@ -8,7 +8,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from app.db.base import Base
-from app.models import IngestDelivery, Prisoner  # noqa: F401
+from app.models import ForwarderHeartbeat, IngestDelivery, Prisoner  # noqa: F401
 
 config = context.config
 

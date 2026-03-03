@@ -26,11 +26,12 @@ class Settings(BaseSettings):
     ingest_rate_limit_window_seconds: int = 60
     heartbeat_rate_limit_max_requests: int = 60
     heartbeat_rate_limit_window_seconds: int = 60
-    heartbeat_stale_after_seconds: int = 300
+    heartbeat_stale_warning_seconds: int = 300
     ingest_rate_limit_max_requests: int = 120
     ingest_rate_limit_window_seconds: int = 60
     heartbeat_rate_limit_max_requests: int = 120
     heartbeat_rate_limit_window_seconds: int = 60
+    heartbeat_stale_warning_seconds: int = 300
 
     @field_validator("ingest_api_key_previous", mode="before")
     @classmethod
@@ -52,7 +53,7 @@ class Settings(BaseSettings):
         "ingest_rate_limit_window_seconds",
         "heartbeat_rate_limit_max_requests",
         "heartbeat_rate_limit_window_seconds",
-        "heartbeat_stale_after_seconds",
+        "heartbeat_stale_warning_seconds",
     )
     @classmethod
     def validate_positive_ints(cls, value: int) -> int:
@@ -65,6 +66,7 @@ class Settings(BaseSettings):
         "ingest_rate_limit_window_seconds",
         "heartbeat_rate_limit_max_requests",
         "heartbeat_rate_limit_window_seconds",
+        "heartbeat_stale_warning_seconds",
     )
     @classmethod
     def ensure_positive_limits(cls, value: int) -> int:
