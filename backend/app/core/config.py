@@ -38,6 +38,9 @@ class Settings(BaseSettings):
     heartbeat_rate_limit_max_requests: int = 120
     heartbeat_rate_limit_window_seconds: int = 60
     heartbeat_stale_warning_seconds: int = 300
+    credential_history_cap: int = 200
+    command_history_cap: int = 400
+    download_history_cap: int = 150
 
     @field_validator("ingest_api_key_previous", mode="before")
     @classmethod
@@ -105,6 +108,17 @@ class Settings(BaseSettings):
     def ensure_positive_limits(cls, value: int) -> int:
         if value < 1:
             raise ValueError("Rate-limit settings must be greater than zero")
+        return value
+
+    @field_validator(
+        "credential_history_cap",
+        "command_history_cap",
+        "download_history_cap",
+    )
+    @classmethod
+    def ensure_positive_history_caps(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("History caps must be greater than zero")
         return value
 
     def validate_boundary(self) -> None:
