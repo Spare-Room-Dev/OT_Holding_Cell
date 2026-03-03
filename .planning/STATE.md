@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-last_updated: "2026-03-03T13:21:37.907Z"
+status: in_progress
+last_updated: "2026-03-03T14:11:55.585Z"
 progress:
-  total_phases: 2
+  total_phases: 3
   completed_phases: 2
-  total_plans: 9
-  completed_plans: 9
+  total_plans: 13
+  completed_plans: 10
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 
 ## Current Position
 
-Phase: 2 of 5 (Canonical Prisoner Data)
-Plan: 4 of 4 in current phase
-Status: Complete
-Last activity: 2026-03-03 - Completed 02-03 prisoner query surface with deterministic cursor pagination and sectioned detail APIs.
+Phase: 3 of 5 (Async Threat Enrichment)
+Plan: 1 of 4 in current phase
+Status: In Progress
+Last activity: 2026-03-03 - Completed 03-01 enrichment schema contracts and durable queue migration foundation.
 
-Progress: [##########] 100%
+Progress: [#######---] 77%
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Progress: [##########] 100%
 | Phase 02-canonical-prisoner-data P02 | 5 min | 2 tasks | 4 files |
 | Phase 02-canonical-prisoner-data P04 | 4 min | 2 tasks | 10 files |
 | Phase 02 P03 | 4 min | 2 tasks | 5 files |
+| Phase 03-async-threat-enrichment P01 | 5 min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -84,6 +85,8 @@ Recent decisions affecting current work:
 - [Phase 02-canonical-prisoner-data]: Scheduled retention runs emit deterministic JSON summaries and non-zero exit status on failure for Render cron verification.
 - [Phase 02-canonical-prisoner-data]: List responses remain summary-only, and heavy persisted history is served via dedicated prisoner detail endpoint.
 - [Phase 02-canonical-prisoner-data]: Detail sections are deterministically ordered newest-first using timestamp DESC plus id DESC tie-breakers.
+- [Phase 03-async-threat-enrichment]: Persist enrichment reason metadata as JSON on prisoners and queue rows to retain explicit null-intel explanations.
+- [Phase 03-async-threat-enrichment]: Define FIFO queue claim ordering with status + available_at + created_at + id indexes for deterministic worker claiming.
 
 ### Pending Todos
 
@@ -96,5 +99,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-async-threat-enrichment/03-CONTEXT.md
+Stopped at: Completed 03-01-PLAN.md
+Resume file: .planning/phases/03-async-threat-enrichment/03-02-PLAN.md
