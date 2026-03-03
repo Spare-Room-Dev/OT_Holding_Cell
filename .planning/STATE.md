@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-03-03T09:35:37.851Z"
+last_updated: "2026-03-03T09:39:28.734Z"
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 5
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -23,33 +23,34 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 ## Current Position
 
 Phase: 1 of 5 (Trusted Ingest Boundary)
-Plan: 4 of 5 in current phase
+Plan: 5 of 5 in current phase
 Status: In progress
-Last activity: 2026-03-03 - Completed 01-04-PLAN.md (endpoint rate limiting and persistent heartbeat stale-window liveness tracking).
+Last activity: 2026-03-03 - Completed 01-05-PLAN.md (approved-origin CORS/WebSocket/CSP security alignment).
 
-Progress: [########--] 80%
+Progress: [##########] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
+- Total plans completed: 5
 - Average duration: 8 min
-- Total execution time: 0.6 hours
+- Total execution time: 0.7 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1 | 4 | 33 min | 8 min |
+| 1 | 5 | 40 min | 8 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01, 01-02, 01-03, 01-04
+- Last 5 plans: 01-01, 01-02, 01-03, 01-04, 01-05
 - Trend: Stable
 
 *Updated after each plan completion*
 | Phase 01-trusted-ingest-boundary P02 | 6 min | 2 tasks | 11 files |
 | Phase 01-trusted-ingest-boundary P03 | 4min | 2 tasks | 9 files |
 | Phase 01-trusted-ingest-boundary P04 | 18min | 2 tasks | 10 files |
+| Phase 01-trusted-ingest-boundary P05 | 7min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,8 @@ Recent decisions affecting current work:
 - [Phase 01-trusted-ingest-boundary]: Return HTTP 200 with status duplicate_ignored for duplicate delivery_id submissions. — Forwarder retries receive deterministic safe success without implying additional writes.
 - [Phase 01-trusted-ingest-boundary]: Rate limits are endpoint-scoped so heartbeat and ingest quotas cannot starve each other. — Independent quotas protect heartbeat visibility while preserving ingest under burst traffic.
 - [Phase 01-trusted-ingest-boundary]: Heartbeat liveness is persisted by source_ip+protocol and returned with stale evaluation metadata. — Operators need restart-safe liveness checks and explicit stale-window visibility.
+- [Phase 01-trusted-ingest-boundary]: Backend API CORS and websocket-origin checks read from one shared approved-origin settings field. — One allowlist prevents policy drift between API and realtime entry points.
+- [Phase 01-trusted-ingest-boundary]: Frontend CSP connect-src is explicitly pinned to approved API/WSS targets with no wildcard fallback. — Restrictive connect-src reduces browser exfiltration channels and aligns with backend origin policy.
 
 ### Pending Todos
 
@@ -79,5 +82,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 01-04-PLAN.md
-Resume file: .planning/phases/01-trusted-ingest-boundary/01-04-SUMMARY.md
+Stopped at: Completed 01-05-PLAN.md
+Resume file: .planning/phases/01-trusted-ingest-boundary/01-05-SUMMARY.md

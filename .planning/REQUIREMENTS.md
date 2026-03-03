@@ -47,7 +47,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **SEC-01**: User can view attacker strings safely because attacker-controlled fields are rendered as text and sanitized before display.
 - [ ] **SEC-02**: User can view masked source IPs by default in public-facing views while backend storage retains full IPs.
-- [ ] **SEC-03**: Operator can enforce frontend CSP/CORS restrictions so only approved frontend origins can connect to backend APIs/WebSocket.
+- [x] **SEC-03**: Operator can enforce frontend CSP/CORS restrictions so only approved frontend origins can connect to backend APIs/WebSocket.
 - [ ] **SEC-04**: User can interact with a read-only WebSocket channel where client-emitted custom events are not processed by the server.
 
 ## v2 Requirements
@@ -110,7 +110,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-05 | Phase 5 | Pending |
 | SEC-01 | Phase 5 | Pending |
 | SEC-02 | Phase 5 | Pending |
-| SEC-03 | Phase 1 | Pending |
+| SEC-03 | Phase 1 | Complete |
 | SEC-04 | Phase 4 | Pending |
 
 **Coverage:**
