@@ -28,3 +28,17 @@ def test_heartbeat_rejects_protocol_outside_allowlist(client: TestClient) -> Non
     response = client.post("/api/heartbeat", headers=_trusted_headers(), json=payload)
 
     assert response.status_code == 422
+
+
+def test_heartbeat_returns_sanitized_error_envelope_for_validation_failures(client: TestClient) -> None:
+    payload = _valid_heartbeat_payload()
+    payload["protocol"] = "http"
+
+    response = client.post("/api/heartbeat", headers=_trusted_headers(), json=payload)
+
+    assert response.status_code == 422
+    assert response.json() == {
+        "error": "validation_error",
+        "message": "Invalid request payload",
+    }
+    assert "detail" not in response.text

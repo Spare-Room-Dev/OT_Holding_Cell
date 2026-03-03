@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
@@ -51,3 +52,35 @@ def test_ingest_rejects_stale_timestamp(client: TestClient) -> None:
     response = client.post("/api/ingest", headers=_trusted_headers(), json=payload)
 
     assert response.status_code == 422
+
+
+def test_ingest_returns_sanitized_error_envelope_for_validation_failures(client: TestClient) -> None:
+    payload = _valid_ingest_payload()
+    payload["protocol"] = "http"
+
+    response = client.post("/api/ingest", headers=_trusted_headers(), json=payload)
+
+    assert response.status_code == 422
+    assert response.json() == {
+        "error": "validation_error",
+        "message": "Invalid request payload",
+    }
+    assert "detail" not in response.text
+
+
+def test_ingest_rejects_oversized_body_before_json_parsing(client: TestClient) -> None:
+    payload = _valid_ingest_payload()
+    payload["commands"] = ["A" * 150_000, "B" * 150_000]
+    raw_body = json.dumps(payload)
+
+    response = client.post(
+        "/api/ingest",
+        headers={**_trusted_headers(), "Content-Type": "application/json"},
+        data=raw_body,
+    )
+
+    assert response.status_code == 413
+    assert response.json() == {
+        "error": "payload_too_large",
+        "message": "Request body exceeds allowed size",
+    }
