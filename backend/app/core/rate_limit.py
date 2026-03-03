@@ -12,6 +12,8 @@ from fastapi import Depends, Request
 from app.core.config import Settings, get_settings
 from app.security.forwarder_auth import resolve_client_ip
 
+RATE_LIMIT_EXCEEDED_MESSAGE = "Too many requests for this endpoint. Retry after the specified delay."
+
 
 @dataclass(frozen=True)
 class RateLimitResult:
@@ -29,9 +31,10 @@ class RateLimitExceeded(Exception):
 
     def __init__(self, result: RateLimitResult) -> None:
         self.result = result
+        self.decision = result
         self.body = {
             "error": "rate_limit_exceeded",
-            "message": "Too many requests for this endpoint. Retry after the specified delay.",
+            "message": RATE_LIMIT_EXCEEDED_MESSAGE,
             "retry_after_seconds": result.retry_after_seconds,
         }
         self.headers = {
@@ -89,6 +92,13 @@ _limiter_cache: dict[str, tuple[tuple[int, int], FixedWindowLimiter]] = {}
 _cache_lock = Lock()
 
 
+def reset_rate_limiters() -> None:
+    """Clear all cached limiter state (used for app/test lifecycle isolation)."""
+
+    with _cache_lock:
+        _limiter_cache.clear()
+
+
 def _get_limiter(name: str, max_requests: int, window_seconds: int) -> FixedWindowLimiter:
     config_tuple = (max_requests, window_seconds)
     with _cache_lock:
@@ -106,7 +116,7 @@ def _request_key(request: Request) -> str:
     return client_ip or "unknown-client"
 
 
-def enforce_ingest_rate_limit(
+def require_ingest_rate_limit(
     request: Request,
     settings: Settings = Depends(get_settings),
 ) -> None:
@@ -120,7 +130,7 @@ def enforce_ingest_rate_limit(
         raise RateLimitExceeded(result)
 
 
-def enforce_heartbeat_rate_limit(
+def require_heartbeat_rate_limit(
     request: Request,
     settings: Settings = Depends(get_settings),
 ) -> None:
@@ -132,3 +142,8 @@ def enforce_heartbeat_rate_limit(
     result = limiter.check(_request_key(request))
     if not result.allowed:
         raise RateLimitExceeded(result)
+
+
+# Backward-compatible aliases for callers using older function names.
+enforce_ingest_rate_limit = require_ingest_rate_limit
+enforce_heartbeat_rate_limit = require_heartbeat_rate_limit

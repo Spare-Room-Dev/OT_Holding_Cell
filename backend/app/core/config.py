@@ -24,6 +24,11 @@ class Settings(BaseSettings):
     allowed_forwarder_ips: tuple[IPvAnyAddress, ...] = ("127.0.0.1",)
     ingest_rate_limit_max_requests: int = 120
     ingest_rate_limit_window_seconds: int = 60
+    heartbeat_rate_limit_max_requests: int = 60
+    heartbeat_rate_limit_window_seconds: int = 60
+    heartbeat_stale_after_seconds: int = 300
+    ingest_rate_limit_max_requests: int = 120
+    ingest_rate_limit_window_seconds: int = 60
     heartbeat_rate_limit_max_requests: int = 120
     heartbeat_rate_limit_window_seconds: int = 60
 
@@ -40,6 +45,19 @@ class Settings(BaseSettings):
         if isinstance(value, str):
             parsed = tuple(ip.strip() for ip in value.split(",") if ip.strip())
             return parsed
+        return value
+
+    @field_validator(
+        "ingest_rate_limit_max_requests",
+        "ingest_rate_limit_window_seconds",
+        "heartbeat_rate_limit_max_requests",
+        "heartbeat_rate_limit_window_seconds",
+        "heartbeat_stale_after_seconds",
+    )
+    @classmethod
+    def validate_positive_ints(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("Rate-limit and heartbeat windows must be positive integers")
         return value
 
     @field_validator(
