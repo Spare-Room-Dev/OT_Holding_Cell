@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-03-03T13:03:36.000Z"
+last_updated: "2026-03-03T13:12:30.000Z"
 progress:
   total_phases: 2
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -18,32 +18,33 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-03)
 
 **Core value:** Turn raw honeypot attack traffic into an immediate, understandable, real-time visual intelligence feed.
-**Current focus:** Phase 2 - Canonical Prisoner Data
+**Current focus:** Phase 3 - Async Threat Enrichment
 
 ## Current Position
 
 Phase: 2 of 5 (Canonical Prisoner Data)
-Plan: 3 of 4 in current phase
-Status: In progress
-Last activity: 2026-03-03 - Completed 02-04 retention lifecycle automation with rollup preservation and cron runbook.
+Plan: 4 of 4 in current phase
+Status: Complete
+Last activity: 2026-03-03 - Completed 02-03 prisoner query surface with deterministic cursor pagination and sectioned detail APIs.
 
-Progress: [#########-] 89%
+Progress: [##########] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
+- Total plans completed: 9
 - Average duration: 7 min
-- Total execution time: 1.0 hours
+- Total execution time: 1.1 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 | 5 | 40 min | 8 min |
+| 2 | 4 | 19 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-04, 01-05, 02-01, 02-02, 02-04
+- Last 5 plans: 01-05, 02-01, 02-02, 02-04, 02-03
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -54,6 +55,7 @@ Progress: [#########-] 89%
 | Phase 02-canonical-prisoner-data P01 | 6 min | 2 tasks | 8 files |
 | Phase 02-canonical-prisoner-data P02 | 5 min | 2 tasks | 4 files |
 | Phase 02-canonical-prisoner-data P04 | 4 min | 2 tasks | 10 files |
+| Phase 02 P03 | 4 min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -80,6 +82,8 @@ Recent decisions affecting current work:
 - [Phase 02-canonical-prisoner-data]: Credential, command, and download histories are append-only with deterministic oldest-first pruning via observed_at/id ordering.
 - [Phase 02-canonical-prisoner-data]: Retention rolls expired prisoner attempts into lifetime rollups before hard deletes in a single transaction.
 - [Phase 02-canonical-prisoner-data]: Scheduled retention runs emit deterministic JSON summaries and non-zero exit status on failure for Render cron verification.
+- [Phase 02-canonical-prisoner-data]: List responses remain summary-only, and heavy persisted history is served via dedicated prisoner detail endpoint.
+- [Phase 02-canonical-prisoner-data]: Detail sections are deterministically ordered newest-first using timestamp DESC plus id DESC tie-breakers.
 
 ### Pending Todos
 
@@ -92,5 +96,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 02-canonical-prisoner-data-04-PLAN.md
-Resume file: .planning/phases/02-canonical-prisoner-data/02-03-PLAN.md
+Stopped at: Completed 02-canonical-prisoner-data-03-PLAN.md
+Resume file: .planning/ROADMAP.md
