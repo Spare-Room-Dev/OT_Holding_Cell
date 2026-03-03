@@ -22,6 +22,10 @@ class Settings(BaseSettings):
     ingest_api_key: SecretStr = SecretStr("test-ingest-key")
     ingest_api_key_previous: Optional[SecretStr] = None
     allowed_forwarder_ips: tuple[IPvAnyAddress, ...] = ("127.0.0.1",)
+    ingest_rate_limit_max_requests: int = 120
+    ingest_rate_limit_window_seconds: int = 60
+    heartbeat_rate_limit_max_requests: int = 120
+    heartbeat_rate_limit_window_seconds: int = 60
 
     @field_validator("ingest_api_key_previous", mode="before")
     @classmethod
@@ -36,6 +40,18 @@ class Settings(BaseSettings):
         if isinstance(value, str):
             parsed = tuple(ip.strip() for ip in value.split(",") if ip.strip())
             return parsed
+        return value
+
+    @field_validator(
+        "ingest_rate_limit_max_requests",
+        "ingest_rate_limit_window_seconds",
+        "heartbeat_rate_limit_max_requests",
+        "heartbeat_rate_limit_window_seconds",
+    )
+    @classmethod
+    def ensure_positive_limits(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("Rate-limit settings must be greater than zero")
         return value
 
     def validate_boundary(self) -> None:

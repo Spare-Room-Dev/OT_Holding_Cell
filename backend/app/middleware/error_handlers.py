@@ -8,6 +8,8 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
+from app.core.rate_limit import RATE_LIMIT_EXCEEDED_MESSAGE, RateLimitExceeded
+
 logger = logging.getLogger(__name__)
 
 VALIDATION_ERROR_BODY = {
@@ -32,3 +34,21 @@ def register_error_handlers(app: FastAPI) -> None:
             },
         )
         return JSONResponse(status_code=422, content=VALIDATION_ERROR_BODY)
+
+    @app.exception_handler(RateLimitExceeded)
+    async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:
+        decision = exc.decision
+        return JSONResponse(
+            status_code=429,
+            content={
+                "error": "rate_limit_exceeded",
+                "message": RATE_LIMIT_EXCEEDED_MESSAGE,
+                "retry_after_seconds": decision.retry_after_seconds,
+            },
+            headers={
+                "Retry-After": str(decision.retry_after_seconds),
+                "X-RateLimit-Limit": str(decision.limit),
+                "X-RateLimit-Remaining": str(decision.remaining),
+                "X-RateLimit-Reset": str(decision.reset_epoch),
+            },
+        )

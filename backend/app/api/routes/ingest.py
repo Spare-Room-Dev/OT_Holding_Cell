@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 
+from app.core.rate_limit import require_ingest_rate_limit
 from app.db.session import get_db_session
 from app.schemas.ingest import IngestPayload
 from app.security.forwarder_auth import require_trusted_forwarder, resolve_client_ip
@@ -11,7 +12,10 @@ from app.services.ingest_service import process_ingest_payload
 router = APIRouter()
 
 
-@router.post("/ingest", dependencies=[Depends(require_trusted_forwarder)])
+@router.post(
+    "/ingest",
+    dependencies=[Depends(require_trusted_forwarder), Depends(require_ingest_rate_limit)],
+)
 async def ingest_payload(
     payload: IngestPayload,
     request: Request,
