@@ -18,8 +18,13 @@ from app.models.prisoner import Prisoner
 from app.schemas.prisoners import (
     PrisonerCommandHistoryEntry,
     PrisonerCredentialHistoryEntry,
+    PrisonerDetailPrisoner,
     PrisonerDetailResponse,
     PrisonerDownloadHistoryEntry,
+    PrisonerEnrichmentDetail,
+    PrisonerEnrichmentGeo,
+    PrisonerEnrichmentReputation,
+    PrisonerEnrichmentSummary,
     PrisonerListResponse,
     PrisonerProtocolHistoryEntry,
     PrisonerSummary,
@@ -42,6 +47,12 @@ def _coerce_utc(value: datetime) -> datetime:
     if value.tzinfo is None:
         return value.replace(tzinfo=timezone.utc)
     return value.astimezone(timezone.utc)
+
+
+def _coerce_optional_utc(value: datetime | None) -> datetime | None:
+    if value is None:
+        return None
+    return _coerce_utc(value)
 
 
 def encode_prisoner_cursor(*, last_seen_at: datetime, prisoner_id: int) -> str:
@@ -88,6 +99,39 @@ def _build_prisoner_summary(prisoner: Prisoner) -> PrisonerSummary:
         credential_count=prisoner.credential_count,
         command_count=prisoner.command_count,
         download_count=prisoner.download_count,
+        enrichment=_build_prisoner_enrichment_summary(prisoner),
+    )
+
+
+def _build_prisoner_enrichment_summary(prisoner: Prisoner) -> PrisonerEnrichmentSummary:
+    return PrisonerEnrichmentSummary(
+        status=prisoner.enrichment_status,
+        last_updated_at=_coerce_optional_utc(prisoner.last_enriched_at),
+        country_code=prisoner.enrichment_country_code,
+        asn=prisoner.enrichment_asn,
+        reputation_severity=prisoner.enrichment_reputation_severity,
+    )
+
+
+def _build_prisoner_enrichment_detail(prisoner: Prisoner) -> PrisonerEnrichmentDetail:
+    raw_reason_metadata = prisoner.enrichment_reason_metadata or {}
+    reason_metadata = {
+        str(key): str(value)
+        for key, value in raw_reason_metadata.items()
+    }
+    return PrisonerEnrichmentDetail(
+        status=prisoner.enrichment_status,
+        last_updated_at=_coerce_optional_utc(prisoner.last_enriched_at),
+        provider=prisoner.enrichment_provider,
+        geo=PrisonerEnrichmentGeo(
+            country_code=prisoner.enrichment_country_code,
+            asn=prisoner.enrichment_asn,
+        ),
+        reputation=PrisonerEnrichmentReputation(
+            severity=prisoner.enrichment_reputation_severity,
+            confidence=prisoner.enrichment_reputation_confidence,
+        ),
+        reason_metadata=reason_metadata,
     )
 
 
@@ -178,7 +222,18 @@ def get_prisoner_detail(*, session: Session, prisoner_id: int) -> PrisonerDetail
     ).scalars().all()
 
     return PrisonerDetailResponse(
-        prisoner=_build_prisoner_summary(prisoner),
+        prisoner=PrisonerDetailPrisoner(
+            id=prisoner.id,
+            source_ip=prisoner.source_ip,
+            country_code=prisoner.country_code,
+            attempt_count=prisoner.attempt_count,
+            first_seen_at=prisoner.first_seen_at,
+            last_seen_at=prisoner.last_seen_at,
+            credential_count=prisoner.credential_count,
+            command_count=prisoner.command_count,
+            download_count=prisoner.download_count,
+            enrichment=_build_prisoner_enrichment_detail(prisoner),
+        ),
         protocol_history=[
             PrisonerProtocolHistoryEntry(
                 protocol=row.protocol,

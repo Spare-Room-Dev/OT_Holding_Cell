@@ -10,6 +10,10 @@ import app.db.session as db_session_module
 from app.models.prisoner import Prisoner
 
 
+def _api_timestamp(value: datetime) -> str:
+    return value.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
 def _create_prisoner(*, source_ip: str, timestamp: datetime, enrichment_reasons: dict[str, str]) -> int:
     with db_session_module.SessionFactory() as session:
         prisoner = Prisoner(
@@ -97,7 +101,7 @@ def test_prisoner_list_and_detail_include_enrichment_status_contract(client: Tes
     refreshed_item = next(row for row in refreshed_list.json()["items"] if row["id"] == prisoner_id)
     assert refreshed_item["enrichment"] == {
         "status": "complete",
-        "last_updated_at": enriched_at.isoformat(),
+        "last_updated_at": _api_timestamp(enriched_at),
         "country_code": "US",
         "asn": "AS13335",
         "reputation_severity": "high",
@@ -108,7 +112,7 @@ def test_prisoner_list_and_detail_include_enrichment_status_contract(client: Tes
     refreshed_payload = refreshed_detail.json()
     assert refreshed_payload["prisoner"]["enrichment"] == {
         "status": "complete",
-        "last_updated_at": enriched_at.isoformat(),
+        "last_updated_at": _api_timestamp(enriched_at),
         "provider": "ipinfo+abuseipdb",
         "geo": {"country_code": "US", "asn": "AS13335"},
         "reputation": {"severity": "high", "confidence": 92},
