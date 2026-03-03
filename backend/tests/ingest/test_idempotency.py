@@ -17,6 +17,7 @@ from fastapi.testclient import TestClient
 
 from app.models.ingest_delivery import IngestDelivery
 from app.models.prisoner import Prisoner
+from app.models.prisoner_protocol_activity import PrisonerProtocolActivity
 
 
 def _alembic_config(database_url: str) -> Config:
@@ -158,9 +159,18 @@ def test_duplicate_delivery_returns_duplicate_ignored_and_skips_mutation(
 
     assert prisoner_count == 1
     assert delivery_count == 1
+    assert prisoner.attempt_count == 1
     assert prisoner.credential_count == 1
     assert prisoner.command_count == 1
     assert prisoner.download_count == 1
+
+    protocol_activities = (
+        session.query(PrisonerProtocolActivity)
+        .filter(PrisonerProtocolActivity.prisoner_id == prisoner.id)
+        .all()
+    )
+    assert len(protocol_activities) == 1
+    assert protocol_activities[0].attempt_count == 1
 
 
 def test_parallel_duplicate_submissions_mutate_once(tmp_path: Path) -> None:
@@ -195,6 +205,15 @@ def test_parallel_duplicate_submissions_mutate_once(tmp_path: Path) -> None:
     with Session(engine) as session:
         prisoner_count = session.query(Prisoner).count()
         delivery_count = session.query(IngestDelivery).count()
+        prisoner = session.query(Prisoner).one()
+        protocol_activities = (
+            session.query(PrisonerProtocolActivity)
+            .filter(PrisonerProtocolActivity.prisoner_id == prisoner.id)
+            .all()
+        )
 
     assert prisoner_count == 1
     assert delivery_count == 1
+    assert prisoner.attempt_count == 1
+    assert len(protocol_activities) == 1
+    assert protocol_activities[0].attempt_count == 1
