@@ -28,7 +28,13 @@ This roadmap delivers the v1 live intelligence loop in dependency order: trust t
   3. Operator can resend the same `delivery_id` without creating duplicate prisoner records.
   4. Operator receives `429` responses with retry guidance under burst traffic while ingest remains available.
   5. Operator can post heartbeats to confirm forwarder liveness, and browser clients from non-approved origins are blocked by CORS/CSP policy.
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [x] 01-01-PLAN.md — Shared trusted-forwarder auth + source-IP allowlist boundary.
+- [x] 01-02-PLAN.md — Strict ingest/heartbeat schema validation and payload-size defenses.
+- [ ] 01-03-PLAN.md — Delivery idempotency persistence and transactional replay-safe ingest flow.
+- [ ] 01-04-PLAN.md — Burst-rate limiting contract and heartbeat liveness monitoring.
+- [ ] 01-05-PLAN.md — Approved-origin CORS/WebSocket/CSP alignment and security tests.
 
 ### Phase 2: Canonical Prisoner Data
 **Goal**: Users can reliably inspect canonical attacker records and query them predictably from persisted storage.
@@ -82,9 +88,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Trusted Ingest Boundary | 0/TBD | Not started | - |
+| 1. Trusted Ingest Boundary | 2/5 | In Progress | - |
 | 2. Canonical Prisoner Data | 0/TBD | Not started | - |
 | 3. Async Threat Enrichment | 0/TBD | Not started | - |
 | 4. Realtime Event Stream | 0/TBD | Not started | - |
 | 5. Responsive Analyst Dashboard | 0/TBD | Not started | - |
-
