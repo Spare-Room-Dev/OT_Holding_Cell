@@ -76,7 +76,7 @@ def test_ingest_rejects_oversized_body_before_json_parsing(client: TestClient) -
     response = client.post(
         "/api/ingest",
         headers={**_trusted_headers(), "Content-Type": "application/json"},
-        data=raw_body,
+        content=raw_body,
     )
 
     assert response.status_code == 413
