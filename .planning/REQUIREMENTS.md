@@ -9,7 +9,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Ingest
 
-- [ ] **ING-01**: Operator can receive Cowrie attack session payloads through `POST /api/ingest` using API-key authentication and source-IP allowlisting.
+- [x] **ING-01**: Operator can receive Cowrie attack session payloads through `POST /api/ingest` using API-key authentication and source-IP allowlisting.
 - [x] **ING-02**: Operator can ingest payloads only when payload schema is valid (including bounded list sizes and field length limits) and reject invalid requests safely.
 - [x] **ING-03**: Operator can submit duplicate deliveries with the same `delivery_id` and have the backend ignore replays without creating duplicate attacker records.
 - [x] **ING-04**: Operator can keep ingest available during burst traffic using endpoint rate limiting and return `429` with retry guidance when limits are exceeded.
@@ -87,7 +87,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ING-01 | Phase 1 | Pending |
+| ING-01 | Phase 1 | Complete |
 | ING-02 | Phase 1 | Complete |
 | ING-03 | Phase 1 | Complete |
 | ING-04 | Phase 1 | Complete |

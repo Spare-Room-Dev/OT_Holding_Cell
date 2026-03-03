@@ -10,7 +10,7 @@ This roadmap delivers the v1 live intelligence loop in dependency order: trust t
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 1: Trusted Ingest Boundary** - Secure, validated, replay-safe intake for forwarder traffic.
+- [x] **Phase 1: Trusted Ingest Boundary** - Secure, validated, replay-safe intake for forwarder traffic.
 - [ ] **Phase 2: Canonical Prisoner Data** - Durable attacker model, query surfaces, and retention hygiene.
 - [ ] **Phase 3: Async Threat Enrichment** - Non-blocking intelligence enrichment with graceful failure handling.
 - [ ] **Phase 4: Realtime Event Stream** - Reliable websocket delivery for prisoner lifecycle and stats updates.
@@ -88,7 +88,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Trusted Ingest Boundary | 5/5 | Complete | - |
+| 1. Trusted Ingest Boundary | 5/5 | Complete | 2026-03-03 |
 | 2. Canonical Prisoner Data | 0/TBD | Not started | - |
 | 3. Async Threat Enrichment | 0/TBD | Not started | - |
 | 4. Realtime Event Stream | 0/TBD | Not started | - |
