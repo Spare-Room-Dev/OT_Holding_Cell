@@ -32,7 +32,7 @@ This roadmap delivers the v1 live intelligence loop in dependency order: trust t
 Plans:
 - [x] 01-01-PLAN.md — Shared trusted-forwarder auth + source-IP allowlist boundary.
 - [x] 01-02-PLAN.md — Strict ingest/heartbeat schema validation and payload-size defenses.
-- [ ] 01-03-PLAN.md — Delivery idempotency persistence and transactional replay-safe ingest flow.
+- [x] 01-03-PLAN.md — Delivery idempotency persistence and transactional replay-safe ingest flow.
 - [ ] 01-04-PLAN.md — Burst-rate limiting contract and heartbeat liveness monitoring.
 - [ ] 01-05-PLAN.md — Approved-origin CORS/WebSocket/CSP alignment and security tests.
 
@@ -88,7 +88,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Trusted Ingest Boundary | 2/5 | In Progress | - |
+| 1. Trusted Ingest Boundary | 3/5 | In Progress | - |
 | 2. Canonical Prisoner Data | 0/TBD | Not started | - |
 | 3. Async Threat Enrichment | 0/TBD | Not started | - |
 | 4. Realtime Event Stream | 0/TBD | Not started | - |
