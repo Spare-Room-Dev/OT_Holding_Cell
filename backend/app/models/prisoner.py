@@ -5,12 +5,13 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Optional
 
-from sqlalchemy import DateTime, Integer, String, UniqueConstraint
+from sqlalchemy import JSON, DateTime, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
 if TYPE_CHECKING:
+    from app.models.enrichment_job import EnrichmentJob
     from app.models.prisoner_command import PrisonerCommand
     from app.models.prisoner_credential import PrisonerCredential
     from app.models.prisoner_download import PrisonerDownload
@@ -36,6 +37,14 @@ class Prisoner(Base):
     credential_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     command_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     download_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    enrichment_status: Mapped[str] = mapped_column(String(16), default="pending", nullable=False)
+    enrichment_country_code: Mapped[Optional[str]] = mapped_column(String(2), nullable=True)
+    enrichment_asn: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    enrichment_reputation_severity: Mapped[Optional[str]] = mapped_column(String(16), nullable=True)
+    enrichment_reputation_confidence: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    enrichment_reason_metadata: Mapped[dict[str, str]] = mapped_column(JSON, default=dict, nullable=False)
+    enrichment_provider: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    last_enriched_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
     protocol_activities: Mapped[list["PrisonerProtocolActivity"]] = relationship(
         "PrisonerProtocolActivity",
@@ -54,6 +63,11 @@ class Prisoner(Base):
     )
     downloads: Mapped[list["PrisonerDownload"]] = relationship(
         "PrisonerDownload",
+        back_populates="prisoner",
+        cascade="all, delete-orphan",
+    )
+    enrichment_jobs: Mapped[list["EnrichmentJob"]] = relationship(
+        "EnrichmentJob",
         back_populates="prisoner",
         cascade="all, delete-orphan",
     )

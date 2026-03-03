@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from functools import lru_cache
 import json
+from functools import lru_cache
 from typing import Literal, Optional
 
 from pydantic import IPvAnyAddress, SecretStr, field_validator
@@ -33,11 +33,11 @@ class Settings(BaseSettings):
     heartbeat_rate_limit_max_requests: int = 60
     heartbeat_rate_limit_window_seconds: int = 60
     heartbeat_stale_warning_seconds: int = 300
-    ingest_rate_limit_max_requests: int = 120
-    ingest_rate_limit_window_seconds: int = 60
-    heartbeat_rate_limit_max_requests: int = 120
-    heartbeat_rate_limit_window_seconds: int = 60
-    heartbeat_stale_warning_seconds: int = 300
+    enrichment_provider_timeout_seconds: int = 8
+    enrichment_retry_max_attempts: int = 3
+    enrichment_retry_min_backoff_seconds: int = 30
+    enrichment_retry_max_backoff_seconds: int = 900
+    enrichment_quota_backoff_seconds: int = 120
     credential_history_cap: int = 200
     command_history_cap: int = 400
     download_history_cap: int = 150
@@ -85,11 +85,16 @@ class Settings(BaseSettings):
         "heartbeat_rate_limit_max_requests",
         "heartbeat_rate_limit_window_seconds",
         "heartbeat_stale_warning_seconds",
+        "enrichment_provider_timeout_seconds",
+        "enrichment_retry_max_attempts",
+        "enrichment_retry_min_backoff_seconds",
+        "enrichment_retry_max_backoff_seconds",
+        "enrichment_quota_backoff_seconds",
     )
     @classmethod
-    def validate_positive_ints(cls, value: int) -> int:
+    def ensure_positive_limits(cls, value: int) -> int:
         if value <= 0:
-            raise ValueError("Rate-limit and heartbeat windows must be positive integers")
+            raise ValueError("Rate limits, heartbeat, and enrichment settings must be positive integers")
         return value
 
     def validate_origin_policy(self) -> None:
@@ -98,19 +103,6 @@ class Settings(BaseSettings):
 
         if self.app_env != "development" and "*" in self.approved_browser_origins:
             raise ValueError("Wildcard approved origins are only allowed in development mode")
-
-    @field_validator(
-        "ingest_rate_limit_max_requests",
-        "ingest_rate_limit_window_seconds",
-        "heartbeat_rate_limit_max_requests",
-        "heartbeat_rate_limit_window_seconds",
-        "heartbeat_stale_warning_seconds",
-    )
-    @classmethod
-    def ensure_positive_limits(cls, value: int) -> int:
-        if value < 1:
-            raise ValueError("Rate-limit settings must be greater than zero")
-        return value
 
     @field_validator(
         "credential_history_cap",
