@@ -24,7 +24,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Intel
 
-- [ ] **INTL-01**: User can view geo and reputation enrichment for new IPs when provider calls succeed.
+- [x] **INTL-01**: User can view geo and reputation enrichment for new IPs when provider calls succeed.
 - [x] **INTL-02**: User can still view newly ingested prisoners when enrichment providers fail, with enrichment status shown as `pending`, `partial`, or `failed`.
 - [x] **INTL-03**: User can receive deferred enrichment updates after initial prisoner creation without losing initial event visibility.
 - [x] **INTL-04**: Operator can prevent enrichment quota exhaustion during floods by deferring excess enrichment workload to a controlled background queue.
@@ -96,7 +96,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-02 | Phase 2 | Complete |
 | DATA-03 | Phase 2 | Complete |
 | DATA-04 | Phase 2 | Complete |
-| INTL-01 | Phase 3 | Pending |
+| INTL-01 | Phase 3 | Complete |
 | INTL-02 | Phase 3 | Complete |
 | INTL-03 | Phase 3 | Complete |
 | INTL-04 | Phase 3 | Complete |

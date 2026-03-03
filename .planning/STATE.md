@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-03-03T14:49:46Z"
+last_updated: "2026-03-03T14:56:32.376Z"
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 13
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # Project State
@@ -23,18 +23,18 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 ## Current Position
 
 Phase: 3 of 5 (Async Threat Enrichment)
-Plan: 2 of 4 in current phase
+Plan: 3 of 4 in current phase
 Status: In Progress
-Last activity: 2026-03-03 - Completed 03-02 non-blocking ingest enqueue handoff with FIFO retry queue lifecycle.
+Last activity: 2026-03-03 - Completed 03-04 enrichment visibility and queue health API contracts.
 
-Progress: [########--] 85%
+Progress: [#########-] 92%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
+- Total plans completed: 12
 - Average duration: 7 min
-- Total execution time: 1.3 hours
+- Total execution time: 1.9 hours
 
 **By Phase:**
 
@@ -44,7 +44,7 @@ Progress: [########--] 85%
 | 2 | 4 | 19 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02, 02-04, 02-03, 03-01, 03-02
+- Last 5 plans: 02-04, 02-03, 03-01, 03-02, 03-04
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -58,6 +58,7 @@ Progress: [########--] 85%
 | Phase 02 P03 | 4 min | 2 tasks | 5 files |
 | Phase 03-async-threat-enrichment P01 | 5 min | 2 tasks | 6 files |
 | Phase 03-async-threat-enrichment P02 | 11 min | 2 tasks | 5 files |
+| Phase 03-async-threat-enrichment P04 | 39 min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,8 @@ Recent decisions affecting current work:
 - [Phase 03-async-threat-enrichment]: Define FIFO queue claim ordering with status + available_at + created_at + id indexes for deterministic worker claiming.
 - [Phase 03-async-threat-enrichment]: Ingest commits prisoner visibility first, then attempts deferred queue enqueue without failing ingest responses.
 - [Phase 03-async-threat-enrichment]: Queue retries are bounded with quota-aware deferral and terminal failure metadata when attempts are exhausted.
+- [Phase 03-async-threat-enrichment]: Expose queue pressure through a dedicated read-only ops endpoint instead of overloading prisoner query responses.
+- [Phase 03-async-threat-enrichment]: Calculate oldest pending age from minimum created_at across queued and in_progress jobs for deterministic backlog aging.
 
 ### Pending Todos
 
@@ -102,5 +105,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 03-02-PLAN.md
+Stopped at: Completed 03-04-PLAN.md
 Resume file: .planning/phases/03-async-threat-enrichment/03-03-PLAN.md

@@ -66,7 +66,7 @@ Plans:
 - [x] 03-01-PLAN.md — Enrichment schema contracts and durable queue migration foundation.
 - [x] 03-02-PLAN.md — Non-blocking ingest enqueue handoff with FIFO claim and bounded defer/retry queue primitives.
 - [ ] 03-03-PLAN.md — Provider normalization, lifecycle state machine, and worker/drain execution scripts.
-- [ ] 03-04-PLAN.md — Enrichment list/detail API visibility plus operator queue-health endpoint and runbook.
+- [x] 03-04-PLAN.md — Enrichment list/detail API visibility plus operator queue-health endpoint and runbook.
 
 ### Phase 4: Realtime Event Stream
 **Goal**: Users get accurate live prisoner and aggregate updates over reconnect-safe websocket channels.
@@ -100,6 +100,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 |-------|----------------|--------|-----------|
 | 1. Trusted Ingest Boundary | 5/5 | Complete | 2026-03-03 |
 | 2. Canonical Prisoner Data | 4/4 | Complete | 2026-03-03 |
-| 3. Async Threat Enrichment | 2/4 | In Progress | - |
+| 3. Async Threat Enrichment | 3/4 | In Progress | - |
 | 4. Realtime Event Stream | 0/TBD | Not started | - |
 | 5. Responsive Analyst Dashboard | 0/TBD | Not started | - |
