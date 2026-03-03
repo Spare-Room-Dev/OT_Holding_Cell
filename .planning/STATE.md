@@ -96,5 +96,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Completed 02-canonical-prisoner-data-03-PLAN.md
-Resume file: .planning/ROADMAP.md
+Stopped at: Phase 3 context gathered
+Resume file: .planning/phases/03-async-threat-enrichment/03-CONTEXT.md
