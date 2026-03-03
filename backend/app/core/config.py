@@ -41,6 +41,8 @@ class Settings(BaseSettings):
     credential_history_cap: int = 200
     command_history_cap: int = 400
     download_history_cap: int = 150
+    retention_prisoner_days: int = 30
+    retention_delivery_days: int = 7
 
     @field_validator("ingest_api_key_previous", mode="before")
     @classmethod
@@ -119,6 +121,16 @@ class Settings(BaseSettings):
     def ensure_positive_history_caps(cls, value: int) -> int:
         if value < 1:
             raise ValueError("History caps must be greater than zero")
+        return value
+
+    @field_validator(
+        "retention_prisoner_days",
+        "retention_delivery_days",
+    )
+    @classmethod
+    def ensure_positive_retention_windows(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("Retention windows must be greater than zero")
         return value
 
     def validate_boundary(self) -> None:
