@@ -19,7 +19,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **DATA-01**: User can see one canonical prisoner record per unique source IP with repeat attacks aggregated into `attempt_count`.
 - [x] **DATA-02**: User can inspect credentials, commands, downloads, and protocol history for a prisoner from persisted backend data.
-- [ ] **DATA-03**: Operator can automatically purge prisoners older than 30 days and idempotency delivery records older than 7 days.
+- [x] **DATA-03**: Operator can automatically purge prisoners older than 30 days and idempotency delivery records older than 7 days.
 - [ ] **DATA-04**: User can request paginated prisoner lists with deterministic sorting and country filtering.
 
 ### Intel
@@ -94,7 +94,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ING-05 | Phase 1 | Complete |
 | DATA-01 | Phase 2 | Complete |
 | DATA-02 | Phase 2 | Complete |
-| DATA-03 | Phase 2 | Pending |
+| DATA-03 | Phase 2 | Complete |
 | DATA-04 | Phase 2 | Pending |
 | INTL-01 | Phase 3 | Pending |
 | INTL-02 | Phase 3 | Pending |
