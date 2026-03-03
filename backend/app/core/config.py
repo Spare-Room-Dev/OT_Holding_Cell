@@ -34,6 +34,8 @@ class Settings(BaseSettings):
     heartbeat_rate_limit_window_seconds: int = 60
     heartbeat_stale_warning_seconds: int = 300
     enrichment_provider_timeout_seconds: int = 8
+    ipinfo_token: Optional[SecretStr] = None
+    abuseipdb_api_key: Optional[SecretStr] = None
     enrichment_retry_max_attempts: int = 3
     enrichment_retry_min_backoff_seconds: int = 30
     enrichment_retry_max_backoff_seconds: int = 900
@@ -47,6 +49,13 @@ class Settings(BaseSettings):
     @field_validator("ingest_api_key_previous", mode="before")
     @classmethod
     def normalize_previous_key(cls, value: object) -> object:
+        if value in (None, "", " "):
+            return None
+        return value
+
+    @field_validator("ipinfo_token", "abuseipdb_api_key", mode="before")
+    @classmethod
+    def normalize_optional_secrets(cls, value: object) -> object:
         if value in (None, "", " "):
             return None
         return value
