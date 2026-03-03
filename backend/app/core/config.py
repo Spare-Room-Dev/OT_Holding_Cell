@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from functools import lru_cache
+import json
 from typing import Literal, Optional
 
 from pydantic import IPvAnyAddress, SecretStr, field_validator
@@ -22,6 +23,11 @@ class Settings(BaseSettings):
     ingest_api_key: SecretStr = SecretStr("test-ingest-key")
     ingest_api_key_previous: Optional[SecretStr] = None
     allowed_forwarder_ips: tuple[IPvAnyAddress, ...] = ("127.0.0.1",)
+    approved_browser_origins: tuple[str, ...] = ("http://localhost:5173",)
+    approved_backend_connect_src: tuple[str, ...] = (
+        "https://api.holdingcell.test",
+        "wss://api.holdingcell.test",
+    )
     ingest_rate_limit_max_requests: int = 120
     ingest_rate_limit_window_seconds: int = 60
     heartbeat_rate_limit_max_requests: int = 60
@@ -48,6 +54,26 @@ class Settings(BaseSettings):
             return parsed
         return value
 
+    @field_validator("approved_browser_origins", "approved_backend_connect_src", mode="before")
+    @classmethod
+    def parse_origin_lists(cls, value: object) -> object:
+        if not isinstance(value, str):
+            return value
+
+        raw = value.strip()
+        if not raw:
+            return ()
+
+        if raw.startswith("["):
+            try:
+                parsed_json = json.loads(raw)
+                if isinstance(parsed_json, list):
+                    return tuple(str(item).strip() for item in parsed_json if str(item).strip())
+            except json.JSONDecodeError:
+                pass
+
+        return tuple(item.strip() for item in raw.split(",") if item.strip())
+
     @field_validator(
         "ingest_rate_limit_max_requests",
         "ingest_rate_limit_window_seconds",
@@ -60,6 +86,13 @@ class Settings(BaseSettings):
         if value <= 0:
             raise ValueError("Rate-limit and heartbeat windows must be positive integers")
         return value
+
+    def validate_origin_policy(self) -> None:
+        if not self.approved_browser_origins:
+            raise ValueError("APPROVED_BROWSER_ORIGINS must include at least one origin")
+
+        if self.app_env != "development" and "*" in self.approved_browser_origins:
+            raise ValueError("Wildcard approved origins are only allowed in development mode")
 
     @field_validator(
         "ingest_rate_limit_max_requests",
@@ -80,6 +113,8 @@ class Settings(BaseSettings):
 
         if not self.allowed_forwarder_ips:
             raise ValueError("ALLOWED_FORWARDER_IPS must include at least one valid IP address")
+
+        self.validate_origin_policy()
 
 
 @lru_cache

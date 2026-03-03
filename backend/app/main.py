@@ -1,6 +1,7 @@
 """FastAPI app entrypoint."""
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import heartbeat, ingest
 from app.core.config import get_settings
@@ -13,10 +14,17 @@ MAX_REQUEST_BODY_BYTES = 256 * 1024
 
 def create_app() -> FastAPI:
     # Fail fast during app startup when boundary settings are invalid.
-    get_settings()
+    settings = get_settings()
     reset_rate_limiters()
 
     app = FastAPI(title="The Holding Cell Backend")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=list(settings.approved_browser_origins),
+        allow_credentials=True,
+        allow_methods=["POST", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type", "X-Forwarded-For"],
+    )
     app.add_middleware(BodySizeLimitMiddleware, max_body_bytes=MAX_REQUEST_BODY_BYTES)
     register_error_handlers(app)
     app.include_router(ingest.router, prefix="/api", tags=["ingest"])
