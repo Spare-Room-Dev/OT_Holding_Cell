@@ -17,6 +17,7 @@ from fastapi.testclient import TestClient
 
 from app.models.ingest_delivery import IngestDelivery
 from app.models.prisoner import Prisoner
+from app.models.enrichment_job import EnrichmentJob
 from app.models.prisoner_protocol_activity import PrisonerProtocolActivity
 
 
@@ -211,9 +212,18 @@ def test_parallel_duplicate_submissions_mutate_once(tmp_path: Path) -> None:
             .filter(PrisonerProtocolActivity.prisoner_id == prisoner.id)
             .all()
         )
+        active_jobs = (
+            session.query(EnrichmentJob)
+            .filter(
+                EnrichmentJob.prisoner_id == prisoner.id,
+                EnrichmentJob.status.in_(("queued", "in_progress")),
+            )
+            .all()
+        )
 
     assert prisoner_count == 1
     assert delivery_count == 1
     assert prisoner.attempt_count == 1
     assert len(protocol_activities) == 1
     assert protocol_activities[0].attempt_count == 1
+    assert len(active_jobs) == 1
