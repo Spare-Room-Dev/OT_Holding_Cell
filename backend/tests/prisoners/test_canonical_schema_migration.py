@@ -95,8 +95,8 @@ def test_migration_merges_protocol_split_rows_deterministically(tmp_path: Path) 
         ).one()
         assert merged.source_ip == "203.0.113.10"
         assert merged.attempt_count == 11
-        assert merged.first_seen_at == "2026-01-01 09:30:00.000000"
-        assert merged.last_seen_at == "2026-01-01 13:00:00.000000"
+        assert merged.first_seen_at == "2026-01-01 09:30:00+00:00"
+        assert merged.last_seen_at == "2026-01-01 13:00:00+00:00"
         assert merged.credential_count == 4
         assert merged.command_count == 6
         assert merged.download_count == 1
@@ -104,17 +104,21 @@ def test_migration_merges_protocol_split_rows_deterministically(tmp_path: Path) 
         protocol_rows = connection.execute(
             text(
                 """
-                SELECT protocol, attempt_count, first_seen_at, last_seen_at
+                SELECT
+                    prisoner_protocol_activities.protocol,
+                    prisoner_protocol_activities.attempt_count,
+                    prisoner_protocol_activities.first_seen_at,
+                    prisoner_protocol_activities.last_seen_at
                 FROM prisoner_protocol_activities
                 JOIN prisoners ON prisoners.id = prisoner_protocol_activities.prisoner_id
                 WHERE prisoners.source_ip = '203.0.113.10'
-                ORDER BY protocol ASC
+                ORDER BY prisoner_protocol_activities.protocol ASC
                 """
             )
         ).all()
         assert protocol_rows == [
-            ("ssh", 6, "2026-01-01 10:00:00.000000", "2026-01-01 12:00:00.000000"),
-            ("telnet", 5, "2026-01-01 09:30:00.000000", "2026-01-01 13:00:00.000000"),
+            ("ssh", 6, "2026-01-01 10:00:00+00:00", "2026-01-01 12:00:00+00:00"),
+            ("telnet", 5, "2026-01-01 09:30:00+00:00", "2026-01-01 13:00:00+00:00"),
         ]
 
         delivery_links = connection.execute(
