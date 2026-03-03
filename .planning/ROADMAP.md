@@ -45,7 +45,12 @@ Plans:
   2. User can open a prisoner and inspect persisted credentials, commands, downloads, and protocol history.
   3. User can browse prisoner lists with pagination, deterministic sorting, and country filtering.
   4. Operator can verify automatic purging of prisoners older than 30 days and idempotency records older than 7 days.
-**Plans**: TBD
+**Plans**: 4 plans
+Plans:
+- [x] 02-01-PLAN.md — Canonical prisoner schema transition and protocol/history merge migration.
+- [x] 02-02-PLAN.md — Canonical ingest mutation with attempt aggregation and capped persisted detail histories.
+- [ ] 02-03-PLAN.md — Cursor-paginated prisoner list and sectioned prisoner detail query API.
+- [ ] 02-04-PLAN.md — Daily retention purge, lifetime rollup preservation, and cron execution wiring.
 
 ### Phase 3: Async Threat Enrichment
 **Goal**: Users receive useful threat context without making ingest latency or availability depend on external providers.
@@ -89,7 +94,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Trusted Ingest Boundary | 5/5 | Complete | 2026-03-03 |
-| 2. Canonical Prisoner Data | 0/TBD | Not started | - |
+| 2. Canonical Prisoner Data | 2/4 | In Progress | - |
 | 3. Async Threat Enrichment | 0/TBD | Not started | - |
 | 4. Realtime Event Stream | 0/TBD | Not started | - |
 | 5. Responsive Analyst Dashboard | 0/TBD | Not started | - |

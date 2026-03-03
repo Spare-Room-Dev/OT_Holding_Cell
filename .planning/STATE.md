@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-03-03T12:05:11Z"
+last_updated: "2026-03-03T12:47:56.426Z"
 progress:
-  total_phases: 5
+  total_phases: 2
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 9
+  completed_plans: 7
 ---
 
 # Project State
@@ -23,18 +23,18 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 ## Current Position
 
 Phase: 2 of 5 (Canonical Prisoner Data)
-Plan: 0 of TBD in current phase
-Status: Ready for planning
-Last activity: 2026-03-03 - Captured Phase 02 context decisions (Canonical Prisoner Data).
+Plan: 2 of 4 in current phase
+Status: In progress
+Last activity: 2026-03-03 - Completed 02-02 canonical ingest mutation and capped persisted detail history updates.
 
-Progress: [##--------] 20%
+Progress: [#######---] 78%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 8 min
-- Total execution time: 0.7 hours
+- Total plans completed: 6
+- Average duration: 7 min
+- Total execution time: 0.9 hours
 
 **By Phase:**
 
@@ -43,7 +43,7 @@ Progress: [##--------] 20%
 | 1 | 5 | 40 min | 8 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01, 01-02, 01-03, 01-04, 01-05
+- Last 5 plans: 01-03, 01-04, 01-05, 02-01, 02-02
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -51,6 +51,8 @@ Progress: [##--------] 20%
 | Phase 01-trusted-ingest-boundary P03 | 4min | 2 tasks | 9 files |
 | Phase 01-trusted-ingest-boundary P04 | 18min | 2 tasks | 10 files |
 | Phase 01-trusted-ingest-boundary P05 | 7min | 2 tasks | 5 files |
+| Phase 02-canonical-prisoner-data P01 | 6 min | 2 tasks | 8 files |
+| Phase 02-canonical-prisoner-data P02 | 5 min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -70,6 +72,11 @@ Recent decisions affecting current work:
 - [Phase 01-trusted-ingest-boundary]: Heartbeat liveness is persisted by source_ip+protocol and returned with stale evaluation metadata. — Operators need restart-safe liveness checks and explicit stale-window visibility.
 - [Phase 01-trusted-ingest-boundary]: Backend API CORS and websocket-origin checks read from one shared approved-origin settings field. — One allowlist prevents policy drift between API and realtime entry points.
 - [Phase 01-trusted-ingest-boundary]: Frontend CSP connect-src is explicitly pinned to approved API/WSS targets with no wildcard fallback. — Restrictive connect-src reduces browser exfiltration channels and aligns with backend origin policy.
+- [Phase 02-canonical-prisoner-data]: Use source_ip as canonical prisoner uniqueness key and move protocol behavior into prisoner_protocol_activities.
+- [Phase 02-canonical-prisoner-data]: Compute deterministic migration attempt_count from summed legacy detail counters with a floor of one per legacy row.
+- [Phase 02-canonical-prisoner-data]: Rebuild ingest_deliveries during migration to remap prisoner_id foreign keys onto canonical prisoner rows.
+- [Phase 02-canonical-prisoner-data]: Accepted ingest deliveries now mutate a single canonical prisoner selected by source_ip while protocol attempt counters remain separate.
+- [Phase 02-canonical-prisoner-data]: Credential, command, and download histories are append-only with deterministic oldest-first pruning via observed_at/id ordering.
 
 ### Pending Todos
 
@@ -82,5 +89,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-03
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-canonical-prisoner-data/02-CONTEXT.md
+Stopped at: Completed 02-canonical-prisoner-data-02-PLAN.md
+Resume file: .planning/phases/02-canonical-prisoner-data/02-03-PLAN.md
