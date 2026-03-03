@@ -20,7 +20,7 @@ def _is_valid_key(token: str, settings: Settings) -> bool:
     return token in valid_keys
 
 
-def _resolve_client_ip(request: Request) -> str:
+def resolve_client_ip(request: Request) -> str:
     forwarded_for = request.headers.get("x-forwarded-for")
     if forwarded_for:
         return forwarded_for.split(",")[0].strip()
@@ -60,7 +60,7 @@ async def require_trusted_forwarder(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    if not _is_allowlisted_ip(_resolve_client_ip(request), settings):
+    if not _is_allowlisted_ip(resolve_client_ip(request), settings):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Source IP not allowed",
