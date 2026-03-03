@@ -10,8 +10,20 @@ import json
 from sqlalchemy import and_, or_, select
 from sqlalchemy.orm import Session
 
+from app.models.prisoner_command import PrisonerCommand
+from app.models.prisoner_credential import PrisonerCredential
+from app.models.prisoner_download import PrisonerDownload
+from app.models.prisoner_protocol_activity import PrisonerProtocolActivity
 from app.models.prisoner import Prisoner
-from app.schemas.prisoners import PrisonerListResponse, PrisonerSummary
+from app.schemas.prisoners import (
+    PrisonerCommandHistoryEntry,
+    PrisonerCredentialHistoryEntry,
+    PrisonerDetailResponse,
+    PrisonerDownloadHistoryEntry,
+    PrisonerListResponse,
+    PrisonerProtocolHistoryEntry,
+    PrisonerSummary,
+)
 
 
 class InvalidCursorTokenError(ValueError):
@@ -65,6 +77,20 @@ def decode_prisoner_cursor(cursor_token: str) -> CursorPosition:
     )
 
 
+def _build_prisoner_summary(prisoner: Prisoner) -> PrisonerSummary:
+    return PrisonerSummary(
+        id=prisoner.id,
+        source_ip=prisoner.source_ip,
+        country_code=prisoner.country_code,
+        attempt_count=prisoner.attempt_count,
+        first_seen_at=prisoner.first_seen_at,
+        last_seen_at=prisoner.last_seen_at,
+        credential_count=prisoner.credential_count,
+        command_count=prisoner.command_count,
+        download_count=prisoner.download_count,
+    )
+
+
 def list_prisoners(
     *,
     session: Session,
@@ -113,19 +139,77 @@ def list_prisoners(
         )
 
     return PrisonerListResponse(
-        items=[
-            PrisonerSummary(
-                id=row.id,
-                source_ip=row.source_ip,
-                country_code=row.country_code,
+        items=[_build_prisoner_summary(row) for row in page_rows],
+        next_cursor=next_cursor,
+    )
+
+
+def get_prisoner_detail(*, session: Session, prisoner_id: int) -> PrisonerDetailResponse | None:
+    """Return sectioned persisted history for a single prisoner."""
+
+    prisoner = session.execute(
+        select(Prisoner).where(Prisoner.id == prisoner_id)
+    ).scalar_one_or_none()
+    if prisoner is None:
+        return None
+
+    protocol_rows = session.execute(
+        select(PrisonerProtocolActivity)
+        .where(PrisonerProtocolActivity.prisoner_id == prisoner.id)
+        .order_by(
+            PrisonerProtocolActivity.last_seen_at.desc(),
+            PrisonerProtocolActivity.id.desc(),
+        )
+    ).scalars().all()
+    credential_rows = session.execute(
+        select(PrisonerCredential)
+        .where(PrisonerCredential.prisoner_id == prisoner.id)
+        .order_by(PrisonerCredential.observed_at.desc(), PrisonerCredential.id.desc())
+    ).scalars().all()
+    command_rows = session.execute(
+        select(PrisonerCommand)
+        .where(PrisonerCommand.prisoner_id == prisoner.id)
+        .order_by(PrisonerCommand.observed_at.desc(), PrisonerCommand.id.desc())
+    ).scalars().all()
+    download_rows = session.execute(
+        select(PrisonerDownload)
+        .where(PrisonerDownload.prisoner_id == prisoner.id)
+        .order_by(PrisonerDownload.observed_at.desc(), PrisonerDownload.id.desc())
+    ).scalars().all()
+
+    return PrisonerDetailResponse(
+        prisoner=_build_prisoner_summary(prisoner),
+        protocol_history=[
+            PrisonerProtocolHistoryEntry(
+                protocol=row.protocol,
                 attempt_count=row.attempt_count,
                 first_seen_at=row.first_seen_at,
                 last_seen_at=row.last_seen_at,
-                credential_count=row.credential_count,
-                command_count=row.command_count,
-                download_count=row.download_count,
             )
-            for row in page_rows
+            for row in protocol_rows
         ],
-        next_cursor=next_cursor,
+        credentials=[
+            PrisonerCredentialHistoryEntry(
+                protocol=row.protocol,
+                credential=row.credential,
+                observed_at=row.observed_at,
+            )
+            for row in credential_rows
+        ],
+        commands=[
+            PrisonerCommandHistoryEntry(
+                protocol=row.protocol,
+                command=row.command,
+                observed_at=row.observed_at,
+            )
+            for row in command_rows
+        ],
+        downloads=[
+            PrisonerDownloadHistoryEntry(
+                protocol=row.protocol,
+                download_url=row.download_url,
+                observed_at=row.observed_at,
+            )
+            for row in download_rows
+        ],
     )
