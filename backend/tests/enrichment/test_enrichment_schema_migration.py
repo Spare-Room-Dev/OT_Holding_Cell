@@ -8,7 +8,6 @@ from pathlib import Path
 from alembic import command
 from alembic.config import Config
 from sqlalchemy import UniqueConstraint, create_engine, inspect, text
-from sqlalchemy import UniqueConstraint
 
 from app.models.enrichment_job import EnrichmentJob
 from app.models.prisoner import Prisoner
