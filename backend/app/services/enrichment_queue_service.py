@@ -11,6 +11,11 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.models.enrichment_job import EnrichmentJob
 from app.models.prisoner import Prisoner
+from app.services.enrichment_service import (
+    ExistingEnrichmentState,
+    enrich_ip_intel,
+    merge_enrichment_result,
+)
 
 ACTIVE_ENRICHMENT_JOB_STATUSES = ("queued", "in_progress")
 QUEUED_STATUS = "queued"
@@ -237,3 +242,121 @@ def defer_enrichment_job(
     session.commit()
     session.refresh(job)
     return job
+
+
+def _build_existing_enrichment_state(prisoner: Prisoner) -> ExistingEnrichmentState:
+    return ExistingEnrichmentState(
+        status=prisoner.enrichment_status,
+        country_code=prisoner.enrichment_country_code,
+        asn=prisoner.enrichment_asn,
+        reputation_severity=prisoner.enrichment_reputation_severity,
+        reputation_confidence=prisoner.enrichment_reputation_confidence,
+        reason_metadata=prisoner.enrichment_reason_metadata or {},
+        provider=prisoner.enrichment_provider,
+        last_enriched_at=prisoner.last_enriched_at,
+    )
+
+
+def _apply_prisoner_enrichment_update(*, prisoner: Prisoner, status_payload) -> None:
+    prisoner.enrichment_status = status_payload.status
+    prisoner.enrichment_country_code = status_payload.country_code
+    prisoner.enrichment_asn = status_payload.asn
+    prisoner.enrichment_reputation_severity = status_payload.reputation_severity
+    prisoner.enrichment_reputation_confidence = status_payload.reputation_confidence
+    prisoner.enrichment_reason_metadata = dict(status_payload.reason_metadata)
+    prisoner.enrichment_provider = status_payload.provider
+    if status_payload.last_enriched_at is not None:
+        prisoner.last_enriched_at = status_payload.last_enriched_at
+
+
+def process_next_batch(
+    *,
+    session: Session,
+    batch_size: int,
+    now: datetime | None = None,
+) -> dict[str, int]:
+    """Claim FIFO jobs and execute provider enrichment with bounded retries."""
+
+    event_time = _coerce_utc(now or datetime.now(timezone.utc))
+    claimed_jobs = claim_enrichment_jobs(
+        session=session,
+        batch_size=batch_size,
+        now=event_time,
+    )
+    if not claimed_jobs:
+        return {
+            "claimed_count": 0,
+            "processed_count": 0,
+            "completed_count": 0,
+            "deferred_count": 0,
+            "failed_count": 0,
+        }
+
+    processed_count = 0
+    completed_count = 0
+    deferred_count = 0
+    failed_count = 0
+
+    for job in claimed_jobs:
+        prisoner = session.execute(
+            select(Prisoner).where(Prisoner.id == job.prisoner_id).with_for_update()
+        ).scalar_one_or_none()
+        if prisoner is None:
+            mark_enrichment_job_failed(
+                session=session,
+                job_id=job.id,
+                reason_metadata={"prisoner": "missing"},
+                completed_at=event_time,
+                attempt_count=job.attempt_count + 1,
+            )
+            processed_count += 1
+            failed_count += 1
+            continue
+
+        provider_attempt = enrich_ip_intel(
+            source_ip=prisoner.source_ip,
+            now=event_time,
+        )
+        merged_result = merge_enrichment_result(
+            previous=_build_existing_enrichment_state(prisoner),
+            attempt=provider_attempt,
+        )
+        _apply_prisoner_enrichment_update(
+            prisoner=prisoner,
+            status_payload=merged_result,
+        )
+
+        if merged_result.status == "complete":
+            mark_enrichment_job_succeeded(
+                session=session,
+                job_id=job.id,
+                completed_at=event_time,
+            )
+            completed_count += 1
+            processed_count += 1
+            continue
+
+        deferred_or_failed = defer_enrichment_job(
+            session=session,
+            job_id=job.id,
+            reason_metadata=merged_result.reason_metadata,
+            now=event_time,
+            quota_limited=provider_attempt.quota_limited,
+        )
+        if deferred_or_failed is None:
+            processed_count += 1
+            continue
+
+        if deferred_or_failed.status == FAILED_STATUS:
+            failed_count += 1
+        else:
+            deferred_count += 1
+        processed_count += 1
+
+    return {
+        "claimed_count": len(claimed_jobs),
+        "processed_count": processed_count,
+        "completed_count": completed_count,
+        "deferred_count": deferred_count,
+        "failed_count": failed_count,
+    }
