@@ -48,6 +48,12 @@ def _seed_prisoner(*, source_ip: str, observed_at: datetime) -> Prisoner:
     )
 
 
+def _coerce_utc(timestamp: datetime) -> datetime:
+    if timestamp.tzinfo is None:
+        return timestamp.replace(tzinfo=timezone.utc)
+    return timestamp.astimezone(timezone.utc)
+
+
 def test_queue_claiming_respects_fifo_and_retry_deferral_rules(tmp_path: Path) -> None:
     database_url = f"sqlite:///{tmp_path / 'queue-claiming.sqlite3'}"
     command.upgrade(_alembic_config(database_url), "head")
@@ -84,7 +90,7 @@ def test_queue_claiming_respects_fifo_and_retry_deferral_rules(tmp_path: Path) -
         assert deferred is not None
         assert deferred.status == "queued"
         assert deferred.attempt_count == 1
-        assert deferred.available_at >= now + timedelta(seconds=120)
+        assert _coerce_utc(deferred.available_at) >= now + timedelta(seconds=120)
         assert deferred.failure_reason_metadata["provider_error"] == "quota_exceeded"
 
         to_fail = session.get(EnrichmentJob, claimed[1].id)
