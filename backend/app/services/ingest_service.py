@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timezone
 from typing import Union
 
@@ -17,6 +18,9 @@ from app.models.prisoner_credential import PrisonerCredential
 from app.models.prisoner_download import PrisonerDownload
 from app.models.prisoner_protocol_activity import PrisonerProtocolActivity
 from app.schemas.ingest import IngestPayload
+from app.services.enrichment_queue_service import enqueue_prisoner_enrichment, pending_enrichment_reason_metadata
+
+logger = logging.getLogger(__name__)
 
 
 def _coerce_utc(timestamp: datetime) -> datetime:
@@ -163,6 +167,14 @@ def process_ingest_payload(*, payload: IngestPayload, source_ip: str, session: S
             credential_count=len(payload.credentials),
             command_count=len(payload.commands),
             download_count=len(payload.downloads),
+            enrichment_status="pending",
+            enrichment_country_code=None,
+            enrichment_asn=None,
+            enrichment_reputation_severity=None,
+            enrichment_reputation_confidence=None,
+            enrichment_reason_metadata=pending_enrichment_reason_metadata(),
+            enrichment_provider=None,
+            last_enriched_at=None,
         )
         session.add(prisoner)
         session.flush()
@@ -211,6 +223,20 @@ def process_ingest_payload(*, payload: IngestPayload, source_ip: str, session: S
 
     delivery.prisoner_id = prisoner.id
     session.commit()
+
+    if outcome == "created":
+        try:
+            enqueue_prisoner_enrichment(
+                session=session,
+                prisoner_id=prisoner.id,
+            )
+        except Exception:
+            session.rollback()
+            logger.warning(
+                "Failed to enqueue deferred enrichment job for prisoner_id=%s",
+                prisoner.id,
+                exc_info=True,
+            )
 
     return {
         "status": "processed",
