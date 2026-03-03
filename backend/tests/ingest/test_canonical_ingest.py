@@ -12,7 +12,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.models.prisoner import Prisoner
+from app.models.prisoner_command import PrisonerCommand
 from app.models.prisoner_protocol_activity import PrisonerProtocolActivity
+from app.models.prisoner_credential import PrisonerCredential
+from app.models.prisoner_download import PrisonerDownload
 from app.schemas.ingest import IngestPayload
 from app.services.ingest_service import process_ingest_payload
 
@@ -99,3 +102,87 @@ def test_canonical_prisoner_aggregates_attempts_across_protocols(tmp_path: Path)
 
     assert [row.protocol for row in protocol_rows] == ["ssh", "telnet"]
     assert [row.attempt_count for row in protocol_rows] == [1, 1]
+
+
+def test_history_caps_prune_oldest_entries_first(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("CREDENTIAL_HISTORY_CAP", "2")
+    monkeypatch.setenv("COMMAND_HISTORY_CAP", "3")
+    monkeypatch.setenv("DOWNLOAD_HISTORY_CAP", "2")
+
+    from app.core.config import get_settings
+
+    get_settings.cache_clear()
+
+    database_url = f"sqlite:///{tmp_path / 'history-caps.sqlite3'}"
+    command.upgrade(_alembic_config(database_url), "head")
+
+    engine = create_engine(database_url, future=True)
+    SessionFactory = sessionmaker(bind=engine, expire_on_commit=False, class_=Session)
+    source_ip = "203.0.113.55"
+    now = datetime.now(timezone.utc)
+
+    payloads = [
+        _payload(
+            protocol="ssh",
+            timestamp=now,
+            credentials=["user1:secret-one"],
+            commands=["cmd-1", "cmd-2"],
+            downloads=["http://example.invalid/file-1"],
+        ),
+        _payload(
+            protocol="telnet",
+            timestamp=now,
+            credentials=["user2:secret-two"],
+            commands=["cmd-3"],
+            downloads=["http://example.invalid/file-2"],
+        ),
+        _payload(
+            protocol="ssh",
+            timestamp=now,
+            credentials=["user3:secret-three"],
+            commands=["cmd-4"],
+            downloads=["http://example.invalid/file-3"],
+        ),
+    ]
+
+    for payload in payloads:
+        with SessionFactory() as session:
+            process_ingest_payload(payload=payload, source_ip=source_ip, session=session)
+
+    with Session(engine) as session:
+        prisoner = session.query(Prisoner).filter(Prisoner.source_ip == source_ip).one()
+
+        credentials = (
+            session.query(PrisonerCredential)
+            .filter(PrisonerCredential.prisoner_id == prisoner.id)
+            .order_by(PrisonerCredential.observed_at.asc(), PrisonerCredential.id.asc())
+            .all()
+        )
+        commands = (
+            session.query(PrisonerCommand)
+            .filter(PrisonerCommand.prisoner_id == prisoner.id)
+            .order_by(PrisonerCommand.observed_at.asc(), PrisonerCommand.id.asc())
+            .all()
+        )
+        downloads = (
+            session.query(PrisonerDownload)
+            .filter(PrisonerDownload.prisoner_id == prisoner.id)
+            .order_by(PrisonerDownload.observed_at.asc(), PrisonerDownload.id.asc())
+            .all()
+        )
+
+    assert len(credentials) == 2
+    assert [entry.protocol for entry in credentials] == ["telnet", "ssh"]
+    assert all("secret-" not in entry.credential for entry in credentials)
+    assert [entry.credential.split(":", maxsplit=1)[0] for entry in credentials] == ["user2", "user3"]
+
+    assert len(commands) == 3
+    assert [entry.command for entry in commands] == ["cmd-2", "cmd-3", "cmd-4"]
+
+    assert len(downloads) == 2
+    assert [entry.download_url for entry in downloads] == [
+        "http://example.invalid/file-2",
+        "http://example.invalid/file-3",
+    ]
+
+    get_settings.cache_clear()
