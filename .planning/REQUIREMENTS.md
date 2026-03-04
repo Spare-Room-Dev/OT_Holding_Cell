@@ -39,14 +39,14 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **UI-01**: User can view a responsive dashboard with header, cell, detail pane, and stats bar across desktop and tablet/mobile fallback layouts.
 - [x] **UI-02**: User can click a prisoner to inspect attack summary, threat-intel context, and activity timestamps in the detail pane.
-- [ ] **UI-03**: User can identify threat severity from prisoner visual encoding (color + attempt prominence) that updates when enrichment arrives.
+- [x] **UI-03**: User can identify threat severity from prisoner visual encoding (color + attempt prominence) that updates when enrichment arrives.
 - [x] **UI-04**: User can apply at least one operational filter (time window and/or country/protocol) to narrow visible prisoners.
 - [x] **UI-05**: User can understand connection health through clear live/reconnecting/offline status indicators.
 
 ### Security
 
-- [ ] **SEC-01**: User can view attacker strings safely because attacker-controlled fields are rendered as text and sanitized before display.
-- [ ] **SEC-02**: User can view masked source IPs by default in public-facing views while backend storage retains full IPs.
+- [x] **SEC-01**: User can view attacker strings safely because attacker-controlled fields are rendered as text and sanitized before display.
+- [x] **SEC-02**: User can view masked source IPs by default in public-facing views while backend storage retains full IPs.
 - [x] **SEC-03**: Operator can enforce frontend CSP/CORS restrictions so only approved frontend origins can connect to backend APIs/WebSocket.
 - [x] **SEC-04**: User can interact with a read-only WebSocket channel where client-emitted custom events are not processed by the server.
 
@@ -105,11 +105,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RT-03 | Phase 4 | Complete |
 | UI-01 | Phase 5 | Complete |
 | UI-02 | Phase 5 | Complete |
-| UI-03 | Phase 5 | Pending |
+| UI-03 | Phase 5 | Complete |
 | UI-04 | Phase 5 | Complete |
 | UI-05 | Phase 5 | Complete |
-| SEC-01 | Phase 5 | Pending |
-| SEC-02 | Phase 5 | Pending |
+| SEC-01 | Phase 5 | Complete |
+| SEC-02 | Phase 5 | Complete |
 | SEC-03 | Phase 1 | Complete |
 | SEC-04 | Phase 4 | Complete |
 
