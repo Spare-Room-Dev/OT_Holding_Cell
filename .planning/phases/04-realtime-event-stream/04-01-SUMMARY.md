@@ -103,7 +103,8 @@ Each task was committed atomically:
 **Impact on plan:** Auto-fixes were required for environment compatibility and strict schema correctness; no scope creep introduced.
 
 ## Issues Encountered
-None.
+- `state advance-plan`, `state update-progress`, and `state record-session` could not parse legacy `STATE.md` position/session blocks.
+- Applied manual fallback by updating `Current Position`, progress text, and session continuity fields directly in `STATE.md` after recording metrics/decisions via supported commands.
 
 ## User Setup Required
 None - no external service configuration required.
