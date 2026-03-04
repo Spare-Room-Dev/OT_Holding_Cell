@@ -14,7 +14,7 @@ This roadmap delivers the v1 live intelligence loop in dependency order: trust t
 - [x] **Phase 2: Canonical Prisoner Data** - Durable attacker model, query surfaces, and retention hygiene.
 - [x] **Phase 3: Async Threat Enrichment** - Non-blocking intelligence enrichment with graceful failure handling.
 - [x] **Phase 4: Realtime Event Stream** - Reliable websocket delivery for prisoner lifecycle and stats updates.
-- [ ] **Phase 5: Responsive Analyst Dashboard** - Interactive, safe, and responsive UI for live threat inspection.
+- [x] **Phase 5: Responsive Analyst Dashboard** - Interactive, safe, and responsive UI for live threat inspection.
 
 ## Phase Details
 
@@ -103,7 +103,7 @@ Plans:
 - [x] 05-05-PLAN.md — Security/severity domain utilities with dedicated tests.
 - [x] 05-06-PLAN.md — Responsive dashboard presentation components and component tests.
 - [x] 05-07-PLAN.md — Final shell wiring with integration verification.
-- [ ] 05-08-PLAN.md — Dedicated E2E + ops validation plan.
+- [x] 05-08-PLAN.md — Dedicated E2E + ops validation plan.
 
 ## Progress
 
@@ -116,4 +116,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 2. Canonical Prisoner Data | 4/4 | Complete | 2026-03-03 |
 | 3. Async Threat Enrichment | 4/4 | Complete | 2026-03-03 |
 | 4. Realtime Event Stream | 4/4 | Complete | 2026-03-04 |
-| 5. Responsive Analyst Dashboard | 7/8 | In Progress|  |
+| 5. Responsive Analyst Dashboard | 8/8 | Complete | 2026-03-04 |
