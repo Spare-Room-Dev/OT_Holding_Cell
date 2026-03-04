@@ -4,14 +4,18 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import Path
+from uuid import uuid4
 
 from alembic import command
 from alembic.config import Config
+import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.models.prisoner import Prisoner
 from app.realtime.publishers import publish_prisoner_lifecycle_event
+from app.schemas.ingest import IngestPayload
+from app.services.ingest_service import process_ingest_payload
 
 
 def _alembic_config(database_url: str) -> Config:
@@ -28,6 +32,26 @@ class _CaptureBus:
 
     async def publish(self, event: str, payload: dict[str, object]) -> None:
         self.calls.append((event, payload))
+
+
+def _payload(
+    *,
+    delivery_id: str | None = None,
+    observed_at: datetime,
+    credentials: list[str] | None = None,
+    commands: list[str] | None = None,
+    downloads: list[str] | None = None,
+) -> IngestPayload:
+    return IngestPayload.model_validate(
+        {
+            "delivery_id": delivery_id or str(uuid4()),
+            "protocol": "ssh",
+            "timestamp": observed_at.isoformat(),
+            "credentials": credentials or [],
+            "commands": commands or [],
+            "downloads": downloads or [],
+        }
+    )
 
 
 def test_realtime_publish_helper_builds_full_summary_payload_with_stale_hint(tmp_path: Path) -> None:
@@ -117,3 +141,112 @@ def test_realtime_publish_helper_ignores_missing_prisoner_ids(tmp_path: Path) ->
 
     assert emitted is False
     assert bus.calls == []
+
+
+def test_process_ingest_payload_emits_created_and_updated_realtime_events(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    database_url = f"sqlite:///{tmp_path / 'ingest-realtime-created-updated.sqlite3'}"
+    command.upgrade(_alembic_config(database_url), "head")
+
+    engine = create_engine(database_url, future=True)
+    session_factory = sessionmaker(bind=engine, expire_on_commit=False, class_=Session)
+    now = datetime(2026, 3, 4, 12, 30, tzinfo=timezone.utc)
+    source_ip = "198.51.100.45"
+    published: list[tuple[str, int]] = []
+
+    monkeypatch.setattr("app.services.ingest_service.get_realtime_event_bus", lambda: object())
+
+    def _capture_publish(*, session: Session, event_bus, event_name: str, prisoner_id: int) -> bool:
+        published.append((event_name, prisoner_id))
+        return True
+
+    monkeypatch.setattr(
+        "app.services.ingest_service.publish_prisoner_lifecycle_event",
+        _capture_publish,
+    )
+
+    with session_factory() as session:
+        created = process_ingest_payload(
+            payload=_payload(
+                observed_at=now,
+                credentials=["root:toor"],
+                commands=["uname -a"],
+                downloads=["http://example.invalid/dropper.sh"],
+            ),
+            source_ip=source_ip,
+            session=session,
+        )
+
+    with session_factory() as session:
+        updated = process_ingest_payload(
+            payload=_payload(
+                observed_at=now,
+                credentials=["admin:admin"],
+                commands=["cat /etc/passwd"],
+                downloads=[],
+            ),
+            source_ip=source_ip,
+            session=session,
+        )
+
+    assert created["outcome"] == "created"
+    assert updated["outcome"] == "updated"
+    assert published == [
+        ("new_prisoner", created["prisoner_id"]),
+        ("prisoner_updated", created["prisoner_id"]),
+    ]
+
+
+def test_duplicate_ignored_ingest_does_not_emit_realtime_event(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    database_url = f"sqlite:///{tmp_path / 'ingest-realtime-duplicate.sqlite3'}"
+    command.upgrade(_alembic_config(database_url), "head")
+
+    engine = create_engine(database_url, future=True)
+    session_factory = sessionmaker(bind=engine, expire_on_commit=False, class_=Session)
+    now = datetime(2026, 3, 4, 13, 0, tzinfo=timezone.utc)
+    delivery_id = str(uuid4())
+    published: list[tuple[str, int]] = []
+
+    monkeypatch.setattr("app.services.ingest_service.get_realtime_event_bus", lambda: object())
+
+    def _capture_publish(*, session: Session, event_bus, event_name: str, prisoner_id: int) -> bool:
+        published.append((event_name, prisoner_id))
+        return True
+
+    monkeypatch.setattr(
+        "app.services.ingest_service.publish_prisoner_lifecycle_event",
+        _capture_publish,
+    )
+
+    with session_factory() as session:
+        first = process_ingest_payload(
+            payload=_payload(
+                delivery_id=delivery_id,
+                observed_at=now,
+                credentials=["user:pass"],
+                commands=["id"],
+                downloads=[],
+            ),
+            source_ip="198.51.100.55",
+            session=session,
+        )
+        duplicate = process_ingest_payload(
+            payload=_payload(
+                delivery_id=delivery_id,
+                observed_at=now,
+                credentials=["user:pass"],
+                commands=["id"],
+                downloads=[],
+            ),
+            source_ip="198.51.100.55",
+            session=session,
+        )
+
+    assert first["status"] == "processed"
+    assert duplicate["status"] == "duplicate_ignored"
+    assert published == [("new_prisoner", first["prisoner_id"])]
