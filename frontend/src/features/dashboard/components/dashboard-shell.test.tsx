@@ -61,6 +61,28 @@ const DETAIL_RESPONSE = {
   downloads: [],
 };
 
+class FakeWebSocket {
+  private listeners: Record<string, Set<(event: unknown) => void>> = {
+    open: new Set(),
+    message: new Set(),
+    close: new Set(),
+  };
+
+  addEventListener(type: string, listener: (event: unknown) => void) {
+    this.listeners[type]?.add(listener);
+  }
+
+  removeEventListener(type: string, listener: (event: unknown) => void) {
+    this.listeners[type]?.delete(listener);
+  }
+
+  close() {}
+
+  emitClose() {
+    this.listeners.close.forEach((listener) => listener({}));
+  }
+}
+
 function createQueryClient() {
   return new QueryClient({
     defaultOptions: {
@@ -125,15 +147,20 @@ describe("DashboardShell", () => {
     delete (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT;
   });
 
-  function renderShell(forceMobileLayout = false) {
+  function renderShell(options?: {
+    forceMobileLayout?: boolean;
+    realtimeEnabled?: boolean;
+    websocketFactory?: (url: string) => FakeWebSocket;
+  }) {
     act(() => {
       root.render(
         <QueryClientProvider client={queryClient}>
           <DashboardShell
             apiBaseUrl="https://api.holdingcell.test"
             websocketUrl="wss://api.holdingcell.test/ws/events"
-            realtimeEnabled={false}
-            forceMobileLayout={forceMobileLayout}
+            realtimeEnabled={options?.realtimeEnabled ?? false}
+            websocketFactory={options?.websocketFactory}
+            forceMobileLayout={options?.forceMobileLayout ?? false}
           />
         </QueryClientProvider>,
       );
@@ -151,7 +178,7 @@ describe("DashboardShell", () => {
   });
 
   it("uses mobile detail drawer behavior when forced into mobile layout", async () => {
-    renderShell(true);
+    renderShell({ forceMobileLayout: true });
     await flush();
     const row = container.querySelector('[data-prisoner-id="11"]') as HTMLButtonElement;
     expect(row).not.toBeNull();
@@ -162,5 +189,29 @@ describe("DashboardShell", () => {
     await flush();
 
     expect(container.querySelector(".mobile-detail-drawer--open")).not.toBeNull();
+  });
+
+  it("shows stale reconnecting indicators and only enables retry once disconnected", async () => {
+    const sockets: FakeWebSocket[] = [];
+    const websocketFactory = vi.fn((url: string) => {
+      const socket = new FakeWebSocket();
+      sockets.push(socket);
+      return socket;
+    });
+
+    renderShell({ realtimeEnabled: true, websocketFactory });
+    await flush();
+
+    const retryButton = container.querySelector(".connection-pill__retry") as HTMLButtonElement;
+    expect(retryButton.disabled).toBe(true);
+
+    act(() => {
+      sockets[0].emitClose();
+    });
+    await flush();
+
+    expect(container.textContent).toContain("Connection reconnecting");
+    expect(container.textContent).toContain("Live feed is stale");
+    expect(retryButton.disabled).toBe(false);
   });
 });
