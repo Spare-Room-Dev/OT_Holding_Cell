@@ -101,6 +101,8 @@ describe("DetailPane", () => {
     expect(text).toContain("Attack Summary");
     expect(text).toContain("Intel Context");
     expect(text).toContain("Activity Timeline");
+    expect(text).toContain("Source IP: 203.0.x.x");
+    expect(text).not.toContain("203.0.113.7");
     expect(text).toContain("First seen: 2026-03-04T00:00:00Z");
     expect(text).toContain("Last seen: 2026-03-04T00:45:00Z");
     expect(text).toContain("root:<script>alert('x')</script>");

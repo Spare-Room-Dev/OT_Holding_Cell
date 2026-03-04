@@ -51,6 +51,9 @@ function buildDetailResponse(prisoner: ListItem) {
       enrichment: {
         status: prisoner.enrichment.status,
         last_updated_at: prisoner.enrichment.last_updated_at,
+        country_code: prisoner.enrichment.country_code,
+        asn: prisoner.enrichment.asn,
+        reputation_severity: prisoner.enrichment.reputation_severity,
         provider: null,
         geo: {
           country_code: prisoner.enrichment.country_code,
@@ -179,7 +182,9 @@ test.describe("@dashboard responsive shell", () => {
 
     await page.locator('[data-prisoner-id="11"]').click();
     await expect(page.locator('[data-prisoner-id="11"]')).toHaveAttribute("aria-pressed", "true");
-    await expect(page.getByText("Loading selected prisoner detail...")).toBeVisible();
+    const detailPane = page.locator(".dashboard-layout__content .detail-pane");
+    await expect(detailPane.getByText("Source IP: 198.51.x.x")).toBeVisible();
+    await expect(detailPane.getByText("198.51.100.11")).toHaveCount(0);
   });
 
   test("opens a mobile detail drawer after row selection and supports close", async ({ page }) => {

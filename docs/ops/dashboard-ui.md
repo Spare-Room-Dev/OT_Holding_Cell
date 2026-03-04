@@ -50,9 +50,10 @@ Expected result: all `@dashboard` tests pass.
 3. Confirm severity text/signal updates and the row visually reflects the change.
 
 ### 5) Safe Rendering and Masked-IP Defaults
-1. Confirm list-level source IP display is masked by default (for example `198.51.x.x`).
+1. Confirm both list-level and detail-pane source IP values are masked by default (for example `198.51.x.x`).
 2. Verify attacker-controlled text values render as plain text (no executed markup/scripts).
-3. Confirm no unsafe HTML rendering appears in prisoner list or detail sections.
+3. Confirm the selected-prisoner detail pane never shows a full raw source IP value.
+4. Confirm no unsafe HTML rendering appears in prisoner list or detail sections.
 
 ## Failure Signals
 - Layout overlap, clipped content, or unusable mobile drawer.
