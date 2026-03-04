@@ -2,68 +2,71 @@
 
 ## What This Is
 
-The Holding Cell is a gamified threat-intelligence dashboard that visualizes real Cowrie honeypot attacks as moving "prisoners" in a retro jail-cell interface. It ingests live SSH/Telnet attack activity from a hardened forwarder, enriches it with threat intel, and streams updates to a React frontend in near real time. The primary audience is security practitioners and portfolio reviewers who want a clear, engaging view of hostile traffic patterns.
+The Holding Cell is a real-time threat-intelligence dashboard that turns Cowrie honeypot activity into an interactive analyst view with secure ingest, durable canonical attacker records, asynchronous enrichment, and live websocket updates.
 
 ## Core Value
 
 Turn raw honeypot attack traffic into an immediate, understandable, real-time visual intelligence feed.
 
+## Current State
+
+- v1.0 MVP shipped on 2026-03-04.
+- Delivered end-to-end ingest -> canonical persistence -> async enrichment -> realtime stream -> responsive dashboard loop.
+- Milestone execution completed across 5 phases, 26 plans, and 52 tasks.
+- Milestone audit verdict: `tech_debt` (no blocking gaps; one requirement partially externally verified).
+
+## Next Milestone Goals
+
+- Close `DATA-03` production proof with verified retention cron evidence.
+- Add browser-level live backend wiring E2E coverage (reduce mocked-only risk).
+- Resolve frontend endpoint/CSP topology coupling for split-domain deployments.
+- Define and prioritize v1.1 requirements from deferred intelligence/integration/admin scope.
+
 ## Requirements
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Trusted ingest boundary with API-key auth, source-IP allowlisting, validation hardening, idempotency, and rate limiting — v1.0
+- ✓ Canonical prisoner persistence with deterministic pagination/detail APIs and retention hygiene — v1.0
+- ✓ Async enrichment pipeline with durable queueing and graceful provider-failure handling — v1.0
+- ✓ Reconnect-safe realtime prisoner/stat event streaming with read-only websocket posture — v1.0
+- ✓ Responsive analyst dashboard with safe rendering, masked IP defaults, and operational filtering — v1.0
 
 ### Active
 
-- [ ] Securely ingest and validate Cowrie attack sessions from a VPS forwarder with API-key auth, IP allowlisting, idempotency, and rate limiting.
-- [ ] Persist unique attacker records in PostgreSQL with repeat-attempt aggregation, enrichment status, and retention cleanup.
-- [ ] Enrich new attacker IPs with geo/threat-intel signals and handle partial failures without blocking ingest.
-- [ ] Stream `new_prisoner`, `prisoner_updated`, `prisoner_enriched`, and `stats_update` events to the frontend over WebSocket.
-- [ ] Render a responsive "cell + detail pane + stats bar" UI where users can inspect attacker behavior and threat context.
+- [ ] Validate retention scheduler behavior in deployed environment and capture durable proof (`DATA-03` closure).
+- [ ] Add live backend-wiring Playwright coverage alongside existing mocked dashboard E2E tests.
+- [ ] Decouple runtime endpoint resolution and CSP topology assumptions.
+- [ ] Convert deferred v2 requirements into an approved v1.1 milestone plan.
 
 ### Out of Scope
 
-- Pixel-art walk-cycle avatars in v1 — deferred to keep v1 focused on reliability and core data flow.
-- OT/ICS control-room theming and advanced visual polish in v1 — deferred until core interaction loop is stable.
-- Multi-honeypot ingestion in v1 — single-sensor path first to reduce operational complexity.
-- Admin panel with unmasked IP access in v1 — public dashboard remains masked by default.
-- PDF export and historical timeline features in v1 — defer until primary live-view workflow proves value.
+- Pixel-art walk-cycle prisoner sprites (deferred to post-core validation).
+- OT/ICS control-room visual framing (deferred until post-v1.0 UX iteration).
+- Public unmasked IP display (conflicts with public-safe posture).
+- Full SOC case-management workflow (beyond current product boundary).
 
 ## Context
 
-System shape is explicitly three-tier:
-- Cowrie honeypot on Vultr + Python forwarder (outbound HTTPS only)
-- FastAPI backend on Render with async PostgreSQL persistence and WebSocket broadcasting
+Current stack remains:
+- Cowrie honeypot + forwarder on Vultr
+- FastAPI + PostgreSQL backend on Render
 - Vite + React + TypeScript frontend on Vercel
 
-Security posture is a first-class requirement:
-- Authenticated ingest (`Bearer` API key), forwarder IP allowlisting, strict payload validation, and endpoint rate limiting
-- Client is read-only over WebSocket (no custom inbound client events processed)
-- Sensitive values stay server-side; frontend renders masked IPs and sanitized attacker-controlled strings
-
-Operational behavior is event-driven and resilient:
-- New IPs are inserted quickly, enrichment runs asynchronously, partial API failures degrade gracefully
-- Forwarder includes retry + dead-letter + heartbeat semantics
-- Data retention and idempotency controls prevent duplication and unbounded growth
-
-## Constraints
-
-- **Hosting**: Use Vultr (honeypot), Render (backend + Postgres), and Vercel (frontend) — architecture is already selected in design.
-- **Security**: No secrets in frontend bundles, strict CORS/CSP, allowlisted forwarder ingress only — required by threat model.
-- **Performance**: Target smooth animation and interaction with up to 25 visible prisoners (desktop baseline) — avoids UI degradation.
-- **Scope**: v1 prioritizes live ingest → enrichment → visualization loop over advanced theming/features — ensures shippable core.
-- **Data Retention**: Purge prisoner records older than 30 days and idempotency records older than 7 days — limits storage growth.
+Milestone v1.0 delivery metrics:
+- Git range: `feat(01-01)` -> `docs(v1.0)`
+- Changes: 190 files, +21,240/-90 lines
+- Timeline: 2026-03-03 -> 2026-03-04
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Use Vite React SPA (not SSR) | Product is real-time, interaction-first, and non-SEO | — Pending |
-| Persist in PostgreSQL (not SQLite) on Render | Free-tier filesystem is ephemeral; DB durability is required | — Pending |
-| Model prisoner details with JSON columns in v1 | Read patterns are per-prisoner detail, reducing JOIN complexity initially | — Pending |
-| Keep frontend IP-masked by default | Public portfolio display should minimize exposure risk | — Pending |
-| Treat enrichment as async background work | Ingest latency and availability should not depend on third-party APIs | — Pending |
+| Use Vite React SPA (not SSR) | Product is realtime and interaction-first | ✓ Good |
+| Persist in PostgreSQL on Render | Durable storage required for canonical attacker records | ✓ Good |
+| Model prisoner detail history as JSON columns in v1 | Optimize for per-prisoner read patterns in MVP | ✓ Good |
+| Keep frontend IP-masked by default | Maintain public-safe visibility posture | ✓ Good |
+| Treat enrichment as async background work | Preserve ingest latency/availability during provider failures | ✓ Good |
 
 ---
-*Last updated: 2026-03-03 after initialization*
+*Last updated: 2026-03-04 after v1.0 milestone completion*
