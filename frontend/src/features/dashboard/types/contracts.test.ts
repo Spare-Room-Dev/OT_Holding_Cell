@@ -50,8 +50,8 @@ describe("dashboard contract foundation", () => {
 describe("dashboard API contract locks", () => {
   it("pins required prisoner list/detail fields", async () => {
     const contractModule = (await import("./contracts")) as {
-      DASHBOARD_PRISONER_SUMMARY_REQUIRED_FIELDS?: string[];
-      DASHBOARD_PRISONER_DETAIL_REQUIRED_FIELDS?: string[];
+      DASHBOARD_PRISONER_SUMMARY_REQUIRED_FIELDS?: readonly string[];
+      DASHBOARD_PRISONER_DETAIL_REQUIRED_FIELDS?: readonly string[];
     };
 
     expect(contractModule.DASHBOARD_PRISONER_SUMMARY_REQUIRED_FIELDS).toEqual([

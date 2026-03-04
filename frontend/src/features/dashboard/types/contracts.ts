@@ -26,6 +26,27 @@ export interface DashboardPrisonerListResponse {
   next_cursor: string | null;
 }
 
+export const DASHBOARD_PRISONER_SUMMARY_REQUIRED_FIELDS = [
+  "id",
+  "source_ip",
+  "country_code",
+  "attempt_count",
+  "first_seen_at",
+  "last_seen_at",
+  "credential_count",
+  "command_count",
+  "download_count",
+  "enrichment",
+] as const;
+
+export const DASHBOARD_PRISONER_DETAIL_REQUIRED_FIELDS = [
+  "prisoner",
+  "protocol_history",
+  "credentials",
+  "commands",
+  "downloads",
+] as const;
+
 export interface DashboardPrisonerProtocolHistoryEntry {
   protocol: string;
   attempt_count: number;
