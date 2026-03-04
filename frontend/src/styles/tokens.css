@@ -1,0 +1,27 @@
+:root {
+  --hc-color-bg: #07101a;
+  --hc-color-surface: #0f1b2a;
+  --hc-color-surface-alt: #152336;
+  --hc-color-border: #24374f;
+  --hc-color-text: #e7eef8;
+  --hc-color-text-muted: #9fb0c6;
+
+  --hc-severity-low: #2e9f74;
+  --hc-severity-caution: #f3c96a;
+  --hc-severity-high: #f08d49;
+  --hc-severity-critical: #db5f5f;
+
+  --hc-connection-live: #4ac57a;
+  --hc-connection-reconnecting: #f3c96a;
+  --hc-connection-offline: #db5f5f;
+
+  --hc-radius-sm: 0.375rem;
+  --hc-radius-md: 0.5rem;
+  --hc-radius-lg: 0.75rem;
+
+  --hc-space-1: 0.25rem;
+  --hc-space-2: 0.5rem;
+  --hc-space-3: 0.75rem;
+  --hc-space-4: 1rem;
+  --hc-space-6: 1.5rem;
+}
