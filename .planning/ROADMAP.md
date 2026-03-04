@@ -13,7 +13,7 @@ This roadmap delivers the v1 live intelligence loop in dependency order: trust t
 - [x] **Phase 1: Trusted Ingest Boundary** - Secure, validated, replay-safe intake for forwarder traffic.
 - [x] **Phase 2: Canonical Prisoner Data** - Durable attacker model, query surfaces, and retention hygiene.
 - [x] **Phase 3: Async Threat Enrichment** - Non-blocking intelligence enrichment with graceful failure handling.
-- [ ] **Phase 4: Realtime Event Stream** - Reliable websocket delivery for prisoner lifecycle and stats updates.
+- [x] **Phase 4: Realtime Event Stream** - Reliable websocket delivery for prisoner lifecycle and stats updates.
 - [ ] **Phase 5: Responsive Analyst Dashboard** - Interactive, safe, and responsive UI for live threat inspection.
 
 ## Phase Details
@@ -82,7 +82,7 @@ Plans:
 - [x] 04-01-PLAN.md — Realtime event envelope contracts and in-process fanout bus foundation.
 - [x] 04-02-PLAN.md — Reconnect-safe websocket sync lifecycle and read-only inbound security enforcement.
 - [x] 04-03-PLAN.md — Post-commit ingest/enrichment realtime publishing for prisoner lifecycle events.
-- [ ] 04-04-PLAN.md — Changed-only stats broadcaster, stream E2E verification, and ops runbook.
+- [x] 04-04-PLAN.md — Changed-only stats broadcaster, stream E2E verification, and ops runbook.
 
 ### Phase 5: Responsive Analyst Dashboard
 **Goal**: Users can operate a responsive, filterable, and safe dashboard to inspect hostile activity in real time.
@@ -106,5 +106,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 1. Trusted Ingest Boundary | 5/5 | Complete | 2026-03-03 |
 | 2. Canonical Prisoner Data | 4/4 | Complete | 2026-03-03 |
 | 3. Async Threat Enrichment | 4/4 | Complete | 2026-03-03 |
-| 4. Realtime Event Stream | 3/4 | In progress | - |
+| 4. Realtime Event Stream | 4/4 | Complete | 2026-03-04 |
 | 5. Responsive Analyst Dashboard | 0/TBD | Not started | - |
