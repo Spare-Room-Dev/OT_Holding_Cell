@@ -188,6 +188,17 @@ def list_prisoners(
     )
 
 
+def get_prisoner_summary(*, session: Session, prisoner_id: int) -> PrisonerSummary | None:
+    """Return one canonical prisoner summary row for realtime mutation events."""
+
+    prisoner = session.execute(
+        select(Prisoner).where(Prisoner.id == prisoner_id)
+    ).scalar_one_or_none()
+    if prisoner is None:
+        return None
+    return _build_prisoner_summary(prisoner)
+
+
 def get_prisoner_detail(*, session: Session, prisoner_id: int) -> PrisonerDetailResponse | None:
     """Return sectioned persisted history for a single prisoner."""
 
