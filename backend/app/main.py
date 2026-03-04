@@ -1,16 +1,34 @@
 """FastAPI app entrypoint."""
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import heartbeat, ingest, ops, prisoners
 from app.core.config import get_settings
 from app.core.rate_limit import reset_rate_limiters
+import app.db.session as db_session_module
 from app.middleware.body_size import BodySizeLimitMiddleware
 from app.middleware.error_handlers import register_error_handlers
+from app.realtime.stats_broadcaster import RealtimeStatsBroadcaster
 from app.realtime import socket_server
 
 MAX_REQUEST_BODY_BYTES = 256 * 1024
+
+
+@asynccontextmanager
+async def _app_lifespan(app: FastAPI):
+    stats_broadcaster = RealtimeStatsBroadcaster(
+        session_factory=db_session_module.SessionFactory,
+        event_bus=socket_server.realtime_event_bus,
+    )
+    app.state.stats_broadcaster = stats_broadcaster
+    await stats_broadcaster.start()
+    try:
+        yield
+    finally:
+        await stats_broadcaster.stop()
 
 
 def create_app() -> FastAPI:
@@ -18,7 +36,7 @@ def create_app() -> FastAPI:
     settings = get_settings()
     reset_rate_limiters()
 
-    app = FastAPI(title="The Holding Cell Backend")
+    app = FastAPI(title="The Holding Cell Backend", lifespan=_app_lifespan)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=list(settings.approved_browser_origins),

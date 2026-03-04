@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from functools import lru_cache
 import inspect
 from itertools import count
 from typing import Any, Awaitable, Callable, Dict, Optional, Union
@@ -102,3 +103,10 @@ class RealtimeEventBus:
             payload_with_ordering["server_time"] = occurred_at
 
         return payload_with_ordering
+
+
+@lru_cache(maxsize=1)
+def get_realtime_event_bus() -> RealtimeEventBus:
+    """Return the process-local realtime event bus singleton."""
+
+    return RealtimeEventBus()

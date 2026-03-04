@@ -110,12 +110,12 @@ def test_realtime_stream_e2e_reconnect_snapshot_then_live_prisoner_and_stats_eve
 ) -> None:
     database_url = f"sqlite:///{tmp_path / 'stream-e2e.sqlite3'}"
     command.upgrade(_alembic_config(database_url), "head")
-    anchor = datetime(2026, 3, 4, 15, 0, tzinfo=timezone.utc)
-    seeded_prisoner_id = _seed_initial_snapshot_state(anchor=anchor)
+    anchor = datetime.now(timezone.utc)
 
     assert realtime_event_bus is get_realtime_event_bus()
 
     client = _build_client(database_url=database_url, monkeypatch=monkeypatch)
+    seeded_prisoner_id = _seed_initial_snapshot_state(anchor=anchor)
     with client:
         with client.websocket_connect(
             "/ws/events",
@@ -134,7 +134,10 @@ def test_realtime_stream_e2e_reconnect_snapshot_then_live_prisoner_and_stats_eve
 
             ingest_response = client.post(
                 "/api/ingest",
-                headers={"Authorization": "Bearer current-forwarder-key"},
+                headers={
+                    "Authorization": "Bearer current-forwarder-key",
+                    "X-Forwarded-For": "203.0.113.10",
+                },
                 json={
                     "delivery_id": str(uuid4()),
                     "protocol": "ssh",
@@ -148,13 +151,15 @@ def test_realtime_stream_e2e_reconnect_snapshot_then_live_prisoner_and_stats_eve
             assert ingest_response.json()["status"] == "processed"
             assert ingest_response.json()["outcome"] == "created"
 
-            live_prisoner_event = websocket.receive_json()
-            assert live_prisoner_event["event"] == "new_prisoner"
-
             asyncio.run(client.app.state.stats_broadcaster.publish_if_changed_once())
-            live_stats_event = websocket.receive_json()
-            assert live_stats_event["event"] == "stats_update"
-            assert live_stats_event["payload"]["changed"] is True
+            observed_live_events: dict[str, dict[str, object]] = {}
+            for _ in range(2):
+                event = websocket.receive_json()
+                observed_live_events[event["event"]] = event
+
+            assert "new_prisoner" in observed_live_events
+            assert "stats_update" in observed_live_events
+            assert observed_live_events["stats_update"]["payload"]["changed"] is True
 
         with client.websocket_connect(
             "/ws/events",

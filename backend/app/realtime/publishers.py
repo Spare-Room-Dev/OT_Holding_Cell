@@ -4,26 +4,18 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime, timezone
-from functools import lru_cache
 import logging
 from typing import Literal
 
 from sqlalchemy.orm import Session
 
-from app.realtime.event_bus import RealtimeEventBus
+from app.realtime.event_bus import RealtimeEventBus, get_realtime_event_bus
 from app.schemas.prisoners import PrisonerSummary
 from app.services.prisoner_query_service import get_prisoner_summary
 
 logger = logging.getLogger(__name__)
 
 PrisonerLifecycleEventName = Literal["new_prisoner", "prisoner_updated", "prisoner_enriched"]
-
-
-@lru_cache(maxsize=1)
-def get_realtime_event_bus() -> RealtimeEventBus:
-    """Return the process-local realtime event bus used by mutation publishers."""
-
-    return RealtimeEventBus()
 
 
 def _coerce_utc(value: datetime) -> datetime:

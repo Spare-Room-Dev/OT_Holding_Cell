@@ -13,7 +13,7 @@ from app.core.config import Settings
 from app.core.config import get_settings
 import app.db.session as db_session_module
 from app.realtime.connection_manager import RealtimeConnectionManager
-from app.realtime.event_bus import RealtimeEventBus
+from app.realtime.event_bus import get_realtime_event_bus
 from app.realtime.snapshot_service import build_authoritative_snapshot
 from app.schemas.realtime import RealtimeEventEnvelope, RealtimeEventName
 
@@ -23,7 +23,7 @@ SOCKET_POLICY_VIOLATION_CODE = 1008
 SYNC_ROUTE = "/ws/events"
 
 router = APIRouter()
-realtime_event_bus = RealtimeEventBus()
+realtime_event_bus = get_realtime_event_bus()
 connection_manager = RealtimeConnectionManager()
 realtime_event_bus.subscribe(connection_manager.broadcast)
 
