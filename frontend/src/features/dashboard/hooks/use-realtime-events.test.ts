@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createElement } from "react";
+import { act, createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { act } from "react-dom/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { dashboardQueryKeys } from "../data/query-keys";
 import {
@@ -208,6 +207,7 @@ function renderRealtimeHookProbe(
 
 describe("useRealtimeEvents + realtime reconcile", () => {
   beforeEach(() => {
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-03-04T00:00:00Z"));
     resetDashboardUiState();
@@ -216,6 +216,7 @@ describe("useRealtimeEvents + realtime reconcile", () => {
   afterEach(() => {
     vi.useRealTimers();
     resetDashboardUiState();
+    delete (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT;
   });
 
   it("reconciles prisoner/stats caches immutably across filtered list keys", () => {
