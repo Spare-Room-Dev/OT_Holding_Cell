@@ -31,9 +31,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Realtime
 
-- [ ] **RT-01**: User can see a new prisoner appear in the cell within seconds of ingest via `new_prisoner` events.
-- [ ] **RT-02**: User can see repeat-offender updates and enrichment completions reflected live via `prisoner_updated` and `prisoner_enriched` events.
-- [ ] **RT-03**: User can see live aggregate metrics update through `stats_update` events and recover correctly after reconnect.
+- [x] **RT-01**: User can see a new prisoner appear in the cell within seconds of ingest via `new_prisoner` events.
+- [x] **RT-02**: User can see repeat-offender updates and enrichment completions reflected live via `prisoner_updated` and `prisoner_enriched` events.
+- [x] **RT-03**: User can see live aggregate metrics update through `stats_update` events and recover correctly after reconnect.
 
 ### Dashboard
 
@@ -48,7 +48,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **SEC-01**: User can view attacker strings safely because attacker-controlled fields are rendered as text and sanitized before display.
 - [ ] **SEC-02**: User can view masked source IPs by default in public-facing views while backend storage retains full IPs.
 - [x] **SEC-03**: Operator can enforce frontend CSP/CORS restrictions so only approved frontend origins can connect to backend APIs/WebSocket.
-- [ ] **SEC-04**: User can interact with a read-only WebSocket channel where client-emitted custom events are not processed by the server.
+- [x] **SEC-04**: User can interact with a read-only WebSocket channel where client-emitted custom events are not processed by the server.
 
 ## v2 Requirements
 
@@ -100,9 +100,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INTL-02 | Phase 3 | Complete |
 | INTL-03 | Phase 3 | Complete |
 | INTL-04 | Phase 3 | Complete |
-| RT-01 | Phase 4 | Pending |
-| RT-02 | Phase 4 | Pending |
-| RT-03 | Phase 4 | Pending |
+| RT-01 | Phase 4 | Complete |
+| RT-02 | Phase 4 | Complete |
+| RT-03 | Phase 4 | Complete |
 | UI-01 | Phase 5 | Pending |
 | UI-02 | Phase 5 | Pending |
 | UI-03 | Phase 5 | Pending |
@@ -111,7 +111,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEC-01 | Phase 5 | Pending |
 | SEC-02 | Phase 5 | Pending |
 | SEC-03 | Phase 1 | Complete |
-| SEC-04 | Phase 4 | Pending |
+| SEC-04 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total

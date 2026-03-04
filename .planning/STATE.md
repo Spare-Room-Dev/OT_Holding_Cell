@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-last_updated: "2026-03-03T15:16:20.251Z"
+status: in_progress
+last_updated: "2026-03-04T00:46:03.151Z"
 progress:
-  total_phases: 3
+  total_phases: 4
   completed_phases: 3
-  total_plans: 13
-  completed_plans: 13
+  total_plans: 17
+  completed_plans: 14
 ---
 
 # Project State
@@ -23,16 +23,16 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 ## Current Position
 
 Phase: 4 of 5 (Realtime Event Stream)
-Plan: 0 of TBD in current phase
-Status: Ready to Plan
-Last activity: 2026-03-03 - Completed 03-03 provider normalization and worker execution plan.
+Plan: 1 of 4 in current phase
+Status: In Progress
+Last activity: 2026-03-04 - Completed 04-01 realtime schema and fanout bus foundation plan.
 
-Progress: [##########] 100%
+Progress: [########--] 82%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13
+- Total plans completed: 14
 - Average duration: 7 min
 - Total execution time: 2.1 hours
 
@@ -45,7 +45,7 @@ Progress: [##########] 100%
 | 3 | 4 | 65 min | 16 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-03, 03-01, 03-02, 03-04, 03-03
+- Last 5 plans: 03-01, 03-02, 03-04, 03-03, 04-01
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -61,6 +61,7 @@ Progress: [##########] 100%
 | Phase 03-async-threat-enrichment P02 | 11 min | 2 tasks | 5 files |
 | Phase 03-async-threat-enrichment P04 | 39 min | 2 tasks | 10 files |
 | Phase 03-async-threat-enrichment P03 | 10 min | 2 tasks | 8 files |
+| Phase 04-realtime-event-stream P01 | 6 min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,8 @@ Recent decisions affecting current work:
 - [Phase 03-async-threat-enrichment]: Keep enrichment status derivation deterministic from normalized geo/reputation field completeness and explicit reason metadata.
 - [Phase 03-async-threat-enrichment]: Preserve successful intel across retries by merging new attempts into prior prisoner enrichment state rather than overwriting with null provider failures.
 - [Phase 03-async-threat-enrichment]: Make worker scripts emit deterministic JSON on both success and fatal failure paths for cron and ops verification.
+- [Phase 04-realtime-event-stream]: Realtime envelopes map each event literal to one payload model so malformed event/payload pairings fail validation immediately.
+- [Phase 04-realtime-event-stream]: The event bus injects ordering metadata and envelope timestamps centrally, so publishers do not hand-roll sequence/timing fields.
 
 ### Pending Todos
 
@@ -109,6 +112,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-03
-Stopped at: Completed 03-03-PLAN.md
+Last session: 2026-03-04
+Stopped at: Completed 04-01-PLAN.md
 Resume file: .planning/ROADMAP.md
