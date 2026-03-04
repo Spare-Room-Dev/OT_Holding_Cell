@@ -1,0 +1,23 @@
+# Allowlist repo content for GitHub push
+/*
+!/.gitignore
+!/backend/
+!/frontend/
+!/infra/
+
+# OS/editor noise
+.DS_Store
+
+# Backend local/runtime artifacts
+backend/.venv/
+backend/.pytest_cache/
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/*.db
+
+# Frontend local/build artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/*.tsbuildinfo
+frontend/**/*.tsbuildinfo

@@ -1,18 +1,8 @@
 import { DashboardShell } from "./features/dashboard/components/dashboard-shell";
-
-function resolveApiBaseUrl() {
-  return window.location.origin;
-}
-
-function resolveWebSocketUrl(apiBaseUrl: string) {
-  const url = new URL("/ws/events", apiBaseUrl);
-  url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
-  return url.toString();
-}
+import { resolveRuntimeEndpoints } from "./app/runtime-endpoints";
 
 function App() {
-  const apiBaseUrl = resolveApiBaseUrl();
-  const websocketUrl = resolveWebSocketUrl(apiBaseUrl);
+  const { apiBaseUrl, websocketUrl } = resolveRuntimeEndpoints();
 
   return (
     <main>

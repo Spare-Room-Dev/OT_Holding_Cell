@@ -1,0 +1,36 @@
+[Unit]
+Description=Holding Cell Cowrie Forwarder
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=holdingcell
+Group=holdingcell
+EnvironmentFile=/etc/holding-cell/forwarder.env
+WorkingDirectory=/opt/holding-cell
+ExecStart=/opt/holding-cell/venv/bin/python /opt/holding-cell/forwarder.py
+Restart=on-failure
+RestartSec=10
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+# Resource limits
+MemoryMax=256M
+CPUQuota=20%
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/log/holding-cell /var/lib/holding-cell
+ReadOnlyPaths=/home/cowrie/cowrie/var/log/cowrie /opt/holding-cell
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=holding-cell-forwarder
+
+[Install]
+WantedBy=multi-user.target
