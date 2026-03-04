@@ -1,4 +1,5 @@
 import { SafeRender } from "../domain/safe-render";
+import { maskSourceIp } from "../domain/masking";
 import { deriveSeverity } from "../domain/severity";
 import type {
   DashboardPrisonerCommandHistoryEntry,
@@ -87,6 +88,7 @@ export function DetailPane({ selectedPrisonerId, detail }: DetailPaneProps) {
     enrichmentStatus: detail.prisoner.enrichment.status,
     reputationSeverity: detail.prisoner.enrichment.reputation.severity,
   });
+  const maskedSourceIp = maskSourceIp(detail.prisoner.source_ip);
 
   return (
     <aside className="dashboard-panel detail-pane" aria-live="polite">
@@ -99,7 +101,9 @@ export function DetailPane({ selectedPrisonerId, detail }: DetailPaneProps) {
 
       <section className="detail-pane__section" aria-label="Attack summary">
         <h3 className="detail-pane__section-title">Attack Summary</h3>
-        <p className="detail-pane__line">Source IP: <SafeRender value={detail.prisoner.source_ip} /></p>
+        <p className="detail-pane__line">
+          Source IP: <SafeRender value={maskedSourceIp} />
+        </p>
         <p className="detail-pane__line">Country: {detail.prisoner.country_code ?? "Unknown"}</p>
         <p className="detail-pane__line">Attempts: {detail.prisoner.attempt_count}</p>
         <p className="detail-pane__line">Credentials observed: {detail.prisoner.credential_count}</p>
