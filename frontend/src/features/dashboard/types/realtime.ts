@@ -79,13 +79,17 @@ export interface DashboardRealtimePayloadByEvent {
   stats_update: DashboardStatsUpdatePayload;
 }
 
-export type DashboardRealtimeEnvelope<E extends RealtimeEventName = RealtimeEventName> = {
+type DashboardRealtimeEnvelopeBase<E extends RealtimeEventName> = {
   event_id: string;
   event: E;
   occurred_at: DashboardIsoDateTime;
   protocol_version: string;
   payload: DashboardRealtimePayloadByEvent[E];
 };
+
+export type DashboardRealtimeEnvelope<E extends RealtimeEventName = RealtimeEventName> = {
+  [K in E]: DashboardRealtimeEnvelopeBase<K>;
+}[E];
 
 type JsonObject = Record<string, unknown>;
 
@@ -220,27 +224,75 @@ export function parseDashboardRealtimeEnvelope(value: unknown): DashboardRealtim
     throw new TypeError(`DashboardRealtimeEnvelope.event must be one of: ${DASHBOARD_REALTIME_EVENT_NAMES.join(", ")}`);
   }
 
-  const baseEnvelope = {
-    event_id: ensureString(obj.event_id, "DashboardRealtimeEnvelope.event_id"),
-    event,
-    occurred_at: ensureIsoDateTime(obj.occurred_at, "DashboardRealtimeEnvelope.occurred_at"),
-    protocol_version: ensureString(obj.protocol_version, "DashboardRealtimeEnvelope.protocol_version"),
-  };
+  const eventId = ensureString(obj.event_id, "DashboardRealtimeEnvelope.event_id");
+  const occurredAt = ensureIsoDateTime(obj.occurred_at, "DashboardRealtimeEnvelope.occurred_at");
+  const protocolVersion = ensureString(obj.protocol_version, "DashboardRealtimeEnvelope.protocol_version");
 
   const payloadPath = "DashboardRealtimeEnvelope.payload";
   switch (event) {
     case "welcome":
-      return { ...baseEnvelope, payload: parseWelcomePayload(obj.payload, payloadPath) };
+      return {
+        event_id: eventId,
+        event: "welcome",
+        occurred_at: occurredAt,
+        protocol_version: protocolVersion,
+        payload: parseWelcomePayload(obj.payload, payloadPath),
+      };
     case "sync_start":
+      return {
+        event_id: eventId,
+        event: "sync_start",
+        occurred_at: occurredAt,
+        protocol_version: protocolVersion,
+        payload: parseSyncLifecyclePayload(obj.payload, payloadPath),
+      };
     case "sync_complete":
-      return { ...baseEnvelope, payload: parseSyncLifecyclePayload(obj.payload, payloadPath) };
+      return {
+        event_id: eventId,
+        event: "sync_complete",
+        occurred_at: occurredAt,
+        protocol_version: protocolVersion,
+        payload: parseSyncLifecyclePayload(obj.payload, payloadPath),
+      };
     case "snapshot_chunk":
-      return { ...baseEnvelope, payload: parseSnapshotChunkPayload(obj.payload, payloadPath) };
+      return {
+        event_id: eventId,
+        event: "snapshot_chunk",
+        occurred_at: occurredAt,
+        protocol_version: protocolVersion,
+        payload: parseSnapshotChunkPayload(obj.payload, payloadPath),
+      };
     case "new_prisoner":
+      return {
+        event_id: eventId,
+        event: "new_prisoner",
+        occurred_at: occurredAt,
+        protocol_version: protocolVersion,
+        payload: parsePrisonerPayload(obj.payload, payloadPath),
+      };
     case "prisoner_updated":
+      return {
+        event_id: eventId,
+        event: "prisoner_updated",
+        occurred_at: occurredAt,
+        protocol_version: protocolVersion,
+        payload: parsePrisonerPayload(obj.payload, payloadPath),
+      };
     case "prisoner_enriched":
-      return { ...baseEnvelope, payload: parsePrisonerPayload(obj.payload, payloadPath) };
+      return {
+        event_id: eventId,
+        event: "prisoner_enriched",
+        occurred_at: occurredAt,
+        protocol_version: protocolVersion,
+        payload: parsePrisonerPayload(obj.payload, payloadPath),
+      };
     case "stats_update":
-      return { ...baseEnvelope, payload: parseStatsUpdatePayload(obj.payload, payloadPath) };
+      return {
+        event_id: eventId,
+        event: "stats_update",
+        occurred_at: occurredAt,
+        protocol_version: protocolVersion,
+        payload: parseStatsUpdatePayload(obj.payload, payloadPath),
+      };
   }
 }

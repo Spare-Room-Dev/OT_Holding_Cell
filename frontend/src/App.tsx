@@ -1,8 +1,22 @@
+import { DashboardShell } from "./features/dashboard/components/dashboard-shell";
+
+function resolveApiBaseUrl() {
+  return window.location.origin;
+}
+
+function resolveWebSocketUrl(apiBaseUrl: string) {
+  const url = new URL("/ws/events", apiBaseUrl);
+  url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
+  return url.toString();
+}
+
 function App() {
+  const apiBaseUrl = resolveApiBaseUrl();
+  const websocketUrl = resolveWebSocketUrl(apiBaseUrl);
+
   return (
     <main>
-      <h1>Holding Cell Analyst Dashboard</h1>
-      <p>Phase 5 frontend scaffold is ready for responsive dashboard composition.</p>
+      <DashboardShell apiBaseUrl={apiBaseUrl} websocketUrl={websocketUrl} />
     </main>
   );
 }
