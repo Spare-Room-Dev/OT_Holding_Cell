@@ -3,18 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 
-from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.models.lifetime_rollup import LifetimeRollup
-from app.models.prisoner import Prisoner
 from app.schemas.prisoners import PrisonerSummary
 from app.services.prisoner_query_service import list_prisoners
+from app.services.realtime_stats_service import build_realtime_stats_snapshot
 
-ACTIVE_WINDOW_HOURS = 24
-LIFETIME_ROLLUP_KEY = "overall"
 SNAPSHOT_PAGE_LIMIT = 200
 
 
@@ -86,47 +82,6 @@ def _load_all_prisoner_summaries(*, session: Session) -> list[PrisonerSummary]:
         cursor = page.next_cursor
 
 
-def _build_stats_payload(*, session: Session, now: datetime) -> dict[str, object]:
-    active_cutoff = now - timedelta(hours=ACTIVE_WINDOW_HOURS)
-
-    total_prisoners = int(
-        session.execute(select(func.count(Prisoner.id))).scalar_one()
-    )
-    active_prisoners = int(
-        session.execute(
-            select(func.count(Prisoner.id)).where(Prisoner.last_seen_at >= active_cutoff)
-        ).scalar_one()
-    )
-
-    current_attempts = int(
-        session.execute(select(func.coalesce(func.sum(Prisoner.attempt_count), 0))).scalar_one()
-    )
-    current_credentials = int(
-        session.execute(select(func.coalesce(func.sum(Prisoner.credential_count), 0))).scalar_one()
-    )
-    current_commands = int(
-        session.execute(select(func.coalesce(func.sum(Prisoner.command_count), 0))).scalar_one()
-    )
-    current_downloads = int(
-        session.execute(select(func.coalesce(func.sum(Prisoner.download_count), 0))).scalar_one()
-    )
-
-    lifetime_rollup_attempts = session.execute(
-        select(LifetimeRollup.attempt_count).where(LifetimeRollup.rollup_key == LIFETIME_ROLLUP_KEY)
-    ).scalar_one_or_none()
-    lifetime_attempts = current_attempts + int(lifetime_rollup_attempts or 0)
-
-    return {
-        "total_prisoners": total_prisoners,
-        "active_prisoners": active_prisoners,
-        "lifetime_attempts": lifetime_attempts,
-        "lifetime_credentials": current_credentials,
-        "lifetime_commands": current_commands,
-        "lifetime_downloads": current_downloads,
-        "changed": True,
-    }
-
-
 def build_authoritative_snapshot(
     *,
     session: Session,
@@ -155,5 +110,8 @@ def build_authoritative_snapshot(
 
     return RealtimeSnapshot(
         chunks=chunks,
-        stats_payload=_build_stats_payload(session=session, now=now),
+        stats_payload={
+            **build_realtime_stats_snapshot(session=session, now=now),
+            "changed": True,
+        },
     )
