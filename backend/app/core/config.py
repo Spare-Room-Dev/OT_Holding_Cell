@@ -40,6 +40,8 @@ class Settings(BaseSettings):
     enrichment_retry_min_backoff_seconds: int = 30
     enrichment_retry_max_backoff_seconds: int = 900
     enrichment_quota_backoff_seconds: int = 120
+    realtime_protocol_version: str = "v1"
+    realtime_stats_cadence_ms: int = 1000
     credential_history_cap: int = 200
     command_history_cap: int = 400
     download_history_cap: int = 150
@@ -99,6 +101,7 @@ class Settings(BaseSettings):
         "enrichment_retry_min_backoff_seconds",
         "enrichment_retry_max_backoff_seconds",
         "enrichment_quota_backoff_seconds",
+        "realtime_stats_cadence_ms",
     )
     @classmethod
     def ensure_positive_limits(cls, value: int) -> int:
