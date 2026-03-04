@@ -17,6 +17,7 @@ from app.models.prisoner_command import PrisonerCommand
 from app.models.prisoner_credential import PrisonerCredential
 from app.models.prisoner_download import PrisonerDownload
 from app.models.prisoner_protocol_activity import PrisonerProtocolActivity
+from app.realtime.publishers import get_realtime_event_bus, publish_prisoner_lifecycle_event
 from app.schemas.ingest import IngestPayload
 from app.services.enrichment_queue_service import enqueue_prisoner_enrichment, pending_enrichment_reason_metadata
 
@@ -223,6 +224,22 @@ def process_ingest_payload(*, payload: IngestPayload, source_ip: str, session: S
 
     delivery.prisoner_id = prisoner.id
     session.commit()
+
+    event_name = "new_prisoner" if outcome == "created" else "prisoner_updated"
+    try:
+        publish_prisoner_lifecycle_event(
+            session=session,
+            event_bus=get_realtime_event_bus(),
+            event_name=event_name,
+            prisoner_id=prisoner.id,
+        )
+    except Exception:
+        logger.warning(
+            "Failed to publish realtime ingest event=%s for prisoner_id=%s",
+            event_name,
+            prisoner.id,
+            exc_info=True,
+        )
 
     if outcome == "created":
         try:

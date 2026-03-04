@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+import logging
 from typing import Mapping
 
 from sqlalchemy import select
@@ -11,6 +12,7 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.models.enrichment_job import EnrichmentJob
 from app.models.prisoner import Prisoner
+from app.realtime.publishers import get_realtime_event_bus, publish_prisoner_lifecycle_event
 from app.services.enrichment_service import (
     ExistingEnrichmentState,
     enrich_ip_intel,
@@ -22,6 +24,7 @@ QUEUED_STATUS = "queued"
 IN_PROGRESS_STATUS = "in_progress"
 COMPLETED_STATUS = "completed"
 FAILED_STATUS = "failed"
+logger = logging.getLogger(__name__)
 
 
 def _coerce_utc(timestamp: datetime) -> datetime:
@@ -332,6 +335,19 @@ def process_next_batch(
                 job_id=job.id,
                 completed_at=event_time,
             )
+            try:
+                publish_prisoner_lifecycle_event(
+                    session=session,
+                    event_bus=get_realtime_event_bus(),
+                    event_name="prisoner_enriched",
+                    prisoner_id=prisoner.id,
+                )
+            except Exception:
+                logger.warning(
+                    "Failed to publish realtime enrichment event for prisoner_id=%s",
+                    prisoner.id,
+                    exc_info=True,
+                )
             completed_count += 1
             processed_count += 1
             continue

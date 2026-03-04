@@ -152,7 +152,7 @@ def test_process_ingest_payload_emits_created_and_updated_realtime_events(
 
     engine = create_engine(database_url, future=True)
     session_factory = sessionmaker(bind=engine, expire_on_commit=False, class_=Session)
-    now = datetime(2026, 3, 4, 12, 30, tzinfo=timezone.utc)
+    now = datetime.now(timezone.utc)
     source_ip = "198.51.100.45"
     published: list[tuple[str, int]] = []
 
@@ -208,7 +208,7 @@ def test_duplicate_ignored_ingest_does_not_emit_realtime_event(
 
     engine = create_engine(database_url, future=True)
     session_factory = sessionmaker(bind=engine, expire_on_commit=False, class_=Session)
-    now = datetime(2026, 3, 4, 13, 0, tzinfo=timezone.utc)
+    now = datetime.now(timezone.utc)
     delivery_id = str(uuid4())
     published: list[tuple[str, int]] = []
 
