@@ -94,7 +94,16 @@ Plans:
   3. User can identify threat severity from color and attempt prominence, and see that encoding update when enrichment arrives.
   4. User can narrow visible prisoners using at least one operational filter (time window and/or country/protocol).
   5. User sees clear live/reconnecting/offline connection state while attacker-controlled strings are safely rendered and source IPs remain masked by default.
-**Plans**: TBD
+**Plans**: 8 plans
+Plans:
+- [ ] 05-01-PLAN.md — Frontend scaffold/tooling bootstrap and shared providers.
+- [ ] 05-02-PLAN.md — Typed dashboard contracts and contract-lock tests.
+- [ ] 05-03-PLAN.md — REST data hooks with deterministic filter pipeline.
+- [ ] 05-04-PLAN.md — Realtime lifecycle state machine and cache reconciliation hooks.
+- [ ] 05-05-PLAN.md — Security/severity domain utilities with dedicated tests.
+- [ ] 05-06-PLAN.md — Responsive dashboard presentation components and component tests.
+- [ ] 05-07-PLAN.md — Final shell wiring with integration verification.
+- [ ] 05-08-PLAN.md — Dedicated E2E + ops validation plan.
 
 ## Progress
 
@@ -107,4 +116,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 2. Canonical Prisoner Data | 4/4 | Complete | 2026-03-03 |
 | 3. Async Threat Enrichment | 4/4 | Complete | 2026-03-03 |
 | 4. Realtime Event Stream | 4/4 | Complete | 2026-03-04 |
-| 5. Responsive Analyst Dashboard | 0/TBD | Not started | - |
+| 5. Responsive Analyst Dashboard | 1/8 | In Progress|  |

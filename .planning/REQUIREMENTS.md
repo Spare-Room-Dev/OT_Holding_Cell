@@ -37,7 +37,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Dashboard
 
-- [ ] **UI-01**: User can view a responsive dashboard with header, cell, detail pane, and stats bar across desktop and tablet/mobile fallback layouts.
+- [x] **UI-01**: User can view a responsive dashboard with header, cell, detail pane, and stats bar across desktop and tablet/mobile fallback layouts.
 - [ ] **UI-02**: User can click a prisoner to inspect attack summary, threat-intel context, and activity timestamps in the detail pane.
 - [ ] **UI-03**: User can identify threat severity from prisoner visual encoding (color + attempt prominence) that updates when enrichment arrives.
 - [ ] **UI-04**: User can apply at least one operational filter (time window and/or country/protocol) to narrow visible prisoners.
@@ -103,7 +103,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RT-01 | Phase 4 | Complete |
 | RT-02 | Phase 4 | Complete |
 | RT-03 | Phase 4 | Complete |
-| UI-01 | Phase 5 | Pending |
+| UI-01 | Phase 5 | Complete |
 | UI-02 | Phase 5 | Pending |
 | UI-03 | Phase 5 | Pending |
 | UI-04 | Phase 5 | Pending |
