@@ -42,6 +42,9 @@ const detailResponse = {
     enrichment: {
       status: "pending",
       last_updated_at: null,
+      country_code: "US",
+      asn: null,
+      reputation_severity: null,
       provider: null,
       geo: {
         country_code: "US",
