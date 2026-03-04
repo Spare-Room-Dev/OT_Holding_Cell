@@ -98,7 +98,7 @@ Plans:
 Plans:
 - [x] 05-01-PLAN.md — Frontend scaffold/tooling bootstrap and shared providers.
 - [x] 05-02-PLAN.md — Typed dashboard contracts and contract-lock tests.
-- [ ] 05-03-PLAN.md — REST data hooks with deterministic filter pipeline.
+- [x] 05-03-PLAN.md — REST data hooks with deterministic filter pipeline.
 - [ ] 05-04-PLAN.md — Realtime lifecycle state machine and cache reconciliation hooks.
 - [ ] 05-05-PLAN.md — Security/severity domain utilities with dedicated tests.
 - [ ] 05-06-PLAN.md — Responsive dashboard presentation components and component tests.
@@ -116,4 +116,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 2. Canonical Prisoner Data | 4/4 | Complete | 2026-03-03 |
 | 3. Async Threat Enrichment | 4/4 | Complete | 2026-03-03 |
 | 4. Realtime Event Stream | 4/4 | Complete | 2026-03-04 |
-| 5. Responsive Analyst Dashboard | 2/8 | In Progress|  |
+| 5. Responsive Analyst Dashboard | 3/8 | In Progress|  |

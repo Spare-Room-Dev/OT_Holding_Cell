@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 05-responsive-analyst-dashboard-02-PLAN.md
-last_updated: "2026-03-04T03:14:02.917Z"
-last_activity: 2026-03-04 - Completed 05-02 typed dashboard contracts and contract-lock tests plan.
+stopped_at: Completed 05-responsive-analyst-dashboard-03-PLAN.md
+last_updated: "2026-03-04T03:24:42.980Z"
+last_activity: 2026-03-04 - Completed 05-03 dashboard REST hooks and deterministic filter pipeline plan.
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 25
-  completed_plans: 19
-  percent: 76
+  completed_plans: 20
+  percent: 80
 ---
 
 # Project State
@@ -26,16 +26,16 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 ## Current Position
 
 Phase: 5 of 5 (Responsive Analyst Dashboard)
-Plan: 2 of 8 in current phase
+Plan: 3 of 8 in current phase
 Status: In Progress
-Last activity: 2026-03-04 - Completed 05-02 typed dashboard contracts and contract-lock tests plan.
+Last activity: 2026-03-04 - Completed 05-03 dashboard REST hooks and deterministic filter pipeline plan.
 
-Progress: [████████░░] 76%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
+- Total plans completed: 20
 - Average duration: 8 min
 - Total execution time: 2.6 hours
 
@@ -49,7 +49,7 @@ Progress: [████████░░] 76%
 | 4 | 4 | 27 min | 7 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-03, 04-02, 04-04, 05-01, 05-02
+- Last 5 plans: 04-02, 04-04, 05-01, 05-02, 05-03
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -71,6 +71,7 @@ Progress: [████████░░] 76%
 | Phase 04-realtime-event-stream P04 | 9 min | 2 tasks | 10 files |
 | Phase 05-responsive-analyst-dashboard P01 | 6 min | 2 tasks | 11 files |
 | Phase 05-responsive-analyst-dashboard P02 | 6 min | 2 tasks | 7 files |
+| Phase 05-responsive-analyst-dashboard P03 | 7 min | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -123,6 +124,9 @@ Recent decisions affecting current work:
 - [Phase 05-responsive-analyst-dashboard]: Model backend datetimes as ISO strings at the boundary and validate them immediately on parse.
 - [Phase 05-responsive-analyst-dashboard]: Expose required-field lock constants and assert them in tests to catch schema drift before UI integration.
 - [Phase 05-responsive-analyst-dashboard]: Introduce shared style tokens and Vitest setup hooks now so downstream dashboard plans inherit one foundation.
+- [Phase 05-responsive-analyst-dashboard]: Keep list/detail data typed at the API boundary and parsed before entering UI state.
+- [Phase 05-responsive-analyst-dashboard]: Gate prisoner detail querying behind explicit user selection via query enabled guards.
+- [Phase 05-responsive-analyst-dashboard]: Derive visible rows and filtered-out counts from one raw->country->time-window selector pipeline.
 
 ### Pending Todos
 
@@ -134,6 +138,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-04T03:14:02.914Z
-Stopped at: Completed 05-responsive-analyst-dashboard-02-PLAN.md
+Last session: 2026-03-04T03:24:25.395Z
+Stopped at: Completed 05-responsive-analyst-dashboard-03-PLAN.md
 Resume file: None
