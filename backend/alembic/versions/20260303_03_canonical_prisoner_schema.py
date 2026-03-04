@@ -134,6 +134,12 @@ def upgrade() -> None:
         )
     )
 
+    bind = op.get_bind()
+    if bind.dialect.name == "postgresql":
+        # Postgres keeps unique-constraint names schema-wide. Drop the legacy
+        # name before creating the replacement table with the same constraint.
+        op.drop_constraint("uq_ingest_delivery_id", "ingest_deliveries", type_="unique")
+
     op.create_table(
         "ingest_deliveries_new",
         sa.Column("id", sa.Integer(), primary_key=True, nullable=False),
@@ -212,6 +218,12 @@ def downgrade() -> None:
             """
         )
     )
+
+    bind = op.get_bind()
+    if bind.dialect.name == "postgresql":
+        # Mirror the upgrade behavior so downgrade can recreate the legacy
+        # ingest_deliveries table with the canonical unique-constraint name.
+        op.drop_constraint("uq_ingest_delivery_id", "ingest_deliveries", type_="unique")
 
     op.create_table(
         "ingest_deliveries_legacy",
