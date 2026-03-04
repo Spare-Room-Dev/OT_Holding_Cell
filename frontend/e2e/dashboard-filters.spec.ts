@@ -254,7 +254,6 @@ test.describe("@dashboard filters", () => {
 
     await emitSocketMessage(page, createRealtimePrisonerEnvelope());
     await expect(listSummary).toContainText("Visible: 1 | Filtered out: 3");
-    await expect(page.getByText("Filtered out: 3")).toBeVisible();
-    await expect(page.getByText("__RED_PHASE_FORCE_FAIL__")).toBeVisible();
+    await expect(page.locator(".filter-bar__meta")).toHaveText("Filtered out: 3");
   });
 });

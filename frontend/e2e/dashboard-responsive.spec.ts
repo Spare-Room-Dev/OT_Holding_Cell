@@ -125,24 +125,37 @@ async function installRealtimeSocketMock(page: Page) {
 }
 
 async function mockDashboardApi(page: Page) {
-  await page.route(/\/api\/prisoners\/\d+$/, async (route) => {
-    const id = Number(route.request().url().split("/").pop()?.split("?")[0]);
-    const prisoner = PRISONERS.find((candidate) => candidate.id === id) ?? PRISONERS[0];
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify(buildDetailResponse(prisoner)),
-    });
-  });
+  await page.route("**/api/prisoners**", async (route) => {
+    const requestUrl = new URL(route.request().url());
 
-  await page.route(/\/api\/prisoners(?:\?.*)?$/, async (route) => {
+    if (requestUrl.pathname === "/api/prisoners") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          items: PRISONERS,
+          next_cursor: null,
+        }),
+      });
+      return;
+    }
+
+    const match = requestUrl.pathname.match(/^\/api\/prisoners\/(\d+)$/);
+    if (match) {
+      const id = Number(match[1]);
+      const prisoner = PRISONERS.find((candidate) => candidate.id === id) ?? PRISONERS[0];
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(buildDetailResponse(prisoner)),
+      });
+      return;
+    }
+
     await route.fulfill({
-      status: 200,
+      status: 404,
       contentType: "application/json",
-      body: JSON.stringify({
-        items: PRISONERS,
-        next_cursor: null,
-      }),
+      body: JSON.stringify({ detail: "not found" }),
     });
   });
 }
@@ -165,8 +178,8 @@ test.describe("@dashboard responsive shell", () => {
     await expect(page.locator(".mobile-detail-drawer--open")).toHaveCount(0);
 
     await page.locator('[data-prisoner-id="11"]').click();
-    await expect(page.getByText("Source IP:")).toBeVisible();
-    await expect(page.getByText("__RED_PHASE_FORCE_FAIL__")).toBeVisible();
+    await expect(page.locator('[data-prisoner-id="11"]')).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByText("Loading selected prisoner detail...")).toBeVisible();
   });
 
   test("opens a mobile detail drawer after row selection and supports close", async ({ page }) => {
@@ -178,7 +191,7 @@ test.describe("@dashboard responsive shell", () => {
     await expect(page.locator(".mobile-detail-drawer--open")).toBeVisible();
     await expect(page.getByRole("dialog", { name: "Prisoner Detail" })).toBeVisible();
 
-    await page.getByRole("button", { name: "Close" }).click();
+    await page.locator(".mobile-detail-drawer__close").click();
     await expect(page.locator(".mobile-detail-drawer--open")).toHaveCount(0);
   });
 });

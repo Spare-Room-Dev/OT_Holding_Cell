@@ -180,7 +180,7 @@ async function emitSocketClose(page: Page) {
     if (!sockets || sockets.length === 0) {
       throw new Error("No dashboard mock socket instance is available");
     }
-    sockets[0].emitClose();
+    sockets[sockets.length - 1].emitClose();
   });
 }
 
@@ -218,8 +218,7 @@ test.describe("@dashboard connection UX", () => {
 
     await emitSocketMessage(page, createSyncCompleteEnvelope());
     await expect(page.getByText("Connection live")).toBeVisible();
-    await expect(page.getByText("Data is stale until sync recovers.")).toHaveCount(0);
+    await expect(page.getByText("Live feed is stale while the connection is recovering.")).toHaveCount(0);
     await expect(retryButton).toBeDisabled();
-    await expect(page.getByText("__RED_PHASE_FORCE_FAIL__")).toBeVisible();
   });
 });
