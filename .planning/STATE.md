@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-last_updated: "2026-03-04T00:46:03.151Z"
+last_updated: "2026-03-04T00:56:20.000Z"
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 17
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # Project State
@@ -23,18 +23,18 @@ See: .planning/PROJECT.md (updated 2026-03-03)
 ## Current Position
 
 Phase: 4 of 5 (Realtime Event Stream)
-Plan: 1 of 4 in current phase
+Plan: 3 of 4 in current phase
 Status: In Progress
-Last activity: 2026-03-04 - Completed 04-01 realtime schema and fanout bus foundation plan.
+Last activity: 2026-03-04 - Completed 04-03 ingest/enrichment realtime lifecycle publishing plan.
 
-Progress: [########--] 82%
+Progress: [#########-] 88%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
+- Total plans completed: 15
 - Average duration: 7 min
-- Total execution time: 2.1 hours
+- Total execution time: 2.2 hours
 
 **By Phase:**
 
@@ -43,9 +43,10 @@ Progress: [########--] 82%
 | 1 | 5 | 40 min | 8 min |
 | 2 | 4 | 19 min | 5 min |
 | 3 | 4 | 65 min | 16 min |
+| 4 | 2 | 12 min | 6 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-01, 03-02, 03-04, 03-03, 04-01
+- Last 5 plans: 03-02, 03-04, 03-03, 04-01, 04-03
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -62,6 +63,7 @@ Progress: [########--] 82%
 | Phase 03-async-threat-enrichment P04 | 39 min | 2 tasks | 10 files |
 | Phase 03-async-threat-enrichment P03 | 10 min | 2 tasks | 8 files |
 | Phase 04-realtime-event-stream P01 | 6 min | 2 tasks | 6 files |
+| Phase 04-realtime-event-stream P03 | 6 min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -101,6 +103,8 @@ Recent decisions affecting current work:
 - [Phase 03-async-threat-enrichment]: Make worker scripts emit deterministic JSON on both success and fatal failure paths for cron and ops verification.
 - [Phase 04-realtime-event-stream]: Realtime envelopes map each event literal to one payload model so malformed event/payload pairings fail validation immediately.
 - [Phase 04-realtime-event-stream]: The event bus injects ordering metadata and envelope timestamps centrally, so publishers do not hand-roll sequence/timing fields.
+- [Phase 04-realtime-event-stream]: Mutation publishers resolve payloads from one canonical prisoner summary helper to keep realtime and API list semantics aligned.
+- [Phase 04-realtime-event-stream]: Ingest and enrichment continue succeeding when realtime publish fails transiently; failures are logged and not escalated to mutation failures.
 
 ### Pending Todos
 
@@ -113,5 +117,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-04
-Stopped at: Completed 04-01-PLAN.md
+Stopped at: Completed 04-03-PLAN.md
 Resume file: .planning/ROADMAP.md
