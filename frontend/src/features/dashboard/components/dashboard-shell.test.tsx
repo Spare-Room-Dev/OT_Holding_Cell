@@ -193,7 +193,7 @@ describe("DashboardShell", () => {
 
   it("shows stale reconnecting indicators and only enables retry once disconnected", async () => {
     const sockets: FakeWebSocket[] = [];
-    const websocketFactory = vi.fn((url: string) => {
+    const websocketFactory = vi.fn((_url: string) => {
       const socket = new FakeWebSocket();
       sockets.push(socket);
       return socket;

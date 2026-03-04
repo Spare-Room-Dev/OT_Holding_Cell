@@ -2,11 +2,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { resetDashboardUiState } from "../state/dashboard-ui-store";
+import { resetDashboardUiState, setDashboardCountryFilter } from "../state/dashboard-ui-store";
 import { DashboardShell } from "../components/dashboard-shell";
-import type { DashboardRealtimeEnvelope } from "../types/realtime";
+import type { DashboardPrisonerRealtimePayload, DashboardRealtimeEnvelope } from "../types/realtime";
 
-const BASE_PRISONER = {
+type RealtimePrisonerPayloadInput = Omit<DashboardPrisonerRealtimePayload, "ordering">;
+
+const BASE_PRISONER: RealtimePrisonerPayloadInput = {
   prisoner_id: 11,
   source_ip: "198.51.100.11",
   country_code: "US",
@@ -25,7 +27,7 @@ const BASE_PRISONER = {
   },
   detail_sync_stale: false,
   detail_last_changed_at: "2026-03-04T00:10:00Z",
-} as const;
+};
 
 const LIST_RESPONSE = {
   items: [
@@ -89,7 +91,7 @@ function createQueryClient() {
 
 function createRealtimeEnvelope(
   event: "new_prisoner" | "prisoner_enriched",
-  payload: Partial<(typeof BASE_PRISONER)>,
+  payload: Partial<RealtimePrisonerPayloadInput>,
 ): DashboardRealtimeEnvelope {
   return {
     event_id: `evt-${event}-${payload.prisoner_id ?? BASE_PRISONER.prisoner_id}`,
@@ -157,7 +159,7 @@ describe("dashboard realtime integration", () => {
 
   it("reconciles realtime events through active filters and updates severity cues", async () => {
     const sockets: FakeWebSocket[] = [];
-    const websocketFactory = vi.fn((url: string) => {
+    const websocketFactory = vi.fn((_url: string) => {
       const socket = new FakeWebSocket();
       sockets.push(socket);
       return socket;
@@ -177,11 +179,8 @@ describe("dashboard realtime integration", () => {
     });
     await flush();
 
-    const selects = container.querySelectorAll(".filter-bar__select");
-    const countrySelect = selects[0] as HTMLSelectElement;
     act(() => {
-      countrySelect.value = "US";
-      countrySelect.dispatchEvent(new Event("change", { bubbles: true }));
+      setDashboardCountryFilter("US");
     });
     await flush();
 

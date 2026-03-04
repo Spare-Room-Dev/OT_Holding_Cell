@@ -50,7 +50,12 @@ export function useRealtimeEvents(options: UseRealtimeEventsOptions): UseRealtim
   const reconnectDelayMs = options.reconnectDelayMs ?? DEFAULT_RECONNECT_DELAY_MS;
   const offlineTimeoutMs = options.offlineTimeoutMs ?? DEFAULT_OFFLINE_TIMEOUT_MS;
   const enabled = options.enabled ?? true;
-  const now = options.now ?? (() => Date.now());
+  const now = useCallback(() => {
+    if (options.now) {
+      return options.now();
+    }
+    return Date.now();
+  }, [options.now]);
 
   const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const offlineTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
