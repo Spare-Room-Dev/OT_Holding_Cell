@@ -8,6 +8,7 @@ from app.core.config import get_settings
 from app.core.rate_limit import reset_rate_limiters
 from app.middleware.body_size import BodySizeLimitMiddleware
 from app.middleware.error_handlers import register_error_handlers
+from app.realtime import socket_server
 
 MAX_REQUEST_BODY_BYTES = 256 * 1024
 
@@ -31,6 +32,7 @@ def create_app() -> FastAPI:
     app.include_router(heartbeat.router, prefix="/api", tags=["heartbeat"])
     app.include_router(prisoners.router, prefix="/api", tags=["prisoners"])
     app.include_router(ops.router, prefix="/api", tags=["ops"])
+    app.include_router(socket_server.router, tags=["realtime"])
     return app
 
 
