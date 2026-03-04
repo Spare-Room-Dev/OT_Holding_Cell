@@ -101,7 +101,7 @@ Plans:
 - [x] 05-03-PLAN.md — REST data hooks with deterministic filter pipeline.
 - [ ] 05-04-PLAN.md — Realtime lifecycle state machine and cache reconciliation hooks.
 - [x] 05-05-PLAN.md — Security/severity domain utilities with dedicated tests.
-- [ ] 05-06-PLAN.md — Responsive dashboard presentation components and component tests.
+- [x] 05-06-PLAN.md — Responsive dashboard presentation components and component tests.
 - [ ] 05-07-PLAN.md — Final shell wiring with integration verification.
 - [ ] 05-08-PLAN.md — Dedicated E2E + ops validation plan.
 
@@ -116,4 +116,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 2. Canonical Prisoner Data | 4/4 | Complete | 2026-03-03 |
 | 3. Async Threat Enrichment | 4/4 | Complete | 2026-03-03 |
 | 4. Realtime Event Stream | 4/4 | Complete | 2026-03-04 |
-| 5. Responsive Analyst Dashboard | 4/8 | In Progress|  |
+| 5. Responsive Analyst Dashboard | 5/8 | In Progress|  |
