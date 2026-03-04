@@ -41,7 +41,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **UI-02**: User can click a prisoner to inspect attack summary, threat-intel context, and activity timestamps in the detail pane.
 - [ ] **UI-03**: User can identify threat severity from prisoner visual encoding (color + attempt prominence) that updates when enrichment arrives.
 - [ ] **UI-04**: User can apply at least one operational filter (time window and/or country/protocol) to narrow visible prisoners.
-- [ ] **UI-05**: User can understand connection health through clear live/reconnecting/offline status indicators.
+- [x] **UI-05**: User can understand connection health through clear live/reconnecting/offline status indicators.
 
 ### Security
 
@@ -107,7 +107,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-02 | Phase 5 | Pending |
 | UI-03 | Phase 5 | Pending |
 | UI-04 | Phase 5 | Pending |
-| UI-05 | Phase 5 | Pending |
+| UI-05 | Phase 5 | Complete |
 | SEC-01 | Phase 5 | Pending |
 | SEC-02 | Phase 5 | Pending |
 | SEC-03 | Phase 1 | Complete |
