@@ -80,7 +80,7 @@ Plans:
 **Plans**: 4 plans
 Plans:
 - [x] 04-01-PLAN.md — Realtime event envelope contracts and in-process fanout bus foundation.
-- [ ] 04-02-PLAN.md — Reconnect-safe websocket sync lifecycle and read-only inbound security enforcement.
+- [x] 04-02-PLAN.md — Reconnect-safe websocket sync lifecycle and read-only inbound security enforcement.
 - [x] 04-03-PLAN.md — Post-commit ingest/enrichment realtime publishing for prisoner lifecycle events.
 - [ ] 04-04-PLAN.md — Changed-only stats broadcaster, stream E2E verification, and ops runbook.
 
@@ -106,5 +106,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 1. Trusted Ingest Boundary | 5/5 | Complete | 2026-03-03 |
 | 2. Canonical Prisoner Data | 4/4 | Complete | 2026-03-03 |
 | 3. Async Threat Enrichment | 4/4 | Complete | 2026-03-03 |
-| 4. Realtime Event Stream | 2/4 | In progress | - |
+| 4. Realtime Event Stream | 3/4 | In progress | - |
 | 5. Responsive Analyst Dashboard | 0/TBD | Not started | - |
