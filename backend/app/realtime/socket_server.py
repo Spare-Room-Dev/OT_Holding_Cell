@@ -74,7 +74,7 @@ async def _send_envelope(*, websocket: WebSocket, envelope: RealtimeEventEnvelop
     await websocket.send_json(envelope.model_dump(mode="json"))
 
 
-async def _drain_ignored_inbound_frames(websocket: WebSocket) -> None:
+async def _drain_ignored_inbound_frames(*, websocket: WebSocket, origin: str | None) -> None:
     while True:
         message = await websocket.receive()
         message_type = message.get("type")
@@ -84,13 +84,20 @@ async def _drain_ignored_inbound_frames(websocket: WebSocket) -> None:
         text_payload = message.get("text")
         bytes_payload = message.get("bytes")
         if text_payload is not None or bytes_payload is not None:
-            logger.info("ignored_client_ws_message")
+            logger.info(
+                "ignored_client_ws_message",
+                extra={
+                    "origin": origin,
+                    "frame_type": "text" if text_payload is not None else "bytes",
+                },
+            )
 
 
 @router.websocket(SYNC_ROUTE)
 async def websocket_events(websocket: WebSocket) -> None:
     settings = get_settings()
-    if not is_socket_origin_allowed(websocket.headers.get("origin"), settings):
+    origin = websocket.headers.get("origin")
+    if not is_socket_origin_allowed(origin, settings):
         await websocket.close(code=SOCKET_POLICY_VIOLATION_CODE)
         return
 
@@ -153,6 +160,6 @@ async def websocket_events(websocket: WebSocket) -> None:
 
     await connection_manager.register(websocket)
     try:
-        await _drain_ignored_inbound_frames(websocket)
+        await _drain_ignored_inbound_frames(websocket=websocket, origin=origin)
     finally:
         await connection_manager.unregister(websocket)
