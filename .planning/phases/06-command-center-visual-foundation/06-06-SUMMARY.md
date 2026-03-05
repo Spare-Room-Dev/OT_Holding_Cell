@@ -66,7 +66,26 @@ Each task was committed atomically:
 
 ## Deviations from Plan
 
-None - plan executed exactly as written.
+### Auto-fixed Issues
+
+**1. [Rule 3 - Blocking] `requirements mark-complete` did not resolve VIS IDs**
+- **Found during:** State updates after task completion
+- **Issue:** `gsd-tools requirements mark-complete VIS-01 VIS-02 VIS-03 VIS-04` returned all IDs in `not_found` despite matching entries in `.planning/REQUIREMENTS.md`.
+- **Fix:** Updated `REQUIREMENTS.md` traceability statuses manually to `Complete (06-06 verified)` for VIS-01..VIS-04.
+- **Files modified:** `.planning/REQUIREMENTS.md`
+- **Verification:** Traceability table now reflects Phase 6 completion state.
+
+**2. [Rule 3 - Blocking] Metadata helper skipped ignored `.planning` files**
+- **Found during:** Final metadata commit step
+- **Issue:** `gsd-tools commit` returned `reason: "skipped_gitignored"` for required summary/state/roadmap/requirements artifacts.
+- **Fix:** Force-staged required `.planning` files and committed metadata manually.
+- **Files modified:** `.planning/phases/06-command-center-visual-foundation/06-06-SUMMARY.md`, `.planning/STATE.md`, `.planning/ROADMAP.md`, `.planning/REQUIREMENTS.md`
+- **Verification:** Final docs commit `e7a46a6` contains required metadata artifacts.
+
+---
+
+**Total deviations:** 2 auto-fixed (2 blocking)
+**Impact on plan:** No scope creep; deviations only resolved tooling/staging blockers so completion metadata reflects actual execution state.
 
 ## Issues Encountered
 
