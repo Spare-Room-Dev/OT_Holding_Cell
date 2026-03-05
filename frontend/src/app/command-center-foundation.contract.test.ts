@@ -13,11 +13,16 @@ const foundationPath = join(
 );
 
 function assertCommandCenterShellContract(source: string): void {
-  if (!source.includes('<main className="command-center-shell">')) {
+  const shellHookPattern =
+    /<main\b[^>]*\bclassName="[^"]*\bcommand-center-shell\b[^"]*"[^>]*>/m;
+  const viewportHookPattern =
+    /<div\b[^>]*\bclassName="[^"]*\bcommand-center-shell__viewport\b[^"]*"[^>]*>/m;
+
+  if (!shellHookPattern.test(source)) {
     throw new Error("Expected command-center-shell main hook.");
   }
 
-  if (!source.includes('<div className="command-center-shell__viewport">')) {
+  if (!viewportHookPattern.test(source)) {
     throw new Error("Expected command-center-shell__viewport hook.");
   }
 }
