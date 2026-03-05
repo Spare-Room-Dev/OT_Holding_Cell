@@ -24,6 +24,7 @@ describe("command-center cohesion contract", () => {
     const detailPane = readFileSync(detailPanePath, "utf8");
 
     expect(shell).toContain('data-command-center-region="command-band"');
+    expect(shell).toContain('data-command-center-region="cell-view"');
     expect(shell).toContain('data-command-center-heading="shell-title"');
     expect(statsBar).toContain('data-command-center-region="kpi-band"');
     expect(filterBar).toContain('data-command-center-region="filter-band"');
@@ -38,8 +39,11 @@ describe("command-center cohesion contract", () => {
     const responsiveSpec = readFileSync(responsiveSpecPath, "utf8");
 
     expect(responsiveSpec).toContain('[data-command-center-region="command-band"]');
+    expect(responsiveSpec).toContain('[data-command-center-region="cell-view"]');
     expect(responsiveSpec).toContain('[data-command-center-region="kpi-band"]');
     expect(responsiveSpec).toContain('[data-command-center-region="filter-band"]');
+    expect(responsiveSpec).toContain("assertNoWhiteBackdropExposure");
+    expect(responsiveSpec).toContain("assertFrameContainmentContracts");
     expect(responsiveSpec).toContain("90%");
     expect(responsiveSpec).toContain("110%");
   });
@@ -48,6 +52,9 @@ describe("command-center cohesion contract", () => {
     const dashboardOps = readFileSync(dashboardOpsPath, "utf8");
 
     expect(dashboardOps).toContain("Attach screenshot evidence");
+    expect(dashboardOps).toContain("cell-view parity");
+    expect(dashboardOps).toContain("scroll attachment");
+    expect(dashboardOps).toContain("frame containment");
     expect(dashboardOps).toContain("desktop command-center cohesion");
     expect(dashboardOps).toContain("mobile command-center cohesion");
     expect(dashboardOps).toContain("90%");
