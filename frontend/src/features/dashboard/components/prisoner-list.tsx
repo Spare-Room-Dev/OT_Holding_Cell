@@ -18,13 +18,13 @@ export function PrisonerList({
 }: PrisonerListProps) {
   return (
     <section
-      className="dashboard-panel surface-panel surface-panel--list surface-panel--archive prisoner-list"
+      className="dashboard-panel surface-panel surface-panel--list surface-panel--history prisoner-list"
       aria-label="Prisoner list"
       data-command-center-region="live-list"
     >
       <header className="surface-panel__header">
         <h2 className="dashboard-panel__title surface-panel__title" data-command-center-heading="panel-title">
-          Active Prisoners
+          Live Breach History
         </h2>
         <p className="dashboard-panel__subtitle">
           Visible: {prisoners.length}

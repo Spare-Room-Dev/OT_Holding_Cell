@@ -2,18 +2,8 @@
   max-width: 100%;
   min-width: 0;
   border-color: var(--hc-frame-border-default);
-  background:
-    var(--hc-frame-bg-base),
-    repeating-linear-gradient(
-      0deg,
-      transparent 0,
-      transparent 1.45rem,
-      color-mix(in srgb, var(--hc-frame-border-default) 10%, transparent) 1.45rem,
-      color-mix(in srgb, var(--hc-frame-border-default) 10%, transparent) 1.5rem
-    );
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--hc-panel-outline-strong) 18%, transparent),
-    var(--hc-glow-soft);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--hc-frame-bg-base) 94%, #050b13), var(--hc-frame-bg-base));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hc-panel-outline) 18%, transparent);
 }
 
 .surface-panel__header {
@@ -37,11 +27,11 @@
 }
 
 .surface-panel--list {
-  gap: var(--hc-space-4);
+  gap: var(--hc-space-3);
 }
 
-.surface-panel--archive {
-  border-left: 2px solid var(--hc-frame-border-strong);
+.surface-panel--history {
+  border-color: color-mix(in srgb, var(--hc-frame-border-default) 88%, var(--hc-panel-outline));
 }
 
 .surface-panel--detail {
@@ -55,12 +45,9 @@
 .surface-card {
   max-width: 100%;
   min-width: 0;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--hc-panel-bg-alt) 92%, transparent), var(--hc-panel-bg)),
-    var(--hc-frame-grid-overlay);
-  background-size: auto, 12px 12px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--hc-panel-bg-alt) 90%, transparent), var(--hc-panel-bg));
   border-color: var(--hc-frame-border-default);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hc-panel-outline-strong) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hc-panel-outline) 10%, transparent);
 }
 
 .surface-card--row {
@@ -101,10 +88,7 @@
   max-width: 100%;
   min-width: 0;
   border-color: var(--hc-frame-border-default);
-  background:
-    linear-gradient(180deg, rgb(20 35 54 / 92%), rgb(14 26 40 / 94%)),
-    var(--hc-frame-grid-overlay);
-  background-size: auto, 14px 14px;
+  background: linear-gradient(180deg, rgb(19 34 52 / 85%), rgb(14 24 38 / 92%));
 }
 
 .surface-section__title {
