@@ -37,12 +37,20 @@ Expected result: all `@dashboard` tests pass.
 4. At each zoom level, confirm dense telemetry lines remain readable and no panel headings, labels, or list content clip or overlap.
 5. Confirm empty/standby states still keep panel boundaries visible and operationally understandable.
 6. With rows present and with filters narrowing the list, confirm archive-facing panel accents remain visible and consistent.
+7. Attach screenshot evidence for each zoom state and annotate any clipping/overlap checks.
 
 ### 2) Responsive Layout
 1. Open the dashboard on desktop width (>= 1280px).
 2. Confirm header, stats, filter controls, prisoner list, and detail region are visible together.
 3. Switch to mobile width (around 390px).
 4. Confirm list remains primary, detail uses a drawer, and drawer can be closed.
+5. Attach screenshot evidence for desktop command-center cohesion and mobile command-center cohesion.
+
+### Evidence Artifacts (Required)
+- Attach screenshot evidence captured at 90%, 100%, and 110% zoom for desktop layout.
+- Attach screenshot evidence showing desktop command-center cohesion with list + dossier simultaneously visible.
+- Attach screenshot evidence showing mobile command-center cohesion with drawer closed and drawer open states.
+- Record screenshot file names in the release ticket or deployment notes.
 
 ### 3) Connection Health, Stale State, and Retry
 1. Confirm header pill initially shows `Connection live`.

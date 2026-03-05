@@ -44,6 +44,16 @@ const PRISONERS: ListItem[] = [
   },
 ];
 
+const COHESION_REGION_SELECTORS = [
+  '[data-command-center-region="command-band"]',
+  '[data-command-center-region="kpi-band"]',
+  '[data-command-center-region="filter-band"]',
+  '[data-command-center-region="live-list"]',
+  '[data-command-center-region="dossier-pane"]',
+];
+
+type CohesionZoomLevel = "90%" | "100%" | "110%";
+
 function buildDetailResponse(prisoner: ListItem) {
   return {
     prisoner: {
@@ -163,6 +173,39 @@ async function mockDashboardApi(page: Page) {
   });
 }
 
+async function assertNoClippingForCohesionRegions(page: Page) {
+  const noClipDetected = await page.evaluate((selectors) => {
+    for (const selector of selectors) {
+      const element = document.querySelector(selector);
+      if (!element) {
+        return false;
+      }
+      const rect = element.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) {
+        return false;
+      }
+      if (rect.left >= window.innerWidth || rect.top >= window.innerHeight) {
+        return false;
+      }
+    }
+    return true;
+  }, COHESION_REGION_SELECTORS);
+
+  expect(noClipDetected).toBe(true);
+}
+
+async function assertDesktopZoomReadability(page: Page, zoomLevel: CohesionZoomLevel) {
+  await page.evaluate((level) => {
+    document.body.style.zoom = level;
+  }, zoomLevel);
+
+  for (const selector of COHESION_REGION_SELECTORS) {
+    await expect(page.locator(selector)).toBeVisible();
+  }
+
+  await assertNoClippingForCohesionRegions(page);
+}
+
 test.describe("@dashboard responsive shell", () => {
   test.beforeEach(async ({ page }) => {
     await installRealtimeSocketMock(page);
@@ -180,6 +223,20 @@ test.describe("@dashboard responsive shell", () => {
     await expect(page.locator(".prisoner-list.surface-panel.surface-panel--list.surface-panel--archive")).toBeVisible();
     await expect(page.locator(".dashboard-layout__content .detail-pane")).toBeVisible();
     await expect(page.locator(".mobile-detail-drawer--open")).toHaveCount(0);
+    await expect(page.locator('[data-command-center-region="command-band"]')).toBeVisible();
+    await expect(page.locator('[data-command-center-region="kpi-band"]')).toBeVisible();
+    await expect(page.locator('[data-command-center-region="filter-band"]')).toBeVisible();
+    await expect(page.locator('[data-command-center-region="live-list"]')).toBeVisible();
+    await expect(page.locator('[data-command-center-region="dossier-pane"]')).toBeVisible();
+    await expect(page.locator('[data-command-center-heading="shell-title"]')).toBeVisible();
+    await expect(page.locator('[data-command-center-heading="panel-title"]').first()).toBeVisible();
+
+    await assertDesktopZoomReadability(page, "90%");
+    await assertDesktopZoomReadability(page, "100%");
+    await assertDesktopZoomReadability(page, "110%");
+    await page.evaluate(() => {
+      document.body.style.zoom = "100%";
+    });
 
     await page.locator('[data-prisoner-id="11"]').click();
     const selectedRow = page.locator('[data-prisoner-id="11"]');
@@ -197,6 +254,8 @@ test.describe("@dashboard responsive shell", () => {
     await page.goto("/");
 
     await expect(page.locator(".dashboard-layout__content .detail-pane")).toHaveCount(0);
+    await expect(page.locator('[data-command-center-region="command-band"]')).toBeVisible();
+    await expect(page.locator('[data-command-center-region="live-list"]')).toBeVisible();
     await page.locator('[data-prisoner-id="11"]').click();
     await expect(page.locator(".mobile-detail-drawer--open")).toBeVisible();
     await expect(page.getByRole("dialog", { name: "Prisoner Detail" })).toBeVisible();
