@@ -240,6 +240,17 @@ describe("DashboardShell", () => {
     expect(container.querySelector('[data-command-center-heading="panel-title"]')).not.toBeNull();
   });
 
+  it("renders a framed cell-view layer in the live hero even before data density increases", async () => {
+    renderShell();
+    await flush();
+
+    const cellView = container.querySelector('[data-command-center-region="cell-view"]');
+    expect(cellView).not.toBeNull();
+    expect(cellView?.classList.contains("dashboard-shell__cell-view")).toBe(true);
+    expect(cellView?.querySelector(".dashboard-shell__cell-view-grid")).not.toBeNull();
+    expect(cellView?.querySelector(".dashboard-shell__cell-view-status")).not.toBeNull();
+  });
+
   it("uses mobile detail drawer behavior when forced into mobile layout", async () => {
     renderShell({ forceMobileLayout: true });
     await flush();
