@@ -3,6 +3,7 @@ import { maskSourceIp } from "../domain/masking";
 import { deriveSeverityFromPrisoner } from "../domain/severity";
 import type { DashboardPrisonerSummary } from "../types/contracts";
 import "./dashboard-layout.css";
+import "./dashboard-surface-panels.css";
 
 export const PRISONER_ROW_PULSE_MS = 700;
 
@@ -74,6 +75,8 @@ export function PrisonerRow({ prisoner, isSelected = false, onSelect, className 
 
   const rowClassName = [
     "prisoner-row",
+    "surface-card",
+    "surface-card--row",
     isSelected ? "prisoner-row--selected" : "",
     isPulsing ? "prisoner-row--pulse" : "",
     className ?? "",
@@ -90,27 +93,30 @@ export function PrisonerRow({ prisoner, isSelected = false, onSelect, className 
       data-prisoner-id={prisoner.id}
     >
       <div className="prisoner-row__top">
-        <strong className="prisoner-row__ip">{maskSourceIp(prisoner.source_ip)}</strong>
-        <span className={`prisoner-row__severity-badge prisoner-row__severity-badge--${severity.tier}`}>
+        <strong className="prisoner-row__ip surface-mono">{maskSourceIp(prisoner.source_ip)}</strong>
+        <span
+          className={`prisoner-row__severity-badge surface-chip surface-chip--severity prisoner-row__severity-badge--${severity.tier}`}
+        >
           {severity.label}
         </span>
       </div>
 
-      <p className="prisoner-row__summary">
+      <p className="prisoner-row__summary surface-readout">
         Attempts: {prisoner.attempt_count} | Credentials: {prisoner.credential_count} | Commands: {prisoner.command_count} |
         Downloads: {prisoner.download_count}
       </p>
 
-      <p className="prisoner-row__intel">
+      <p className="prisoner-row__intel surface-readout">
         Country: {formatValue(prisoner.country_code ?? prisoner.enrichment.country_code)} | Enrichment:{" "}
         {prisoner.enrichment.status}
       </p>
 
-      <p className="prisoner-row__intel">
-        <span className="prisoner-row__signal">Signal: {severity.signal}</span> | Attempt band: {severity.attemptBand}
+      <p className="prisoner-row__intel surface-readout">
+        <span className="prisoner-row__signal surface-tactical-label">Signal: {severity.signal}</span> | Attempt band:{" "}
+        {severity.attemptBand}
       </p>
 
-      <p className="prisoner-row__timestamps">
+      <p className="prisoner-row__timestamps surface-readout">
         First seen: {prisoner.first_seen_at} | Last seen: {prisoner.last_seen_at}
       </p>
     </button>

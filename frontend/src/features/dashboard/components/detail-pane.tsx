@@ -9,6 +9,7 @@ import type {
   DashboardPrisonerProtocolHistoryEntry,
 } from "../types/contracts";
 import "./dashboard-layout.css";
+import "./dashboard-surface-panels.css";
 
 export interface DetailPaneProps {
   selectedPrisonerId: number | null;
@@ -33,13 +34,13 @@ function renderDownloadItem(entry: DashboardPrisonerDownloadHistoryEntry): strin
 
 function renderItemList(items: string[]) {
   if (items.length === 0) {
-    return <p className="detail-pane__line">No records available.</p>;
+    return <p className="detail-pane__line surface-section__line">No records available.</p>;
   }
 
   return (
-    <ul className="detail-pane__list">
+    <ul className="detail-pane__list surface-section__list">
       {items.map((item, index) => (
-        <li key={`${item}-${index}`} className="detail-pane__list-item">
+        <li key={`${item}-${index}`} className="detail-pane__list-item surface-section__list-item">
           <SafeRender value={item} />
         </li>
       ))}
@@ -50,13 +51,13 @@ function renderItemList(items: string[]) {
 function renderReasonMetadata(reasonMetadata: Record<string, string>) {
   const entries = Object.entries(reasonMetadata);
   if (entries.length === 0) {
-    return <p className="detail-pane__line">Reason metadata: none</p>;
+    return <p className="detail-pane__line surface-section__line">Reason metadata: none</p>;
   }
 
   return (
-    <ul className="detail-pane__list">
+    <ul className="detail-pane__list surface-section__list">
       {entries.map(([key, value]) => (
-        <li key={key} className="detail-pane__list-item">
+        <li key={key} className="detail-pane__list-item surface-section__list-item">
           <SafeRender value={`${key}: ${value}`} />
         </li>
       ))}
@@ -67,7 +68,10 @@ function renderReasonMetadata(reasonMetadata: Record<string, string>) {
 export function DetailPane({ selectedPrisonerId, detail }: DetailPaneProps) {
   if (selectedPrisonerId === null) {
     return (
-      <aside className="dashboard-panel detail-pane detail-pane--empty" aria-live="polite">
+      <aside
+        className="dashboard-panel surface-panel surface-panel--detail surface-panel--detail-empty detail-pane detail-pane--empty"
+        aria-live="polite"
+      >
         <h2 className="dashboard-panel__title">Prisoner Detail</h2>
         <p className="detail-pane__empty-text">Select a prisoner from the list to inspect attack summary and activity.</p>
       </aside>
@@ -76,7 +80,7 @@ export function DetailPane({ selectedPrisonerId, detail }: DetailPaneProps) {
 
   if (detail === null) {
     return (
-      <aside className="dashboard-panel detail-pane" aria-live="polite">
+      <aside className="dashboard-panel surface-panel surface-panel--detail detail-pane" aria-live="polite">
         <h2 className="dashboard-panel__title">Prisoner Detail</h2>
         <p className="detail-pane__line">Loading selected prisoner detail...</p>
       </aside>
@@ -91,51 +95,55 @@ export function DetailPane({ selectedPrisonerId, detail }: DetailPaneProps) {
   const maskedSourceIp = maskSourceIp(detail.prisoner.source_ip);
 
   return (
-    <aside className="dashboard-panel detail-pane" aria-live="polite">
-      <header>
-        <h2 className="dashboard-panel__title">Prisoner Detail</h2>
+    <aside className="dashboard-panel surface-panel surface-panel--detail detail-pane" aria-live="polite">
+      <header className="surface-panel__header">
+        <h2 className="dashboard-panel__title surface-panel__title">Prisoner Detail</h2>
         <p className="dashboard-panel__subtitle">
           Severity {severity.label} | Signal {severity.signal}
         </p>
       </header>
 
-      <section className="detail-pane__section" aria-label="Attack summary">
-        <h3 className="detail-pane__section-title">Attack Summary</h3>
-        <p className="detail-pane__line">
+      <section className="detail-pane__section surface-section" aria-label="Attack summary">
+        <h3 className="detail-pane__section-title surface-section__title">Attack Summary</h3>
+        <p className="detail-pane__line surface-section__line">
           Source IP: <SafeRender value={maskedSourceIp} />
         </p>
-        <p className="detail-pane__line">Country: {detail.prisoner.country_code ?? "Unknown"}</p>
-        <p className="detail-pane__line">Attempts: {detail.prisoner.attempt_count}</p>
-        <p className="detail-pane__line">Credentials observed: {detail.prisoner.credential_count}</p>
-        <p className="detail-pane__line">Commands observed: {detail.prisoner.command_count}</p>
-        <p className="detail-pane__line">Downloads observed: {detail.prisoner.download_count}</p>
-        <p className="detail-pane__line">First seen: {detail.prisoner.first_seen_at}</p>
-        <p className="detail-pane__line">Last seen: {detail.prisoner.last_seen_at}</p>
+        <p className="detail-pane__line surface-section__line">Country: {detail.prisoner.country_code ?? "Unknown"}</p>
+        <p className="detail-pane__line surface-section__line">Attempts: {detail.prisoner.attempt_count}</p>
+        <p className="detail-pane__line surface-section__line">Credentials observed: {detail.prisoner.credential_count}</p>
+        <p className="detail-pane__line surface-section__line">Commands observed: {detail.prisoner.command_count}</p>
+        <p className="detail-pane__line surface-section__line">Downloads observed: {detail.prisoner.download_count}</p>
+        <p className="detail-pane__line surface-section__line">First seen: {detail.prisoner.first_seen_at}</p>
+        <p className="detail-pane__line surface-section__line">Last seen: {detail.prisoner.last_seen_at}</p>
       </section>
 
-      <section className="detail-pane__section" aria-label="Intel context">
-        <h3 className="detail-pane__section-title">Intel Context</h3>
-        <p className="detail-pane__line">Status: {detail.prisoner.enrichment.status}</p>
-        <p className="detail-pane__line">Provider: {detail.prisoner.enrichment.provider ?? "Unknown"}</p>
-        <p className="detail-pane__line">Geo country: {detail.prisoner.enrichment.geo.country_code ?? "Unknown"}</p>
-        <p className="detail-pane__line">ASN: {detail.prisoner.enrichment.geo.asn ?? "Unknown"}</p>
-        <p className="detail-pane__line">
+      <section className="detail-pane__section surface-section" aria-label="Intel context">
+        <h3 className="detail-pane__section-title surface-section__title">Intel Context</h3>
+        <p className="detail-pane__line surface-section__line">Status: {detail.prisoner.enrichment.status}</p>
+        <p className="detail-pane__line surface-section__line">Provider: {detail.prisoner.enrichment.provider ?? "Unknown"}</p>
+        <p className="detail-pane__line surface-section__line">
+          Geo country: {detail.prisoner.enrichment.geo.country_code ?? "Unknown"}
+        </p>
+        <p className="detail-pane__line surface-section__line">ASN: {detail.prisoner.enrichment.geo.asn ?? "Unknown"}</p>
+        <p className="detail-pane__line surface-section__line">
           Reputation: {detail.prisoner.enrichment.reputation.severity ?? "Unknown"} (confidence{" "}
           {detail.prisoner.enrichment.reputation.confidence ?? "unknown"})
         </p>
-        <p className="detail-pane__line">Last updated: {detail.prisoner.enrichment.last_updated_at ?? "Unknown"}</p>
+        <p className="detail-pane__line surface-section__line">
+          Last updated: {detail.prisoner.enrichment.last_updated_at ?? "Unknown"}
+        </p>
         {renderReasonMetadata(detail.prisoner.enrichment.reason_metadata)}
       </section>
 
-      <section className="detail-pane__section" aria-label="Activity timeline">
-        <h3 className="detail-pane__section-title">Activity Timeline</h3>
-        <p className="detail-pane__line">Protocol history</p>
+      <section className="detail-pane__section surface-section" aria-label="Activity timeline">
+        <h3 className="detail-pane__section-title surface-section__title">Activity Timeline</h3>
+        <p className="detail-pane__line surface-section__line surface-tactical-label">Protocol history</p>
         {renderItemList(detail.protocol_history.map(renderProtocolHistoryItem))}
-        <p className="detail-pane__line">Credentials</p>
+        <p className="detail-pane__line surface-section__line surface-tactical-label">Credentials</p>
         {renderItemList(detail.credentials.map(renderCredentialItem))}
-        <p className="detail-pane__line">Commands</p>
+        <p className="detail-pane__line surface-section__line surface-tactical-label">Commands</p>
         {renderItemList(detail.commands.map(renderCommandItem))}
-        <p className="detail-pane__line">Downloads</p>
+        <p className="detail-pane__line surface-section__line surface-tactical-label">Downloads</p>
         {renderItemList(detail.downloads.map(renderDownloadItem))}
       </section>
     </aside>
