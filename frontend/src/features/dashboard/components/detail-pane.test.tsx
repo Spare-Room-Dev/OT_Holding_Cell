@@ -91,6 +91,7 @@ describe("DetailPane", () => {
   it("shows explicit empty state when no prisoner is selected", () => {
     renderPane(null, null);
     const pane = container.querySelector(".detail-pane");
+    expect(pane?.getAttribute("data-command-center-region")).toBe("dossier-pane");
     expect(pane?.classList.contains("surface-panel")).toBe(true);
     expect(pane?.classList.contains("surface-panel--detail")).toBe(true);
     expect(pane?.classList.contains("surface-panel--detail-empty")).toBe(true);
@@ -103,8 +104,10 @@ describe("DetailPane", () => {
 
     const text = container.textContent ?? "";
     const pane = container.querySelector(".detail-pane");
+    expect(pane?.getAttribute("data-command-center-region")).toBe("dossier-pane");
     expect(pane?.classList.contains("surface-panel")).toBe(true);
     expect(pane?.classList.contains("surface-panel--detail")).toBe(true);
+    expect(container.querySelector('[data-command-center-heading="panel-title"]')).not.toBeNull();
     expect(container.querySelectorAll(".detail-pane__section.surface-section")).toHaveLength(3);
     expect(text).toContain("Attack Summary");
     expect(text).toContain("Intel Context");

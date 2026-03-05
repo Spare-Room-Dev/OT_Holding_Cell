@@ -226,6 +226,20 @@ describe("DashboardShell", () => {
     expect(kpiReadout).not.toBeNull();
   });
 
+  it("applies shared command-center cohesion region hooks across primary shell regions", async () => {
+    renderShell();
+    await flush();
+
+    expect(container.querySelector('[data-command-center-region="command-band"]')).not.toBeNull();
+    expect(container.querySelector('[data-command-center-region="kpi-band"]')).not.toBeNull();
+    expect(container.querySelector('[data-command-center-region="filter-band"]')).not.toBeNull();
+    expect(container.querySelector('[data-command-center-region="live-list"]')).not.toBeNull();
+    expect(container.querySelector('[data-command-center-region="dossier-pane"]')).not.toBeNull();
+
+    expect(container.querySelector('[data-command-center-heading="shell-title"]')).not.toBeNull();
+    expect(container.querySelector('[data-command-center-heading="panel-title"]')).not.toBeNull();
+  });
+
   it("uses mobile detail drawer behavior when forced into mobile layout", async () => {
     renderShell({ forceMobileLayout: true });
     await flush();

@@ -179,8 +179,8 @@ describe("dashboard realtime integration", () => {
     });
     await flush();
 
-    const listPanel = container.querySelector(".prisoner-list.surface-panel.surface-panel--list.surface-panel--archive");
-    const detailPanel = container.querySelector(".detail-pane.surface-panel.surface-panel--detail");
+    const listPanel = container.querySelector('[data-command-center-region="live-list"]');
+    const detailPanel = container.querySelector('[data-command-center-region="dossier-pane"]');
     expect(listPanel).not.toBeNull();
     expect(detailPanel).not.toBeNull();
 
@@ -232,6 +232,7 @@ describe("dashboard realtime integration", () => {
     expect(text).toContain("High");
     expect(text).toContain("Signal: escalate");
     expect(container.querySelector(".prisoner-row.surface-card.surface-card--row")).not.toBeNull();
+    expect(container.querySelector('.prisoner-row[data-command-center-region="live-row"]')).not.toBeNull();
     expect(container.querySelector(".prisoner-row__signal.surface-tactical-label")).not.toBeNull();
   });
 });

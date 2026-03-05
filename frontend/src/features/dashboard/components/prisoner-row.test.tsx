@@ -79,6 +79,7 @@ describe("PrisonerRow", () => {
 
     const text = container.textContent ?? "";
     const row = container.querySelector(".prisoner-row");
+    expect(row?.getAttribute("data-command-center-region")).toBe("live-row");
     expect(row?.classList.contains("surface-card")).toBe(true);
     expect(row?.classList.contains("surface-card--row")).toBe(true);
     expect(text).toContain("198.51.x.x");
