@@ -4,6 +4,22 @@ import { describe, expect, it } from "vitest";
 
 const projectRoot = join(import.meta.dirname, "..", "..");
 const tokensPath = join(projectRoot, "src", "styles", "tokens.css");
+const shellChromePath = join(
+  projectRoot,
+  "src",
+  "features",
+  "dashboard",
+  "components",
+  "dashboard-shell-chrome.css",
+);
+const surfacePanelsPath = join(
+  projectRoot,
+  "src",
+  "features",
+  "dashboard",
+  "components",
+  "dashboard-surface-panels.css",
+);
 const packageJsonPath = join(projectRoot, "package.json");
 
 describe("command-center token contract", () => {
@@ -24,6 +40,12 @@ describe("command-center token contract", () => {
       "--hc-line-ui",
       "--hc-line-data",
       "--hc-tracking-ui",
+      "--hc-frame-border-default",
+      "--hc-frame-border-strong",
+      "--hc-frame-bg-base",
+      "--hc-frame-grid-overlay",
+      "--hc-frame-heading-size",
+      "--hc-frame-heading-spacing",
     ];
 
     for (const token of requiredTokens) {
@@ -41,6 +63,25 @@ describe("command-center token contract", () => {
     expect(tokens).toContain("--hc-connection-live: #4ac57a;");
     expect(tokens).toContain("--hc-connection-reconnecting: #f3c96a;");
     expect(tokens).toContain("--hc-connection-offline: #db5f5f;");
+  });
+
+  it("uses shared frame primitives across shell and surface panel styles", () => {
+    const shellChrome = readFileSync(shellChromePath, "utf8");
+    const surfacePanels = readFileSync(surfacePanelsPath, "utf8");
+
+    const requiredFramePrimitives = [
+      "var(--hc-frame-border-default)",
+      "var(--hc-frame-border-strong)",
+      "var(--hc-frame-bg-base)",
+      "var(--hc-frame-grid-overlay)",
+      "var(--hc-frame-heading-size)",
+      "var(--hc-frame-heading-spacing)",
+    ];
+
+    for (const framePrimitive of requiredFramePrimitives) {
+      expect(shellChrome).toContain(framePrimitive);
+      expect(surfacePanels).toContain(framePrimitive);
+    }
   });
 
   it("pins approved font packages in frontend dependencies", () => {
