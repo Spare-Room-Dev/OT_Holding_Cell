@@ -32,12 +32,15 @@ Expected result: all `@dashboard` tests pass.
 
 ### 1) Command-Center Surface Cohesion and Readability
 1. Open the dashboard at 100% zoom and confirm list panel, row cards, and dossier sections share the same framed command-center styling language.
+2. Confirm `Live Cell Block` shows explicit cell-view parity (framed bay grid remains visible, not a plain header-only panel).
+3. Confirm command-center backdrop remains attached while scrolling (no white seams above, below, or around shell edges).
 2. Confirm uppercase typography is limited to tactical labels/chrome while metric/readout lines remain easy to scan.
 3. Change browser zoom to 90%, 100%, and 110%.
 4. At each zoom level, confirm dense telemetry lines remain readable and no panel headings, labels, or list content clip or overlap.
 5. Confirm empty/standby states still keep panel boundaries visible and operationally understandable.
 6. With rows present and with filters narrowing the list, confirm archive-facing panel accents remain visible and consistent.
-7. Attach screenshot evidence for each zoom state and annotate any clipping/overlap checks.
+7. Confirm frame containment: list rows and dossier cards stay within the intended blue command-center frame at all tested zoom levels.
+8. Attach screenshot evidence for each zoom state and annotate any clipping/overlap checks.
 
 ### 2) Responsive Layout
 1. Open the dashboard on desktop width (>= 1280px).
@@ -47,6 +50,9 @@ Expected result: all `@dashboard` tests pass.
 5. Attach screenshot evidence for desktop command-center cohesion and mobile command-center cohesion.
 
 ### Evidence Artifacts (Required)
+- Attach screenshot evidence that demonstrates cell-view parity for the `Live Cell Block` hero treatment.
+- Attach screenshot evidence that demonstrates scroll attachment (no white background detachment while scrolling).
+- Attach screenshot evidence that demonstrates frame containment for list and dossier cards at 90%, 100%, and 110% zoom.
 - Attach screenshot evidence captured at 90%, 100%, and 110% zoom for desktop layout.
 - Attach screenshot evidence showing desktop command-center cohesion with list + dossier simultaneously visible.
 - Attach screenshot evidence showing mobile command-center cohesion with drawer closed and drawer open states.

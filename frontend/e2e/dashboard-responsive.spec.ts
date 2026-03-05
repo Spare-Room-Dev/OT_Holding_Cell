@@ -46,6 +46,7 @@ const PRISONERS: ListItem[] = [
 
 const COHESION_REGION_SELECTORS = [
   '[data-command-center-region="command-band"]',
+  '[data-command-center-region="cell-view"]',
   '[data-command-center-region="kpi-band"]',
   '[data-command-center-region="filter-band"]',
   '[data-command-center-region="live-list"]',
