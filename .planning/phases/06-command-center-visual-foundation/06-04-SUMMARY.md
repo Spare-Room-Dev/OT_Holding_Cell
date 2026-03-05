@@ -116,7 +116,7 @@ Each task was committed atomically:
 - **Fix:** Staged the summary with `git add -f` and committed metadata files manually.
 - **Files modified:** `.planning/phases/06-command-center-visual-foundation/06-04-SUMMARY.md`, `.planning/STATE.md`, `.planning/ROADMAP.md`
 - **Verification:** Final docs commit includes summary + planning state/roadmap updates.
-- **Committed in:** final metadata commit
+- **Committed in:** `9372c68`
 
 ---
 
