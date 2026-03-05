@@ -11,7 +11,7 @@ Milestone v1.1 delivers a medium-fidelity, mockup-inspired UI-polish pass that i
 
 ## Phases
 
-- [ ] **Phase 6: Command-Center Visual Foundation** - Establish mockup-inspired shell, grid framing, and readable retro-neon visual system across core surfaces.
+- [x] **Phase 6: Command-Center Visual Foundation** - Establish mockup-inspired shell, grid framing, and readable retro-neon visual system across core surfaces.
 - [ ] **Phase 7: Live Surface Threat Hierarchy** - Make KPI strip, Live Cell Block, and Prisoner File surfaces severity-forward and scan-efficient.
 - [ ] **Phase 8: Interaction and Realtime Feedback Polish** - Complete interaction/system-state feedback and restrained motion across live dashboard widgets.
 - [ ] **Phase 9: Responsive Accessibility Hardening** - Ensure desktop/mobile command workflow integrity, keyboard focus visibility, and readable contrast.
@@ -27,7 +27,7 @@ Milestone v1.1 delivers a medium-fidelity, mockup-inspired UI-polish pass that i
   2. User can read dense dashboard data with legible retro typography, spacing, and contrast tuned for scanning.
   3. User can distinguish primary interface sections through consistent grid alignment, panel framing, and heading patterns.
   4. User can use the polished dashboard without any visible change to existing backend data behavior or realtime semantics.
-**Plans**: 3 total (06-01 complete, 06-02 and 06-03 pending)
+**Plans**: 4 total (06-01, 06-02, 06-03, and 06-04 complete)
 
 ### Phase 7: Live Surface Threat Hierarchy
 **Goal**: Users can triage highest-risk threats first because severity and recency cues are consistently prioritized across KPI, Live Cell Block, and Prisoner File surfaces.
@@ -65,7 +65,7 @@ Milestone v1.1 delivers a medium-fidelity, mockup-inspired UI-polish pass that i
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 6. Command-Center Visual Foundation | 2/3 | In Progress | - |
+| 6. Command-Center Visual Foundation | 4/4 | Complete | 2026-03-05 |
 | 7. Live Surface Threat Hierarchy | 0/TBD | Not started | - |
 | 8. Interaction and Realtime Feedback Polish | 0/TBD | Not started | - |
 | 9. Responsive Accessibility Hardening | 0/TBD | Not started | - |
