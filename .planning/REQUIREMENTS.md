@@ -60,10 +60,10 @@ Explicitly excluded from v1.1.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VIS-01 | Phase 6 | In progress (gap closure pending 06-05) |
-| VIS-02 | Phase 6 | In progress (gap closure pending 06-05) |
-| VIS-03 | Phase 6 | In progress (gap closure pending 06-05) |
-| VIS-04 | Phase 6 | In progress (gap closure pending 06-05) |
+| VIS-01 | Phase 6 | Complete (06-06 verified) |
+| VIS-02 | Phase 6 | Complete (06-06 verified) |
+| VIS-03 | Phase 6 | Complete (06-06 verified) |
+| VIS-04 | Phase 6 | Complete (06-06 verified) |
 | HIER-01 | Phase 7 | Pending |
 | HIER-02 | Phase 7 | Pending |
 | HIER-03 | Phase 7 | Pending |
@@ -83,4 +83,4 @@ Explicitly excluded from v1.1.
 
 ---
 *Requirements defined: 2026-03-04*
-*Last updated: 2026-03-05 after Phase 06 gap-closure planning update (06-05 pending execution)*
+*Last updated: 2026-03-05 after Phase 06 verification closure (06-06 complete)*
