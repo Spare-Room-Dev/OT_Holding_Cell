@@ -19,10 +19,11 @@ export function ConnectionPill({ status, isStale, reconnectAttempt, onRetry }: C
   const canRetry = status !== "live" || isStale;
 
   return (
-    <div className={`connection-pill connection-pill--${status}`} role="status" aria-live="polite">
-      <p className="connection-pill__text">Connection {CONNECTION_LABELS[status]}</p>
-      {isStale ? <p className="connection-pill__meta">Data is stale until sync recovers.</p> : null}
-      {showRetryMetadata ? <p className="connection-pill__meta">Reconnect attempts: {reconnectAttempt}</p> : null}
+    <div className={`connection-pill connection-pill--${status} connection-pill--command`} role="status" aria-live="polite">
+      <p className="connection-pill__label command-band__label">Connection status</p>
+      <p className="connection-pill__text command-band__readout">Connection {CONNECTION_LABELS[status]}</p>
+      {isStale ? <p className="connection-pill__meta command-band__meta">Data is stale until sync recovers.</p> : null}
+      {showRetryMetadata ? <p className="connection-pill__meta command-band__meta">Reconnect attempts: {reconnectAttempt}</p> : null}
       <button type="button" className="connection-pill__retry" onClick={onRetry} disabled={!canRetry}>
         Retry
       </button>

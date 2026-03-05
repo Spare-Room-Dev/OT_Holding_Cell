@@ -26,10 +26,10 @@ export function FilterBar({
   onTimeWindowChange,
 }: FilterBarProps) {
   return (
-    <section className="dashboard-panel" aria-label="Filters">
-      <div className="filter-bar">
+    <section className="dashboard-panel dashboard-shell__filters-band" aria-label="Filters">
+      <div className="filter-bar filter-bar--command-band">
         <label className="filter-bar__control">
-          <span className="filter-bar__label">Country</span>
+          <span className="filter-bar__label command-band__label">Country</span>
           <select
             className="filter-bar__select"
             value={country ?? ""}
@@ -45,7 +45,7 @@ export function FilterBar({
         </label>
 
         <label className="filter-bar__control">
-          <span className="filter-bar__label">Time window</span>
+          <span className="filter-bar__label command-band__label">Time window</span>
           <select
             className="filter-bar__select"
             value={timeWindow}
@@ -59,7 +59,7 @@ export function FilterBar({
           </select>
         </label>
 
-        <p className="filter-bar__meta" aria-live="polite">
+        <p className="filter-bar__meta command-band__meta" aria-live="polite">
           Filtered out: {filteredOutCount}
         </p>
       </div>
