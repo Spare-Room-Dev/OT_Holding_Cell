@@ -149,7 +149,12 @@
 
 .dashboard-shell__live-hero-frame {
   border-color: color-mix(in srgb, var(--hc-frame-border-default) 86%, var(--hc-panel-outline));
-  background: linear-gradient(180deg, color-mix(in srgb, var(--hc-frame-bg-base) 95%, #07101a), var(--hc-frame-bg-base));
+  background:
+    var(--hc-frame-grid-overlay),
+    linear-gradient(180deg, color-mix(in srgb, var(--hc-frame-bg-base) 95%, #07101a), var(--hc-frame-bg-base));
+  background-size:
+    2.2rem 100%,
+    auto;
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hc-panel-outline) 14%, transparent);
 }
 
