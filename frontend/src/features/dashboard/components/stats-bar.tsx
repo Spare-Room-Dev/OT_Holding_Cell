@@ -20,7 +20,7 @@ function formatStat(value: number): string {
 export function StatsBar({ stats }: StatsBarProps) {
   return (
     <section
-      className="dashboard-panel dashboard-shell__metrics-band"
+      className="dashboard-panel dashboard-shell__metrics-band dashboard-shell__top-strip-metrics"
       aria-label="Dashboard stats"
       data-command-center-region="kpi-band"
     >

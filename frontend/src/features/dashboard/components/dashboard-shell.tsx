@@ -197,56 +197,66 @@ export function DashboardShell({
         />
       </header>
 
-      <section className="dashboard-panel dashboard-shell__live-hero" data-command-center-region="live-hero">
-        <div className="dashboard-shell__live-hero-head">
-          <h1 className="dashboard-shell__title" data-command-center-heading="shell-title">
-            Live Cell Block
-          </h1>
-          <p className="dashboard-shell__subtitle">
-            Monitor attacker activity with live state, filtering, and explicit analyst-driven detail inspection.
-          </p>
-          {realtime.isStale ? (
-            <p className="dashboard-shell__stale" role="status" aria-live="polite">
-              Live feed is stale while the connection is recovering. Last-known prisoner data remains visible.
-            </p>
-          ) : null}
-        </div>
-
-        <div className="dashboard-shell__cell-view" data-command-center-region="cell-view">
-          <div className="dashboard-shell__cell-view-head">
-            <p className="dashboard-shell__cell-view-kicker">Cell-View Grid</p>
-            <p className="dashboard-shell__cell-view-status surface-readout surface-readout--standby">
-              Standby telemetry frame active. Visual lanes stay pinned even when the live list is sparse.
-            </p>
-          </div>
-          <div className="dashboard-shell__cell-view-frame">
-            <div className="dashboard-shell__cell-view-grid" aria-hidden="true" />
-            <ul className="dashboard-shell__cell-view-bays" aria-label="Cell-view bay telemetry frame">
-              {cellViewSlots.map((isOccupied, index) => (
-                <li
-                  // deterministic bay IDs ensure a stable visual scaffold between sparse and dense states.
-                  key={`cell-view-bay-${index + 1}`}
-                  className={`dashboard-shell__cell-view-bay ${isOccupied ? "dashboard-shell__cell-view-bay--occupied" : "dashboard-shell__cell-view-bay--standby"}`}
-                >
-                  <span className="dashboard-shell__cell-view-bay-label">Bay {index + 1}</span>
-                  <span className="dashboard-shell__cell-view-bay-state">{isOccupied ? "Tracking" : "Standby"}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+      <section className="dashboard-shell__top-strip">
+        <StatsBar stats={stats} />
       </section>
 
-      <StatsBar stats={stats} />
+      <section className="dashboard-layout__content dashboard-shell__main-band">
+        <section className="dashboard-panel dashboard-shell__main-primary dashboard-shell__live-hero" data-command-center-region="live-hero">
+          <div className="dashboard-shell__live-hero-head">
+            <h1 className="dashboard-shell__title" data-command-center-heading="shell-title">
+              Live Cell Block
+            </h1>
+            <p className="dashboard-shell__subtitle">
+              Monitor attacker activity with live state, filtering, and explicit analyst-driven detail inspection.
+            </p>
+            {realtime.isStale ? (
+              <p className="dashboard-shell__stale" role="status" aria-live="polite">
+                Live feed is stale while the connection is recovering. Last-known prisoner data remains visible.
+              </p>
+            ) : null}
+          </div>
 
-      <FilterBar
-        country={filters.country}
-        timeWindow={filters.timeWindow}
-        countryOptions={countryOptions}
-        filteredOutCount={filteredOutCount}
-        onCountryChange={setCountryFilter}
-        onTimeWindowChange={setTimeWindowFilter}
-      />
+          <FilterBar
+            country={filters.country}
+            timeWindow={filters.timeWindow}
+            countryOptions={countryOptions}
+            filteredOutCount={filteredOutCount}
+            onCountryChange={setCountryFilter}
+            onTimeWindowChange={setTimeWindowFilter}
+          />
+
+          <div className="dashboard-shell__cell-view" data-command-center-region="cell-view">
+            <div className="dashboard-shell__cell-view-head">
+              <p className="dashboard-shell__cell-view-kicker">Cell-View Grid</p>
+              <p className="dashboard-shell__cell-view-status surface-readout surface-readout--standby">
+                Standby telemetry frame active. Visual lanes stay pinned even when the live list is sparse.
+              </p>
+            </div>
+            <div className="dashboard-shell__cell-view-frame">
+              <div className="dashboard-shell__cell-view-grid" aria-hidden="true" />
+              <ul className="dashboard-shell__cell-view-bays" aria-label="Cell-view bay telemetry frame">
+                {cellViewSlots.map((isOccupied, index) => (
+                  <li
+                    // deterministic bay IDs ensure a stable visual scaffold between sparse and dense states.
+                    key={`cell-view-bay-${index + 1}`}
+                    className={`dashboard-shell__cell-view-bay ${isOccupied ? "dashboard-shell__cell-view-bay--occupied" : "dashboard-shell__cell-view-bay--standby"}`}
+                  >
+                    <span className="dashboard-shell__cell-view-bay-label">Bay {index + 1}</span>
+                    <span className="dashboard-shell__cell-view-bay-state">{isOccupied ? "Tracking" : "Standby"}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {isMobileLayout ? null : (
+          <section className="dashboard-shell__main-detail">
+            {detailPane}
+          </section>
+        )}
+      </section>
 
       {listQuery.isError ? (
         <section className="dashboard-panel" role="alert">
@@ -255,16 +265,13 @@ export function DashboardShell({
         </section>
       ) : null}
 
-      <section className="dashboard-panel dashboard-shell__live-hero-frame">
-        <section className="dashboard-layout__content">
-          <PrisonerList
-            prisoners={visiblePrisoners}
-            selectedPrisonerId={selectedPrisonerId}
-            onSelectPrisoner={setSelectedPrisonerId}
-            filteredOutCount={filteredOutCount}
-          />
-          {isMobileLayout ? null : detailPane}
-        </section>
+      <section className="dashboard-shell__history-band dashboard-shell__live-hero-frame">
+        <PrisonerList
+          prisoners={visiblePrisoners}
+          selectedPrisonerId={selectedPrisonerId}
+          onSelectPrisoner={setSelectedPrisonerId}
+          filteredOutCount={filteredOutCount}
+        />
       </section>
 
       {isMobileLayout ? (
