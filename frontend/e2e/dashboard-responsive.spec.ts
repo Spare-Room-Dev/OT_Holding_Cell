@@ -177,12 +177,17 @@ test.describe("@dashboard responsive shell", () => {
     await expect(
       page.getByText("Select a prisoner from the list to inspect attack summary and activity."),
     ).toBeVisible();
+    await expect(page.locator(".prisoner-list.surface-panel.surface-panel--list.surface-panel--archive")).toBeVisible();
     await expect(page.locator(".dashboard-layout__content .detail-pane")).toBeVisible();
     await expect(page.locator(".mobile-detail-drawer--open")).toHaveCount(0);
 
     await page.locator('[data-prisoner-id="11"]').click();
-    await expect(page.locator('[data-prisoner-id="11"]')).toHaveAttribute("aria-pressed", "true");
+    const selectedRow = page.locator('[data-prisoner-id="11"]');
+    await expect(selectedRow).toHaveAttribute("aria-pressed", "true");
+    await expect(selectedRow).toHaveClass(/surface-card/);
+    await expect(selectedRow).toHaveClass(/surface-card--row/);
     const detailPane = page.locator(".dashboard-layout__content .detail-pane");
+    await expect(detailPane).toHaveClass(/surface-panel--detail/);
     await expect(detailPane.getByText("Source IP: 198.51.x.x")).toBeVisible();
     await expect(detailPane.getByText("198.51.100.11")).toHaveCount(0);
   });
@@ -195,6 +200,7 @@ test.describe("@dashboard responsive shell", () => {
     await page.locator('[data-prisoner-id="11"]').click();
     await expect(page.locator(".mobile-detail-drawer--open")).toBeVisible();
     await expect(page.getByRole("dialog", { name: "Prisoner Detail" })).toBeVisible();
+    await expect(page.locator(".mobile-detail-drawer--open .detail-pane.surface-panel.surface-panel--detail")).toBeVisible();
 
     await page.locator(".mobile-detail-drawer__close").click();
     await expect(page.locator(".mobile-detail-drawer--open")).toHaveCount(0);

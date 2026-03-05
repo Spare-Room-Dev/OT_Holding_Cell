@@ -244,6 +244,7 @@ test.describe("@dashboard filters", () => {
     await page.goto("/");
 
     const listSummary = page.locator(".prisoner-list .dashboard-panel__subtitle");
+    await expect(page.locator(".prisoner-list.surface-panel.surface-panel--list.surface-panel--archive")).toBeVisible();
     await expect(listSummary).toContainText("Visible: 3");
 
     await page.getByLabel("Country").selectOption("US");
@@ -255,5 +256,6 @@ test.describe("@dashboard filters", () => {
     await emitSocketMessage(page, createRealtimePrisonerEnvelope());
     await expect(listSummary).toContainText("Visible: 1 | Filtered out: 3");
     await expect(page.locator(".filter-bar__meta")).toHaveText("Filtered out: 3");
+    await expect(page.locator('[data-prisoner-id="11"]')).toHaveClass(/surface-card/);
   });
 });

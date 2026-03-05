@@ -179,6 +179,11 @@ describe("dashboard realtime integration", () => {
     });
     await flush();
 
+    const listPanel = container.querySelector(".prisoner-list.surface-panel.surface-panel--list.surface-panel--archive");
+    const detailPanel = container.querySelector(".detail-pane.surface-panel.surface-panel--detail");
+    expect(listPanel).not.toBeNull();
+    expect(detailPanel).not.toBeNull();
+
     act(() => {
       setDashboardCountryFilter("US");
     });
@@ -226,5 +231,7 @@ describe("dashboard realtime integration", () => {
     const text = container.textContent ?? "";
     expect(text).toContain("High");
     expect(text).toContain("Signal: escalate");
+    expect(container.querySelector(".prisoner-row.surface-card.surface-card--row")).not.toBeNull();
+    expect(container.querySelector(".prisoner-row__signal.surface-tactical-label")).not.toBeNull();
   });
 });
