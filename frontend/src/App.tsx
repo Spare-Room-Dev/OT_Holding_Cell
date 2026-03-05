@@ -5,8 +5,10 @@ function App() {
   const { apiBaseUrl, websocketUrl } = resolveRuntimeEndpoints();
 
   return (
-    <main>
-      <DashboardShell apiBaseUrl={apiBaseUrl} websocketUrl={websocketUrl} />
+    <main className="command-center-shell">
+      <div className="command-center-shell__viewport">
+        <DashboardShell apiBaseUrl={apiBaseUrl} websocketUrl={websocketUrl} />
+      </div>
     </main>
   );
 }
