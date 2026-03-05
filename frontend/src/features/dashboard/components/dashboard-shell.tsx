@@ -165,7 +165,10 @@ export function DashboardShell({
 
   return (
     <div className="dashboard-layout dashboard-shell">
-      <header className="dashboard-panel dashboard-shell__command-strip command-band command-band--tight">
+      <header
+        className="dashboard-panel dashboard-shell__command-strip command-band command-band--tight"
+        data-command-center-region="command-band"
+      >
         <nav className="dashboard-shell__nav" aria-label="Command sections">
           <button type="button" className="dashboard-shell__nav-item dashboard-shell__nav-item--active" data-command-tab="dashboard" aria-current="page">
             Dashboard
@@ -188,9 +191,11 @@ export function DashboardShell({
         />
       </header>
 
-      <section className="dashboard-panel dashboard-shell__live-hero">
+      <section className="dashboard-panel dashboard-shell__live-hero" data-command-center-region="live-hero">
         <div className="dashboard-shell__live-hero-head">
-          <h1 className="dashboard-shell__title">Live Cell Block</h1>
+          <h1 className="dashboard-shell__title" data-command-center-heading="shell-title">
+            Live Cell Block
+          </h1>
           <p className="dashboard-shell__subtitle">
             Monitor attacker activity with live state, filtering, and explicit analyst-driven detail inspection.
           </p>

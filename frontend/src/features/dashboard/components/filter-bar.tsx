@@ -26,7 +26,11 @@ export function FilterBar({
   onTimeWindowChange,
 }: FilterBarProps) {
   return (
-    <section className="dashboard-panel dashboard-shell__filters-band" aria-label="Filters">
+    <section
+      className="dashboard-panel dashboard-shell__filters-band"
+      aria-label="Filters"
+      data-command-center-region="filter-band"
+    >
       <div className="filter-bar filter-bar--command-band">
         <label className="filter-bar__control">
           <span className="filter-bar__label command-band__label">Country</span>

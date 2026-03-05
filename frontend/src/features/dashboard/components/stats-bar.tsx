@@ -19,7 +19,11 @@ function formatStat(value: number): string {
 
 export function StatsBar({ stats }: StatsBarProps) {
   return (
-    <section className="dashboard-panel dashboard-shell__metrics-band" aria-label="Dashboard stats">
+    <section
+      className="dashboard-panel dashboard-shell__metrics-band"
+      aria-label="Dashboard stats"
+      data-command-center-region="kpi-band"
+    >
       <div className="stats-bar stats-bar--command-band">
         <article className="stats-bar__item stats-bar__item--command">
           <p className="stats-bar__label command-band__label">Total prisoners</p>

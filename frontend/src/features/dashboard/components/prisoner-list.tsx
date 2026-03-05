@@ -17,9 +17,15 @@ export function PrisonerList({
   filteredOutCount = 0,
 }: PrisonerListProps) {
   return (
-    <section className="dashboard-panel surface-panel surface-panel--list surface-panel--archive prisoner-list" aria-label="Prisoner list">
+    <section
+      className="dashboard-panel surface-panel surface-panel--list surface-panel--archive prisoner-list"
+      aria-label="Prisoner list"
+      data-command-center-region="live-list"
+    >
       <header className="surface-panel__header">
-        <h2 className="dashboard-panel__title surface-panel__title">Active Prisoners</h2>
+        <h2 className="dashboard-panel__title surface-panel__title" data-command-center-heading="panel-title">
+          Active Prisoners
+        </h2>
         <p className="dashboard-panel__subtitle">
           Visible: {prisoners.length}
           {filteredOutCount > 0 ? ` | Filtered out: ${filteredOutCount}` : ""}

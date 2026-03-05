@@ -71,8 +71,11 @@ export function DetailPane({ selectedPrisonerId, detail }: DetailPaneProps) {
       <aside
         className="dashboard-panel surface-panel surface-panel--detail surface-panel--detail-empty detail-pane detail-pane--empty"
         aria-live="polite"
+        data-command-center-region="dossier-pane"
       >
-        <h2 className="dashboard-panel__title">Prisoner Detail</h2>
+        <h2 className="dashboard-panel__title" data-command-center-heading="panel-title">
+          Prisoner Detail
+        </h2>
         <p className="detail-pane__empty-text">Select a prisoner from the list to inspect attack summary and activity.</p>
       </aside>
     );
@@ -80,8 +83,14 @@ export function DetailPane({ selectedPrisonerId, detail }: DetailPaneProps) {
 
   if (detail === null) {
     return (
-      <aside className="dashboard-panel surface-panel surface-panel--detail detail-pane" aria-live="polite">
-        <h2 className="dashboard-panel__title">Prisoner Detail</h2>
+      <aside
+        className="dashboard-panel surface-panel surface-panel--detail detail-pane"
+        aria-live="polite"
+        data-command-center-region="dossier-pane"
+      >
+        <h2 className="dashboard-panel__title" data-command-center-heading="panel-title">
+          Prisoner Detail
+        </h2>
         <p className="detail-pane__line">Loading selected prisoner detail...</p>
       </aside>
     );
@@ -95,9 +104,15 @@ export function DetailPane({ selectedPrisonerId, detail }: DetailPaneProps) {
   const maskedSourceIp = maskSourceIp(detail.prisoner.source_ip);
 
   return (
-    <aside className="dashboard-panel surface-panel surface-panel--detail detail-pane" aria-live="polite">
+    <aside
+      className="dashboard-panel surface-panel surface-panel--detail detail-pane"
+      aria-live="polite"
+      data-command-center-region="dossier-pane"
+    >
       <header className="surface-panel__header">
-        <h2 className="dashboard-panel__title surface-panel__title">Prisoner Detail</h2>
+        <h2 className="dashboard-panel__title surface-panel__title" data-command-center-heading="panel-title">
+          Prisoner Detail
+        </h2>
         <p className="dashboard-panel__subtitle">
           Severity {severity.label} | Signal {severity.signal}
         </p>

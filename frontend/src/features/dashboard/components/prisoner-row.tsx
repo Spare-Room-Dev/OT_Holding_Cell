@@ -91,6 +91,7 @@ export function PrisonerRow({ prisoner, isSelected = false, onSelect, className 
       onClick={() => onSelect?.(prisoner.id)}
       aria-pressed={isSelected}
       data-prisoner-id={prisoner.id}
+      data-command-center-region="live-row"
     >
       <div className="prisoner-row__top">
         <strong className="prisoner-row__ip surface-mono">{maskSourceIp(prisoner.source_ip)}</strong>
