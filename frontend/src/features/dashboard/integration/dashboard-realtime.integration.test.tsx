@@ -183,6 +183,8 @@ describe("dashboard realtime integration", () => {
     const detailPanel = container.querySelector('[data-command-center-region="dossier-pane"]');
     expect(listPanel).not.toBeNull();
     expect(detailPanel).not.toBeNull();
+    expect(listPanel?.classList.contains("surface-panel--history")).toBe(true);
+    expect(listPanel?.textContent).toContain("Live Breach History");
 
     act(() => {
       setDashboardCountryFilter("US");
