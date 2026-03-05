@@ -177,6 +177,32 @@ describe("DashboardShell", () => {
     expect(container.querySelector(".dashboard-layout__content .detail-pane")).not.toBeNull();
   });
 
+  it("renders command-strip chrome with inert placeholder navigation tabs", async () => {
+    renderShell();
+    await flush();
+
+    const commandStrip = container.querySelector(".dashboard-shell__command-strip");
+    expect(commandStrip).not.toBeNull();
+
+    const nav = container.querySelector(".dashboard-shell__nav");
+    expect(nav).not.toBeNull();
+
+    const dashboardTab = container.querySelector('button[data-command-tab="dashboard"]');
+    expect(dashboardTab?.getAttribute("aria-current")).toBe("page");
+
+    const placeholderTabs = [
+      container.querySelector('button[data-command-tab="realtime"]'),
+      container.querySelector('button[data-command-tab="archive"]'),
+      container.querySelector('button[data-command-tab="insights"]'),
+    ];
+    for (const tab of placeholderTabs) {
+      expect(tab?.getAttribute("aria-disabled")).toBe("true");
+      expect(tab?.getAttribute("tabindex")).toBe("-1");
+    }
+
+    expect(container.querySelector(".dashboard-shell__live-hero")).not.toBeNull();
+  });
+
   it("uses mobile detail drawer behavior when forced into mobile layout", async () => {
     renderShell({ forceMobileLayout: true });
     await flush();
