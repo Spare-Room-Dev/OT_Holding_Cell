@@ -251,6 +251,26 @@ describe("DashboardShell", () => {
     expect(cellView?.querySelector(".dashboard-shell__cell-view-status")).not.toBeNull();
   });
 
+  it("keeps mockup-first composition order: top strip, core split, then live history feed", async () => {
+    renderShell();
+    await flush();
+
+    const topStrip = container.querySelector(".dashboard-shell__top-strip");
+    const coreSplit = container.querySelector(".dashboard-shell__main-band");
+    const historyBand = container.querySelector(".dashboard-shell__history-band");
+
+    expect(topStrip).not.toBeNull();
+    expect(coreSplit).not.toBeNull();
+    expect(historyBand).not.toBeNull();
+
+    expect(topStrip?.compareDocumentPosition(coreSplit as Node) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
+    expect(coreSplit?.compareDocumentPosition(historyBand as Node) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
+
+    expect(coreSplit?.querySelector(".dashboard-shell__main-primary")).not.toBeNull();
+    expect(coreSplit?.querySelector(".dashboard-shell__main-detail .detail-pane")).not.toBeNull();
+    expect(historyBand?.querySelector('[data-command-center-region="live-list"]')).not.toBeNull();
+  });
+
   it("uses mobile detail drawer behavior when forced into mobile layout", async () => {
     renderShell({ forceMobileLayout: true });
     await flush();
