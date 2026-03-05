@@ -12,6 +12,16 @@ const foundationPath = join(
   "command-center-foundation.css",
 );
 
+function assertCommandCenterShellContract(source: string): void {
+  if (!source.includes('<main className="command-center-shell">')) {
+    throw new Error("Expected command-center-shell main hook.");
+  }
+
+  if (!source.includes('<div className="command-center-shell__viewport">')) {
+    throw new Error("Expected command-center-shell__viewport hook.");
+  }
+}
+
 describe("command-center foundation contract", () => {
   it("loads global font and foundation style imports once at bootstrap", () => {
     const mainSource = readFileSync(mainPath, "utf8");
@@ -24,8 +34,33 @@ describe("command-center foundation contract", () => {
   it("attaches minimal shell class hooks in App", () => {
     const appSource = readFileSync(appPath, "utf8");
 
-    expect(appSource).toContain('<main className="command-center-shell">');
-    expect(appSource).toContain('className="command-center-shell__viewport"');
+    expect(() => assertCommandCenterShellContract(appSource)).not.toThrow();
+  });
+
+  it("accepts additive non-breaking root attributes with required shell hooks", () => {
+    const appSource = `
+      <main className="command-center-shell" data-command-center-root="shell">
+        <div className="command-center-shell__viewport" data-command-center-root="viewport">
+          <DashboardShell />
+        </div>
+      </main>
+    `;
+
+    expect(() => assertCommandCenterShellContract(appSource)).not.toThrow();
+  });
+
+  it("fails when required shell hooks are missing or renamed", () => {
+    const appSource = `
+      <main className="command-center-root">
+        <div className="command-center-shell__view">
+          <DashboardShell />
+        </div>
+      </main>
+    `;
+
+    expect(() => assertCommandCenterShellContract(appSource)).toThrow(
+      /command-center-shell/,
+    );
   });
 
   it("defines shell framing and typography lane utilities", () => {
