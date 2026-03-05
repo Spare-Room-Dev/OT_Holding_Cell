@@ -5,14 +5,14 @@ milestone_name: UI Polish
 current_phase: 6 of 9 (Command-Center Visual Foundation)
 current_plan: 6
 status: verifying
-stopped_at: Completed 06-command-center-visual-foundation-07-PLAN.md
-last_updated: "2026-03-05T06:37:55.302Z"
+stopped_at: Completed 06-command-center-visual-foundation-08-PLAN.md
+last_updated: "2026-03-05T08:01:29.213Z"
 last_activity: 2026-03-05
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 8
+  completed_plans: 8
   percent: 100
 ---
 
@@ -59,6 +59,7 @@ Progress: [██████████] 100%
 | Phase 06-command-center-visual-foundation P05 | 6 min | 4 tasks | 10 files |
 | Phase 06-command-center-visual-foundation P06 | 3 min | 2 tasks | 1 files |
 | Phase 06-command-center-visual-foundation P07 | 9m | 3 tasks | 13 files |
+| Phase 06-command-center-visual-foundation P08 | 4m | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,9 @@ Recent decisions affecting current work:
 - [Phase 06-command-center-visual-foundation]: Moved filter controls into the live-cell primary panel to preserve a clean top stats strip.
 - [Phase 06-command-center-visual-foundation]: Promoted live feed list to a dedicated bottom Live Breach History band while keeping detail as the secondary desktop pane.
 - [Phase 06-command-center-visual-foundation]: Encoded composition parity with class-hook assertions in E2E and runbook evidence checkpoints.
+- [Phase 06-command-center-visual-foundation]: Sequenced TDD checks by introducing grid-overlay parity as a dedicated Task 2 contract so each task could close with a green verification.
+- [Phase 06-command-center-visual-foundation]: Applied frame-grid overlays as layered backgrounds in existing frame treatments to preserve command-center styling while restoring token usage.
+- [Phase 06-command-center-visual-foundation]: Recorded verification-only Task 3 as an explicit empty test commit to keep atomic task history.
 
 ### Pending Todos
 
@@ -100,6 +104,6 @@ None currently.
 
 ## Session Continuity
 
-Last Session: 2026-03-05T06:37:55.300Z
-Stopped At: Completed 06-command-center-visual-foundation-07-PLAN.md
+Last Session: 2026-03-05T08:01:29.211Z
+Stopped At: Completed 06-command-center-visual-foundation-08-PLAN.md
 Resume File: None
