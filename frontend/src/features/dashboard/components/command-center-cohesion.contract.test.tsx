@@ -24,6 +24,12 @@ describe("command-center cohesion contract", () => {
     const detailPane = readFileSync(detailPanePath, "utf8");
 
     expect(shell).toContain('data-command-center-region="command-band"');
+    expect(shell).toContain("dashboard-shell__top-strip");
+    expect(shell).toContain("dashboard-shell__main-band");
+    expect(shell).toContain("dashboard-shell__history-band");
+    expect(shell).toContain("dashboard-shell__main-primary");
+    expect(shell).toContain("dashboard-shell__main-detail");
+    expect(shell).toContain('data-command-center-region="live-hero"');
     expect(shell).toContain('data-command-center-region="cell-view"');
     expect(shell).toContain('data-command-center-heading="shell-title"');
     expect(statsBar).toContain('data-command-center-region="kpi-band"');
@@ -38,6 +44,10 @@ describe("command-center cohesion contract", () => {
   it("requires responsive e2e coverage for cohesion hooks and zoom readability", () => {
     const responsiveSpec = readFileSync(responsiveSpecPath, "utf8");
 
+    expect(responsiveSpec).toContain(".dashboard-shell__top-strip");
+    expect(responsiveSpec).toContain(".dashboard-shell__main-band");
+    expect(responsiveSpec).toContain(".dashboard-shell__history-band");
+    expect(responsiveSpec).toContain('[data-command-center-region="live-hero"]');
     expect(responsiveSpec).toContain('[data-command-center-region="command-band"]');
     expect(responsiveSpec).toContain('[data-command-center-region="cell-view"]');
     expect(responsiveSpec).toContain('[data-command-center-region="kpi-band"]');
@@ -52,6 +62,9 @@ describe("command-center cohesion contract", () => {
     const dashboardOps = readFileSync(dashboardOpsPath, "utf8");
 
     expect(dashboardOps).toContain("Attach screenshot evidence");
+    expect(dashboardOps).toContain("approved mockup");
+    expect(dashboardOps).toContain("2/3 + 1/3");
+    expect(dashboardOps).toContain("Live Breach History");
     expect(dashboardOps).toContain("cell-view parity");
     expect(dashboardOps).toContain("scroll attachment");
     expect(dashboardOps).toContain("frame containment");
