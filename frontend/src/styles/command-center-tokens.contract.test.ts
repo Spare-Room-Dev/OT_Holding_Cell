@@ -83,6 +83,14 @@ describe("command-center token contract", () => {
     }
   });
 
+  it("uses shared frame grid overlay primitives in shell and surface panel styles", () => {
+    const shellChrome = readFileSync(shellChromePath, "utf8");
+    const surfacePanels = readFileSync(surfacePanelsPath, "utf8");
+
+    expect(shellChrome).toContain("var(--hc-frame-grid-overlay)");
+    expect(surfacePanels).toContain("var(--hc-frame-grid-overlay)");
+  });
+
   it("pins approved font packages in frontend dependencies", () => {
     const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8")) as {
       dependencies?: Record<string, string>;
