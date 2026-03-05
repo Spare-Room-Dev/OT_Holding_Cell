@@ -11,6 +11,8 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@fontsource/share-tech-mono": "5.2.7",
+    "@fontsource/vt323": "5.2.7",
     "@tanstack/react-query": "^5.90.21",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
