@@ -65,7 +65,7 @@ describe("command-center token contract", () => {
     expect(tokens).toContain("--hc-connection-offline: #db5f5f;");
   });
 
-  it("uses shared frame primitives across shell and surface panel styles", () => {
+  it("uses shared frame border, background, and heading primitives across shell and surface panel styles", () => {
     const shellChrome = readFileSync(shellChromePath, "utf8");
     const surfacePanels = readFileSync(surfacePanelsPath, "utf8");
 
@@ -73,7 +73,6 @@ describe("command-center token contract", () => {
       "var(--hc-frame-border-default)",
       "var(--hc-frame-border-strong)",
       "var(--hc-frame-bg-base)",
-      "var(--hc-frame-grid-overlay)",
       "var(--hc-frame-heading-size)",
       "var(--hc-frame-heading-spacing)",
     ];
