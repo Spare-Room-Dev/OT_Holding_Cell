@@ -12,6 +12,7 @@ import { PrisonerList } from "./prisoner-list";
 import { StatsBar, type DashboardStatsSnapshot } from "./stats-bar";
 import { ConnectionPill } from "./connection-pill";
 import "./dashboard-layout.css";
+import "./dashboard-shell-chrome.css";
 
 const MOBILE_LAYOUT_MEDIA_QUERY = "(max-width: 64rem)";
 
@@ -163,10 +164,33 @@ export function DashboardShell({
   );
 
   return (
-    <div className="dashboard-layout">
-      <header className="dashboard-panel dashboard-shell__header">
-        <div>
-          <h1 className="dashboard-shell__title">Holding Cell Analyst Dashboard</h1>
+    <div className="dashboard-layout dashboard-shell">
+      <header className="dashboard-panel dashboard-shell__command-strip command-band command-band--tight">
+        <nav className="dashboard-shell__nav" aria-label="Command sections">
+          <button type="button" className="dashboard-shell__nav-item dashboard-shell__nav-item--active" data-command-tab="dashboard" aria-current="page">
+            Dashboard
+          </button>
+          <button type="button" className="dashboard-shell__nav-item" data-command-tab="realtime" aria-disabled="true" tabIndex={-1}>
+            Real-time
+          </button>
+          <button type="button" className="dashboard-shell__nav-item" data-command-tab="archive" aria-disabled="true" tabIndex={-1}>
+            Archive
+          </button>
+          <button type="button" className="dashboard-shell__nav-item" data-command-tab="insights" aria-disabled="true" tabIndex={-1}>
+            Insights
+          </button>
+        </nav>
+        <ConnectionPill
+          status={realtime.connectionStatus}
+          isStale={realtime.isStale}
+          reconnectAttempt={realtime.reconnectAttempt}
+          onRetry={realtime.retryConnection}
+        />
+      </header>
+
+      <section className="dashboard-panel dashboard-shell__live-hero">
+        <div className="dashboard-shell__live-hero-head">
+          <h1 className="dashboard-shell__title">Live Cell Block</h1>
           <p className="dashboard-shell__subtitle">
             Monitor attacker activity with live state, filtering, and explicit analyst-driven detail inspection.
           </p>
@@ -176,13 +200,7 @@ export function DashboardShell({
             </p>
           ) : null}
         </div>
-        <ConnectionPill
-          status={realtime.connectionStatus}
-          isStale={realtime.isStale}
-          reconnectAttempt={realtime.reconnectAttempt}
-          onRetry={realtime.retryConnection}
-        />
-      </header>
+      </section>
 
       <StatsBar stats={stats} />
 
@@ -202,14 +220,16 @@ export function DashboardShell({
         </section>
       ) : null}
 
-      <section className="dashboard-layout__content">
-        <PrisonerList
-          prisoners={visiblePrisoners}
-          selectedPrisonerId={selectedPrisonerId}
-          onSelectPrisoner={setSelectedPrisonerId}
-          filteredOutCount={filteredOutCount}
-        />
-        {isMobileLayout ? null : detailPane}
+      <section className="dashboard-panel dashboard-shell__live-hero-frame">
+        <section className="dashboard-layout__content">
+          <PrisonerList
+            prisoners={visiblePrisoners}
+            selectedPrisonerId={selectedPrisonerId}
+            onSelectPrisoner={setSelectedPrisonerId}
+            filteredOutCount={filteredOutCount}
+          />
+          {isMobileLayout ? null : detailPane}
+        </section>
       </section>
 
       {isMobileLayout ? (
