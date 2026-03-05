@@ -82,6 +82,10 @@
   text-transform: none;
 }
 
+.surface-readout--standby {
+  letter-spacing: 0.02em;
+}
+
 .surface-tactical-label {
   font-size: 0.72rem;
   text-transform: uppercase;

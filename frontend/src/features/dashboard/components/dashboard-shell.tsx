@@ -15,6 +15,7 @@ import "./dashboard-layout.css";
 import "./dashboard-shell-chrome.css";
 
 const MOBILE_LAYOUT_MEDIA_QUERY = "(max-width: 64rem)";
+const CELL_VIEW_SLOT_COUNT = 6;
 
 export interface DashboardShellProps {
   apiBaseUrl?: string;
@@ -156,6 +157,11 @@ export function DashboardShell({
   );
 
   const isMobileLayout = useMobileLayout(forceMobileLayout);
+  const cellViewOccupiedSlots = Math.min(visiblePrisoners.length, CELL_VIEW_SLOT_COUNT);
+  const cellViewSlots = useMemo(
+    () => Array.from({ length: CELL_VIEW_SLOT_COUNT }, (_, index) => index < cellViewOccupiedSlots),
+    [cellViewOccupiedSlots],
+  );
   const detailPane = (
     <DetailPane
       selectedPrisonerId={selectedPrisonerId}
@@ -204,6 +210,30 @@ export function DashboardShell({
               Live feed is stale while the connection is recovering. Last-known prisoner data remains visible.
             </p>
           ) : null}
+        </div>
+
+        <div className="dashboard-shell__cell-view" data-command-center-region="cell-view">
+          <div className="dashboard-shell__cell-view-head">
+            <p className="dashboard-shell__cell-view-kicker">Cell-View Grid</p>
+            <p className="dashboard-shell__cell-view-status surface-readout surface-readout--standby">
+              Standby telemetry frame active. Visual lanes stay pinned even when the live list is sparse.
+            </p>
+          </div>
+          <div className="dashboard-shell__cell-view-frame">
+            <div className="dashboard-shell__cell-view-grid" aria-hidden="true" />
+            <ul className="dashboard-shell__cell-view-bays" aria-label="Cell-view bay telemetry frame">
+              {cellViewSlots.map((isOccupied, index) => (
+                <li
+                  // deterministic bay IDs ensure a stable visual scaffold between sparse and dense states.
+                  key={`cell-view-bay-${index + 1}`}
+                  className={`dashboard-shell__cell-view-bay ${isOccupied ? "dashboard-shell__cell-view-bay--occupied" : "dashboard-shell__cell-view-bay--standby"}`}
+                >
+                  <span className="dashboard-shell__cell-view-bay-label">Bay {index + 1}</span>
+                  <span className="dashboard-shell__cell-view-bay-state">{isOccupied ? "Tracking" : "Standby"}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
