@@ -23,6 +23,16 @@
   --hc-panel-inset: rgba(12, 24, 38, 0.7);
   --hc-stroke-ui: 1px;
   --hc-stroke-data: 1.25px;
+  --hc-frame-border-default: color-mix(in srgb, var(--hc-panel-outline) 62%, var(--hc-color-border));
+  --hc-frame-border-strong: color-mix(in srgb, var(--hc-panel-outline-strong) 54%, var(--hc-color-border));
+  --hc-frame-bg-base: linear-gradient(168deg, color-mix(in srgb, var(--hc-panel-bg-alt) 90%, #050d17), color-mix(in srgb, var(--hc-panel-bg) 94%, #050d16));
+  --hc-frame-grid-overlay: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--hc-grid-line) 20%, transparent) 1px,
+    transparent 1px
+  );
+  --hc-frame-heading-size: 0.96rem;
+  --hc-frame-heading-spacing: 0.08em;
 
   /* Severity + connection semantics (must remain stable) */
   --hc-severity-low: #2e9f74;

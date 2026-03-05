@@ -8,8 +8,8 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--hc-space-3);
-  border-color: color-mix(in srgb, var(--hc-panel-outline) 70%, var(--hc-color-border));
-  background: color-mix(in srgb, var(--hc-panel-bg) 92%, #040b13);
+  border-color: var(--hc-frame-border-default);
+  background: var(--hc-frame-bg-base);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hc-panel-outline) 35%, transparent);
   padding-block: var(--hc-space-2);
 }
@@ -22,7 +22,7 @@
 }
 
 .dashboard-shell__nav-item {
-  border: 1px solid color-mix(in srgb, var(--hc-panel-outline) 55%, transparent);
+  border: 1px solid var(--hc-frame-border-default);
   border-radius: var(--hc-radius-sm);
   background: color-mix(in srgb, var(--hc-shell-bg-alt) 82%, black);
   color: var(--hc-color-text-muted);
@@ -36,7 +36,7 @@
 
 .dashboard-shell__nav-item--active {
   color: var(--hc-color-text-strong);
-  border-color: color-mix(in srgb, var(--hc-panel-outline-strong) 70%, transparent);
+  border-color: var(--hc-frame-border-strong);
   text-shadow: 0 0 0.5rem color-mix(in srgb, var(--hc-panel-outline-strong) 38%, transparent);
 }
 
@@ -51,14 +51,10 @@
 
 .dashboard-shell__metrics-band,
 .dashboard-shell__filters-band {
-  border-color: color-mix(in srgb, var(--hc-panel-outline) 72%, var(--hc-color-border));
+  border-color: var(--hc-frame-border-default);
   background:
-    linear-gradient(170deg, color-mix(in srgb, var(--hc-panel-bg-alt) 90%, #050d17), color-mix(in srgb, var(--hc-panel-bg) 92%, #07111b)),
-    linear-gradient(
-      to right,
-      color-mix(in srgb, var(--hc-grid-line) 20%, transparent) 1px,
-      transparent 1px
-    );
+    var(--hc-frame-bg-base),
+    var(--hc-frame-grid-overlay);
   background-size: auto, 20px 20px;
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--hc-panel-outline) 36%, transparent),
@@ -70,7 +66,7 @@
   color: color-mix(in srgb, var(--hc-color-text-muted) 92%, var(--hc-color-text));
   font-family: var(--hc-font-display);
   font-size: 0.72rem;
-  letter-spacing: 0.09em;
+  letter-spacing: var(--hc-frame-heading-spacing);
   line-height: 1.1;
   text-transform: uppercase;
 }
@@ -136,7 +132,7 @@
 }
 
 .connection-pill--command .connection-pill__retry {
-  border: 1px solid color-mix(in srgb, var(--hc-panel-outline) 72%, var(--hc-color-border));
+  border: 1px solid var(--hc-frame-border-default);
   border-radius: var(--hc-radius-sm);
   background: color-mix(in srgb, var(--hc-shell-bg-alt) 82%, black);
   color: var(--hc-color-text-strong);
@@ -157,14 +153,10 @@
 
 .dashboard-shell__live-hero,
 .dashboard-shell__live-hero-frame {
-  border-color: color-mix(in srgb, var(--hc-panel-outline-strong) 45%, var(--hc-color-border));
+  border-color: var(--hc-frame-border-strong);
   background:
-    linear-gradient(160deg, color-mix(in srgb, var(--hc-panel-bg-alt) 86%, #060f19), var(--hc-panel-bg)),
-    linear-gradient(
-      to right,
-      color-mix(in srgb, var(--hc-grid-line) 24%, transparent) 1px,
-      transparent 1px
-    ),
+    var(--hc-frame-bg-base),
+    var(--hc-frame-grid-overlay),
     linear-gradient(
       to bottom,
       color-mix(in srgb, var(--hc-grid-line) 20%, transparent) 1px,
@@ -188,8 +180,8 @@
   margin: 0;
   color: var(--hc-color-text-strong);
   font-family: var(--hc-font-display);
-  font-size: 1.35rem;
-  letter-spacing: var(--hc-tracking-ui);
+  font-size: calc(var(--hc-frame-heading-size) + 0.38rem);
+  letter-spacing: var(--hc-frame-heading-spacing);
   text-transform: uppercase;
 }
 
