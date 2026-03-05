@@ -203,6 +203,29 @@ describe("DashboardShell", () => {
     expect(container.querySelector(".dashboard-shell__live-hero")).not.toBeNull();
   });
 
+  it("uses unified command-band classes for kpi, filter, and connection surfaces", async () => {
+    renderShell();
+    await flush();
+
+    const metricsBand = container.querySelector(".dashboard-shell__metrics-band");
+    expect(metricsBand).not.toBeNull();
+
+    const filtersBand = container.querySelector(".dashboard-shell__filters-band");
+    expect(filtersBand).not.toBeNull();
+
+    const tacticalLabels = [
+      container.querySelector(".stats-bar__label.command-band__label"),
+      container.querySelector(".filter-bar__label.command-band__label"),
+      container.querySelector(".connection-pill__label.command-band__label"),
+    ];
+    for (const label of tacticalLabels) {
+      expect(label).not.toBeNull();
+    }
+
+    const kpiReadout = container.querySelector(".stats-bar__value.command-band__readout");
+    expect(kpiReadout).not.toBeNull();
+  });
+
   it("uses mobile detail drawer behavior when forced into mobile layout", async () => {
     renderShell({ forceMobileLayout: true });
     await flush();
