@@ -46,11 +46,18 @@ const PRISONERS: ListItem[] = [
 
 const COHESION_REGION_SELECTORS = [
   '[data-command-center-region="command-band"]',
+  '[data-command-center-region="live-hero"]',
   '[data-command-center-region="cell-view"]',
   '[data-command-center-region="kpi-band"]',
   '[data-command-center-region="filter-band"]',
   '[data-command-center-region="live-list"]',
   '[data-command-center-region="dossier-pane"]',
+];
+
+const MOCKUP_STRUCTURE_SELECTORS = [
+  ".dashboard-shell__top-strip",
+  ".dashboard-shell__main-band",
+  ".dashboard-shell__history-band",
 ];
 
 type CohesionZoomLevel = "90%" | "100%" | "110%";
@@ -207,6 +214,40 @@ async function assertDesktopZoomReadability(page: Page, zoomLevel: CohesionZoomL
   await assertNoClippingForCohesionRegions(page);
 }
 
+async function assertMockupCompositionOrder(page: Page) {
+  const compositionState = await page.evaluate(() => {
+    const topStrip = document.querySelector(".dashboard-shell__top-strip");
+    const mainBand = document.querySelector(".dashboard-shell__main-band");
+    const historyBand = document.querySelector(".dashboard-shell__history-band");
+
+    if (!topStrip || !mainBand || !historyBand) {
+      return { valid: false, ratio: null };
+    }
+
+    const topBeforeMain = Boolean(topStrip.compareDocumentPosition(mainBand) & Node.DOCUMENT_POSITION_FOLLOWING);
+    const mainBeforeHistory = Boolean(mainBand.compareDocumentPosition(historyBand) & Node.DOCUMENT_POSITION_FOLLOWING);
+
+    const primary = document.querySelector(".dashboard-shell__main-primary");
+    const detail = document.querySelector(".dashboard-shell__main-detail");
+    if (!primary || !detail) {
+      return { valid: false, ratio: null };
+    }
+
+    const primaryWidth = primary.getBoundingClientRect().width;
+    const detailWidth = detail.getBoundingClientRect().width;
+    const ratio = detailWidth > 0 ? primaryWidth / detailWidth : null;
+
+    return {
+      valid: topBeforeMain && mainBeforeHistory,
+      ratio,
+    };
+  });
+
+  expect(compositionState.valid).toBe(true);
+  expect(compositionState.ratio).not.toBeNull();
+  expect(compositionState.ratio as number).toBeGreaterThan(1.45);
+}
+
 async function assertNoWhiteBackdropExposure(page: Page) {
   const backdropState = await page.evaluate(() => {
     const html = window.getComputedStyle(document.documentElement).backgroundColor;
@@ -263,10 +304,14 @@ test.describe("@dashboard responsive shell", () => {
     await expect(
       page.getByText("Select a prisoner from the list to inspect attack summary and activity."),
     ).toBeVisible();
-    await expect(page.locator(".prisoner-list.surface-panel.surface-panel--list.surface-panel--archive")).toBeVisible();
-    await expect(page.locator(".dashboard-layout__content .detail-pane")).toBeVisible();
+    await expect(page.locator(".prisoner-list.surface-panel.surface-panel--list.surface-panel--history")).toBeVisible();
+    await expect(page.locator(".dashboard-shell__main-detail .detail-pane")).toBeVisible();
     await expect(page.locator(".mobile-detail-drawer--open")).toHaveCount(0);
+    await expect(page.locator(".dashboard-shell__top-strip")).toBeVisible();
+    await expect(page.locator(".dashboard-shell__main-band")).toBeVisible();
+    await expect(page.locator(".dashboard-shell__history-band")).toBeVisible();
     await expect(page.locator('[data-command-center-region="command-band"]')).toBeVisible();
+    await expect(page.locator('[data-command-center-region="live-hero"]')).toBeVisible();
     await expect(page.locator('[data-command-center-region="kpi-band"]')).toBeVisible();
     await expect(page.locator('[data-command-center-region="filter-band"]')).toBeVisible();
     await expect(page.locator('[data-command-center-region="live-list"]')).toBeVisible();
@@ -274,7 +319,11 @@ test.describe("@dashboard responsive shell", () => {
     await expect(page.locator('[data-command-center-root="shell"]')).toBeVisible();
     await expect(page.locator('[data-command-center-heading="shell-title"]')).toBeVisible();
     await expect(page.locator('[data-command-center-heading="panel-title"]').first()).toBeVisible();
+    for (const selector of MOCKUP_STRUCTURE_SELECTORS) {
+      await expect(page.locator(selector)).toBeVisible();
+    }
     await assertNoWhiteBackdropExposure(page);
+    await assertMockupCompositionOrder(page);
 
     await assertDesktopZoomReadability(page, "90%");
     await assertDesktopZoomReadability(page, "100%");
@@ -289,7 +338,7 @@ test.describe("@dashboard responsive shell", () => {
     await expect(selectedRow).toHaveAttribute("aria-pressed", "true");
     await expect(selectedRow).toHaveClass(/surface-card/);
     await expect(selectedRow).toHaveClass(/surface-card--row/);
-    const detailPane = page.locator(".dashboard-layout__content .detail-pane");
+    const detailPane = page.locator(".dashboard-shell__main-detail .detail-pane");
     await expect(detailPane).toHaveClass(/surface-panel--detail/);
     await expect(detailPane.getByText("Source IP: 198.51.x.x")).toBeVisible();
     await expect(detailPane.getByText("198.51.100.11")).toHaveCount(0);
@@ -301,7 +350,11 @@ test.describe("@dashboard responsive shell", () => {
 
     await expect(page.locator(".dashboard-layout__content .detail-pane")).toHaveCount(0);
     await expect(page.locator('[data-command-center-root="shell"]')).toBeVisible();
+    await expect(page.locator(".dashboard-shell__top-strip")).toBeVisible();
+    await expect(page.locator(".dashboard-shell__main-band")).toBeVisible();
+    await expect(page.locator(".dashboard-shell__history-band")).toBeVisible();
     await expect(page.locator('[data-command-center-region="command-band"]')).toBeVisible();
+    await expect(page.locator('[data-command-center-region="live-hero"]')).toBeVisible();
     await expect(page.locator('[data-command-center-region="live-list"]')).toBeVisible();
     await assertNoWhiteBackdropExposure(page);
     await page.locator('[data-prisoner-id="11"]').click();

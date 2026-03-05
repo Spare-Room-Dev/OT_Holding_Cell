@@ -1,7 +1,7 @@
 # Dashboard UI Verification Runbook
 
 ## Purpose
-Validate that the analyst dashboard remains responsive, operationally usable, and safe after deploys or frontend changes.
+Validate that the analyst dashboard remains responsive, operationally usable, and safe after deploys or frontend changes, with visual hierarchy matching the approved mockup.
 
 ## Scope
 - Command-center panel cohesion across live list, row cards, and dossier sections
@@ -31,16 +31,18 @@ Expected result: all `@dashboard` tests pass.
 ## Manual Verification Checklist
 
 ### 1) Command-Center Surface Cohesion and Readability
-1. Open the dashboard at 100% zoom and confirm list panel, row cards, and dossier sections share the same framed command-center styling language.
-2. Confirm `Live Cell Block` shows explicit cell-view parity (framed bay grid remains visible, not a plain header-only panel).
-3. Confirm command-center backdrop remains attached while scrolling (no white seams above, below, or around shell edges).
+1. Open the dashboard at 100% zoom and confirm layout uses three tiers in this order: top stats strip, middle 2/3 + 1/3 core split, then bottom `Live Breach History`.
+2. Confirm the middle split keeps `Live Cell Block` as the dominant 2/3 panel and `Prisoner Detail` as the 1/3 secondary panel.
+3. Confirm `Live Cell Block` shows explicit cell-view parity (framed bay grid remains visible, not a plain header-only panel).
+4. Confirm command-center backdrop remains attached while scrolling (no white seams above, below, or around shell edges).
 2. Confirm uppercase typography is limited to tactical labels/chrome while metric/readout lines remain easy to scan.
 3. Change browser zoom to 90%, 100%, and 110%.
 4. At each zoom level, confirm dense telemetry lines remain readable and no panel headings, labels, or list content clip or overlap.
 5. Confirm empty/standby states still keep panel boundaries visible and operationally understandable.
-6. With rows present and with filters narrowing the list, confirm archive-facing panel accents remain visible and consistent.
+6. With rows present and with filters narrowing the list, confirm history/feed framing remains clear without heavy redundant borders.
 7. Confirm frame containment: list rows and dossier cards stay within the intended blue command-center frame at all tested zoom levels.
 8. Attach screenshot evidence for each zoom state and annotate any clipping/overlap checks.
+9. Capture side-by-side comparison shots against the approved mockup and note any variances.
 
 ### 2) Responsive Layout
 1. Open the dashboard on desktop width (>= 1280px).
@@ -50,8 +52,11 @@ Expected result: all `@dashboard` tests pass.
 5. Attach screenshot evidence for desktop command-center cohesion and mobile command-center cohesion.
 
 ### Evidence Artifacts (Required)
+- Attach screenshot evidence proving top-strip + middle-split + bottom-history ordering against the approved mockup.
+- Attach screenshot evidence proving the middle split is approximately 2/3 + 1/3 on desktop widths.
 - Attach screenshot evidence that demonstrates cell-view parity for the `Live Cell Block` hero treatment.
 - Attach screenshot evidence that demonstrates scroll attachment (no white background detachment while scrolling).
+- Attach screenshot evidence that demonstrates the bottom `Live Breach History` feed is visually distinct from the middle split.
 - Attach screenshot evidence that demonstrates frame containment for list and dossier cards at 90%, 100%, and 110% zoom.
 - Attach screenshot evidence captured at 90%, 100%, and 110% zoom for desktop layout.
 - Attach screenshot evidence showing desktop command-center cohesion with list + dossier simultaneously visible.

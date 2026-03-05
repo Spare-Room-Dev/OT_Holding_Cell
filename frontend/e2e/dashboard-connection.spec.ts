@@ -205,7 +205,7 @@ test.describe("@dashboard connection UX", () => {
     await page.goto("/");
 
     const retryButton = page.getByRole("button", { name: "Retry" });
-    await expect(page.locator(".prisoner-list.surface-panel.surface-panel--list.surface-panel--archive")).toBeVisible();
+    await expect(page.locator(".prisoner-list.surface-panel.surface-panel--list.surface-panel--history")).toBeVisible();
     await expect(page.getByText("Connection live")).toBeVisible();
     await expect(retryButton).toBeDisabled();
 
