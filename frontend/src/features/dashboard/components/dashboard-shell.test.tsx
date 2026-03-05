@@ -263,8 +263,12 @@ describe("DashboardShell", () => {
     expect(coreSplit).not.toBeNull();
     expect(historyBand).not.toBeNull();
 
-    expect(topStrip?.compareDocumentPosition(coreSplit as Node) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
-    expect(coreSplit?.compareDocumentPosition(historyBand as Node) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
+    if (!topStrip || !coreSplit || !historyBand) {
+      throw new Error("Expected top strip, core split, and history band structure to exist.");
+    }
+
+    expect(topStrip.compareDocumentPosition(coreSplit) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
+    expect(coreSplit.compareDocumentPosition(historyBand) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
 
     expect(coreSplit?.querySelector(".dashboard-shell__main-primary")).not.toBeNull();
     expect(coreSplit?.querySelector(".dashboard-shell__main-detail .detail-pane")).not.toBeNull();
