@@ -4,15 +4,15 @@ milestone: v1.1
 milestone_name: UI Polish
 current_phase: 6 of 9 (Command-Center Visual Foundation)
 current_plan: 6
-status: ready_for_verification
-stopped_at: Completed 06-command-center-visual-foundation-06-PLAN.md
-last_updated: "2026-03-05T06:07:42.522Z"
+status: verifying
+stopped_at: Completed 06-command-center-visual-foundation-07-PLAN.md
+last_updated: "2026-03-05T06:37:55.302Z"
 last_activity: 2026-03-05
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 7
+  completed_plans: 7
   percent: 100
 ---
 
@@ -58,6 +58,7 @@ Progress: [██████████] 100%
 | Phase 06-command-center-visual-foundation P04 | 6 min | 3 tasks | 17 files |
 | Phase 06-command-center-visual-foundation P05 | 6 min | 4 tasks | 10 files |
 | Phase 06-command-center-visual-foundation P06 | 3 min | 2 tasks | 1 files |
+| Phase 06-command-center-visual-foundation P07 | 9m | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,9 @@ Recent decisions affecting current work:
 - [Phase 06-command-center-visual-foundation]: Replaced exact-string JSX hook checks with className-based structural regex patterns so additive attributes remain valid.
 - [Phase 06-command-center-visual-foundation]: Kept hook enforcement strict by failing when shell or viewport class hooks are missing/renamed.
 - [Phase 06-command-center-visual-foundation]: Recorded verification-only task as an explicit empty commit to preserve atomic task history.
+- [Phase 06-command-center-visual-foundation]: Moved filter controls into the live-cell primary panel to preserve a clean top stats strip.
+- [Phase 06-command-center-visual-foundation]: Promoted live feed list to a dedicated bottom Live Breach History band while keeping detail as the secondary desktop pane.
+- [Phase 06-command-center-visual-foundation]: Encoded composition parity with class-hook assertions in E2E and runbook evidence checkpoints.
 
 ### Pending Todos
 
@@ -96,6 +100,6 @@ None currently.
 
 ## Session Continuity
 
-Last Session: 2026-03-05T06:07:42.520Z
-Stopped At: Completed 06-command-center-visual-foundation-06-PLAN.md
+Last Session: 2026-03-05T06:37:55.300Z
+Stopped At: Completed 06-command-center-visual-foundation-07-PLAN.md
 Resume File: None
