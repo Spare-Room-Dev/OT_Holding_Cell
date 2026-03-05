@@ -206,6 +206,30 @@ async function assertDesktopZoomReadability(page: Page, zoomLevel: CohesionZoomL
   await assertNoClippingForCohesionRegions(page);
 }
 
+async function assertNoWhiteBackdropExposure(page: Page) {
+  const backdropState = await page.evaluate(() => {
+    const html = window.getComputedStyle(document.documentElement).backgroundColor;
+    const body = window.getComputedStyle(document.body).backgroundColor;
+    const root = document.getElementById("root");
+    const rootBackground = root ? window.getComputedStyle(root).backgroundColor : null;
+    const shell = document.querySelector('[data-command-center-root="shell"]');
+    const shellBackground = shell ? window.getComputedStyle(shell).backgroundColor : null;
+
+    return {
+      html,
+      body,
+      root: rootBackground,
+      shell: shellBackground,
+      shellPresent: shell !== null,
+    };
+  });
+
+  expect(backdropState.shellPresent).toBe(true);
+  expect(backdropState.body).not.toBe("rgb(255, 255, 255)");
+  expect(backdropState.root).not.toBe("rgb(255, 255, 255)");
+  expect(backdropState.shell).not.toBe("rgb(255, 255, 255)");
+}
+
 test.describe("@dashboard responsive shell", () => {
   test.beforeEach(async ({ page }) => {
     await installRealtimeSocketMock(page);
@@ -228,8 +252,10 @@ test.describe("@dashboard responsive shell", () => {
     await expect(page.locator('[data-command-center-region="filter-band"]')).toBeVisible();
     await expect(page.locator('[data-command-center-region="live-list"]')).toBeVisible();
     await expect(page.locator('[data-command-center-region="dossier-pane"]')).toBeVisible();
+    await expect(page.locator('[data-command-center-root="shell"]')).toBeVisible();
     await expect(page.locator('[data-command-center-heading="shell-title"]')).toBeVisible();
     await expect(page.locator('[data-command-center-heading="panel-title"]').first()).toBeVisible();
+    await assertNoWhiteBackdropExposure(page);
 
     await assertDesktopZoomReadability(page, "90%");
     await assertDesktopZoomReadability(page, "100%");
@@ -254,8 +280,10 @@ test.describe("@dashboard responsive shell", () => {
     await page.goto("/");
 
     await expect(page.locator(".dashboard-layout__content .detail-pane")).toHaveCount(0);
+    await expect(page.locator('[data-command-center-root="shell"]')).toBeVisible();
     await expect(page.locator('[data-command-center-region="command-band"]')).toBeVisible();
     await expect(page.locator('[data-command-center-region="live-list"]')).toBeVisible();
+    await assertNoWhiteBackdropExposure(page);
     await page.locator('[data-prisoner-id="11"]').click();
     await expect(page.locator(".mobile-detail-drawer--open")).toBeVisible();
     await expect(page.getByRole("dialog", { name: "Prisoner Detail" })).toBeVisible();
