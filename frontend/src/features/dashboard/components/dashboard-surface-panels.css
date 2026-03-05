@@ -1,4 +1,6 @@
 .surface-panel {
+  max-width: 100%;
+  min-width: 0;
   border-color: var(--hc-frame-border-default);
   background:
     var(--hc-frame-bg-base),
@@ -51,6 +53,8 @@
 }
 
 .surface-card {
+  max-width: 100%;
+  min-width: 0;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--hc-panel-bg-alt) 92%, transparent), var(--hc-panel-bg)),
     var(--hc-frame-grid-overlay);
@@ -80,6 +84,7 @@
   font-size: 0.8125rem;
   line-height: 1.42;
   text-transform: none;
+  overflow-wrap: anywhere;
 }
 
 .surface-readout--standby {
@@ -93,6 +98,8 @@
 }
 
 .surface-section {
+  max-width: 100%;
+  min-width: 0;
   border-color: var(--hc-frame-border-default);
   background:
     linear-gradient(180deg, rgb(20 35 54 / 92%), rgb(14 26 40 / 94%)),

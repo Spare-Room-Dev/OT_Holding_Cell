@@ -1,5 +1,7 @@
 .dashboard-layout {
   color: var(--hc-color-text);
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 .dashboard-layout__content {
@@ -7,6 +9,13 @@
   gap: var(--hc-space-4);
   grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr);
   align-items: start;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.dashboard-layout__content > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 @media (max-width: 64rem) {

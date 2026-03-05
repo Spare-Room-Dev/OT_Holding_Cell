@@ -312,5 +312,7 @@
 }
 
 .dashboard-shell__live-hero-frame {
+  max-width: 100%;
+  overflow-x: hidden;
   padding-top: var(--hc-space-3);
 }
