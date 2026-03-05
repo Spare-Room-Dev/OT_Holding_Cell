@@ -230,6 +230,24 @@ async function assertNoWhiteBackdropExposure(page: Page) {
   expect(backdropState.shell).not.toBe("rgb(255, 255, 255)");
 }
 
+async function assertFrameContainmentContracts(page: Page) {
+  const containmentState = await page.evaluate(() => {
+    const frame = document.querySelector(".dashboard-shell__live-hero-frame");
+    const list = document.querySelector(".prisoner-list");
+    const detail = document.querySelector(".detail-pane");
+
+    return {
+      frameOverflowX: frame ? window.getComputedStyle(frame).overflowX : null,
+      listMaxWidth: list ? window.getComputedStyle(list).maxWidth : null,
+      detailMaxWidth: detail ? window.getComputedStyle(detail).maxWidth : null,
+    };
+  });
+
+  expect(containmentState.frameOverflowX === "hidden" || containmentState.frameOverflowX === "clip").toBe(true);
+  expect(containmentState.listMaxWidth).toBe("100%");
+  expect(containmentState.detailMaxWidth).toBe("100%");
+}
+
 test.describe("@dashboard responsive shell", () => {
   test.beforeEach(async ({ page }) => {
     await installRealtimeSocketMock(page);
@@ -260,6 +278,7 @@ test.describe("@dashboard responsive shell", () => {
     await assertDesktopZoomReadability(page, "90%");
     await assertDesktopZoomReadability(page, "100%");
     await assertDesktopZoomReadability(page, "110%");
+    await assertFrameContainmentContracts(page);
     await page.evaluate(() => {
       document.body.style.zoom = "100%";
     });
