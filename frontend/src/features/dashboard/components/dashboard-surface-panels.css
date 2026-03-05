@@ -31,7 +31,7 @@
 }
 
 .surface-panel--history {
-  border-color: color-mix(in srgb, var(--hc-frame-border-default) 88%, var(--hc-panel-outline));
+  border-color: color-mix(in srgb, var(--hc-frame-border-strong) 82%, var(--hc-panel-outline));
 }
 
 .surface-panel--detail {
