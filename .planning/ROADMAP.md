@@ -65,7 +65,7 @@ Milestone v1.1 delivers a medium-fidelity, mockup-inspired UI-polish pass that i
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 6. Command-Center Visual Foundation | 7/7 | Complete   | 2026-03-05 |
+| 6. Command-Center Visual Foundation | 8/8 | Complete   | 2026-03-05 |
 | 7. Live Surface Threat Hierarchy | 0/TBD | Not started | - |
 | 8. Interaction and Realtime Feedback Polish | 0/TBD | Not started | - |
 | 9. Responsive Accessibility Hardening | 0/TBD | Not started | - |
